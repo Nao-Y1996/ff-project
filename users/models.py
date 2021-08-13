@@ -84,8 +84,30 @@ class CustomUser(AbstractBaseUser):
         return self.is_admin
 
 
-# class UserInfo(models.Model):
-#     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
-#     country = models.CharField(max_length=20)
-#     age = models.IntegerField
-#     sex = 
+class UserInfo(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="user_info")
+    country = models.CharField(max_length=20, blank=False, null=True)
+    age = models.IntegerField(blank=True, null=True)
+    sex_choice = ((0, 'Female'),(1, 'male'),(2, 'other'))
+    sex = models.IntegerField(choices=sex_choice, blank=True, null=True)
+    introduction = models.TextField(blank=True,null=True)
+    profile_image = models.ImageField(upload_to='', blank=True, null=True)
+    count_send_new_messages = models.IntegerField(blank=True,null=True)
+    count_receive_new_messages = models.IntegerField(blank=True,null=True)
+    count_bad_messages = models.IntegerField(blank=True,null=True)
+    def __str__(self):
+        return str(self.user)
+
+class ReportReasons(models.Model):
+    choices = models.CharField(max_length=200, blank=False, null=True)
+    def __str__(self):
+        return self.choices
+
+class Report(models.Model):
+    reason = models.ForeignKey(ReportReasons, on_delete=models.CASCADE, related_name="reason")
+    user_reported = models.ForeignKey(CustomUser,on_delete=models.CASCADE, related_name="reported")
+    user_reporting = models.ForeignKey(CustomUser,on_delete=models.CASCADE, related_name="reporting")
+    content = models.TextField(max_length=200,blank=True,null=True)
+    def __str__(self):
+        return 'from ' + str(self.user_reporting) + ' to ' + str(self.user_reported)
+

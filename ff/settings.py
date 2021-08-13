@@ -11,9 +11,11 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+# print('BASE_DIR：'+str(BASE_DIR))
 
 
 # Quick-start development settings - unsuitable for production
@@ -132,3 +134,8 @@ LOGIN_REDIRECT_URL = 'users:top'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# 画像を保存する先の指定
+MEDIA＿ROOT = os.path.join(BASE_DIR, 'media')
+# 画像をdjango側で読み込むための設定
+MEDIA_URL = '/media/'

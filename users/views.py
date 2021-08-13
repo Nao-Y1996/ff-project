@@ -13,9 +13,12 @@ from django.shortcuts import redirect
 from django.template.loader import render_to_string
 from django.views import generic
 from django.core.mail import send_mail
+from django.views.generic import FormView, UpdateView
+from django.urls import reverse
+from django.contrib.auth.decorators import login_required
 
-from .forms import LoginForm, UserCreateForm, MyPasswordChangeForm, MyPasswordResetForm, MySetPasswordForm, EmailChangeForm
-
+from .forms import LoginForm, UserCreateForm, MyPasswordChangeForm, MyPasswordResetForm, MySetPasswordForm, EmailChangeForm, UserInfoUpdateForm, ReportForm
+from .models import UserInfo, Report, ReportReasons,CustomUser
 User = get_user_model()
 
 # ログインユーザー自身以外は遷移できないようにするクラス
@@ -28,14 +31,57 @@ class OnlyYouMixin(UserPassesTestMixin):
         return user.pk == self.kwargs['pk'] or user.is_admin
 
 
+@login_required
+def Top(request):
+    user_info = request.user.user_info
+    if user_info.country==None:
+        print('-----------------国が登録されていないので登録ページに飛ぶ---------------')
+        form = UserInfoUpdateForm(instance=user_info)
+        return render(request, 'users/userinfo_update.html', {'form':form})
+    else:
+        return render(request, 'users/top.html')
 
-class Top(generic.TemplateView):
-    template_name = 'users/top.html'
+@login_required
+def profile(request,pk):
+    '''
+    現状、pk(ログインユーザーのid)は使わないが、受け取れるようにしておく
+    '''
+    return render(request,'users/profile.html', {'pk':pk})
+    # if request.method == 'POST':
+    #     if form.is_valid():
+    #         form = ReportForm(request.POST)
+    #         form.save()
+    #         return redirect('users:profile', pk=request.user.id)
+    #     else:
+    #         return render(request, 'users/profile.html', {'form':form})
+    # else:
+    #     form = ReportForm()
+    #     return render(request,'users/profile.html', {'form':form, 'id':pk})
 
+# class Profile(LoginRequiredMixin, OnlyYouMixin, generic.TemplateView):
+#     raise_exception = False # LoginRequiredMixinの設定（Falseにするとログインページへ、Trueだと403）
+#     form_class = ReportForm
+#     template_name = 'users/profile.html'
 
-class Profile(OnlyYouMixin, generic.TemplateView):
-    template_name = 'users/profile.html'
-
+def report(request):
+    if request.method=='POST':
+        form = ReportForm(request.POST)
+        if form.is_valid():
+            #送信内容を1個ずつ取り出してReportを新規作成する（ModelFormを使う意味ない..もっと良い方法がありそう）
+            post = request.POST
+            reason = ReportReasons.objects.get(id=int(post['reason']))
+            user_reported = CustomUser.objects.get(id=int(post['user_reported']))
+            user_reporting = request.user
+            content = post['content']
+            report = Report(reason=reason, user_reported=user_reported,\
+                user_reporting=user_reporting, content=content)
+            report.save()
+            return render(request, 'users/top.html')
+        else:
+            return render(request, 'users/report.html',{'form':form})
+    else:
+        form = ReportForm()
+        return render(request, 'users/report.html',{'form':form})
 
 class Login(LoginView):
     """ログインページ"""
@@ -91,6 +137,7 @@ class UserCreateComplete(generic.TemplateView):
 
     def get(self, request, **kwargs):
         """tokenが正しければ本登録."""
+        user_create_completed = False
         token = kwargs.get('token')
         try:
             user_pk = loads(token, max_age=self.timeout_seconds)
@@ -114,10 +161,36 @@ class UserCreateComplete(generic.TemplateView):
                     # 問題なければ本登録とする
                     user.is_active = True
                     user.save()
-                    return super().get(request, **kwargs)
+                    user_create_completed = True
+                    # return super().get(request, **kwargs)
+        if user_create_completed:
+            user_info = UserInfo(user=user)
+            user_info.save()
+            return super().get(request, **kwargs)
 
         return HttpResponseBadRequest()
 
+
+def EditUserInfo(request, info_id):
+    user_info = UserInfo.objects.get(id=info_id)
+    if user_info.user != request.user:
+        return redirect('users:profile', pk=request.user.id)
+    if request.method == 'POST':
+        # return reverse('users:profile', kwargs={'pk': request.user.id})
+        # messages.success(request, 'レコードを新規追加しました。')
+        form = UserInfoUpdateForm(request.POST, request.FILES, instance=user_info)
+        if form.is_valid():
+            print('==========------------------============')
+            form.save()
+            return redirect('users:profile', pk=request.user.id)
+        else:
+            print('======================')
+            print(form.errors)
+            # return redirect('users:profile', pk=request.user.id)
+            return render(request, 'users/userinfo_update.html', {'form':form})
+    else:
+        form = UserInfoUpdateForm(instance=user_info)
+        return render(request, 'users/userinfo_update.html', {'form':form})
 
 
 # --------------------------------------------------------------
@@ -158,7 +231,6 @@ class PasswordResetConfirm(PasswordResetConfirmView):
 class PasswordResetComplete(PasswordResetCompleteView):
     """新パスワード設定しましたページ"""
     template_name = 'users/password_reset_complete.html'
-
 
 
 # --------------------------------------------------------------
@@ -217,6 +289,5 @@ class EmailChangeComplete(LoginRequiredMixin, generic.TemplateView):
             request.user.email = new_email
             request.user.save()
             return super().get(request, **kwargs)
-
 
 # --------------------------------------------------------------

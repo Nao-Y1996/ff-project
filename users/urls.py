@@ -1,14 +1,16 @@
 from django.contrib import admin
 from django.urls import path, include
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 app_name="users"
 urlpatterns = [
-    path('', views.Top.as_view(), name='top'),
-    path('profile/<int:pk>', views.Profile.as_view(), name='profile'),
+    path('', views.Top, name='top'),
+    path('profile/<int:pk>', views.profile, name='profile'),
     path('login', views.Login.as_view(), name='login'),
     path('logout',  views.Logout.as_view(), name='logout'),
-    
+
     #新規登録用
     path('user_create/', views.UserCreate.as_view(), name='user_create'),
     path('user_create/done', views.UserCreateDone.as_view(), name='user_create_done'),
@@ -28,4 +30,12 @@ urlpatterns = [
     path('email/change/', views.EmailChange.as_view(), name='email_change'),
     path('email/change/done/', views.EmailChangeDone.as_view(), name='email_change_done'),
     path('email/change/complete/<str:token>/', views.EmailChangeComplete.as_view(), name='email_change_complete'),
+    
+    # userinfoの編集
+    path('userinfo/edit/<int:info_id>/', views.EditUserInfo, name='userinfo_edit'),
+    
+    # 通報
+    path('report', views.report, name='report'),
 ]
+# 画像ファイルを扱うための記述
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

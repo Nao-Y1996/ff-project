@@ -2,14 +2,15 @@
 {% block content %}
 <p>トップページです</p>
 {% if user.is_authenticated %}
-<p>{{user.email}}でログインしています。</p>
-<a href="{% url 'users:profile'  user.pk %}" class="btn btn-success">マイページ</a>
-<a href="{% url 'users:password_change'%}" class="btn btn-success">パスワード変更</a>
-<a href="{% url 'users:logout' %}" class="btn btn-primary">ログアウト</a>
+<li>{{user.email}}でログインしています。</li>
+<li>ユーザーネームは{{user.username}}です。</li>
+<li>国は{{user.user_info.country}}です。</li>
+
+<li>通報された回数は{{user.reported.count}}回です。</li>
+
+<li>通報した回数は{{user.reporting.count}}回です。</li>
 
 {% else %}
-<a href="{% url 'users:login' %}" class="btn btn-success">ログイン</a>
-<a href="{% url 'users:user_create' %}" class="btn btn-primary">新規登録</a>
-
+<p>ログインしていません。</p>
 {% endif %}
 {% endblock %}

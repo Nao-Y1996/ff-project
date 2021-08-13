@@ -5,7 +5,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
 
-from users.models import CustomUser
+from users.models import CustomUser,UserInfo, Report, ReportReasons
 
 # Register your models here.
 class CustomUserCreationForm(forms.ModelForm):
@@ -80,8 +80,16 @@ class UserAdmin(BaseUserAdmin):
     filter_horizontal = ()
 
 
+# class UserInfoAdmin(admin.ModelAdmin):
+#     fields = ['user', 'country']
+
+
 # Now register the new UserAdmin...
 admin.site.register(CustomUser, UserAdmin)
 # ... and, since we're not using Django's built-in permissions,
 # unregister the Group model from admin.
-admin.site.unregister(Group)
+# admin.site.unregister(Group)
+
+admin.site.register([UserInfo, Report, ReportReasons])
+
+
