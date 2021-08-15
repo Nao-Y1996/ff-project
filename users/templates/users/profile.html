@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<p>マイページです</p>
+{% if user.is_authenticated %}
+<p>{{user.email}}でログインしています。URLで受け取ったidは{{pk}}です</p>
+
+<li>
+    <a class="btn btn-info" href="{% url 'users:email_change' %}">メールアドレスの変更</a>
+</li>
+<li>
+    <a class="btn btn-success" href="{% url 'users:password_change'%}">パスワード変更</a>
+</li>
+<li>
+    <a class="btn btn-success" href="{% url 'users:userinfo_edit' user.user_info.id %}">公開情報の編集</a>
+</li>
+<li>
+    <a class="btn btn-success" href="{% url 'users:report' %}">通報</a>
+</li>
+{% else %}
+<p>ログインしていません。</p>
+{% endif %}
+{% endblock %}

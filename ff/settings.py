@@ -11,15 +11,18 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+# print('BASE_DIR：'+str(BASE_DIR))
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+DEBUG = False
 SECRET_KEY = ''
 try:
     from .local_settings import *
@@ -28,7 +31,7 @@ except ImportError:
     pass
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -42,6 +45,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'users',
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [
@@ -124,4 +129,16 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# prototypeブランチの作成（userブランチをpostappブランチの統合）
+
+AUTH_USER_MODEL = 'users.CustomUser'
+LOGIN_URL = 'users:login'
+LOGIN_REDIRECT_URL = 'users:top'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# 画像を保存する先の指定
+MEDIA＿ROOT = os.path.join(BASE_DIR, 'media')
+# 画像をdjango側で読み込むための設定
+MEDIA_URL = '/media/'
+
