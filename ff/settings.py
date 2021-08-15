@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users',
     'django_cleanup.apps.CleanupConfig',
+    "postapp.apps.PostappConfig",
 ]
 
 MIDDLEWARE = [
@@ -64,7 +65,7 @@ ROOT_URLCONF = 'ff.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [BASE_DIR / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -142,3 +143,6 @@ MEDIA＿ROOT = os.path.join(BASE_DIR, 'media')
 # 画像をdjango側で読み込むための設定
 MEDIA_URL = '/media/'
 
+
+TIME_ZONE = 'Asia/Tokyo'
+USE_TZ = True
