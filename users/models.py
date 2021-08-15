@@ -4,6 +4,7 @@ from django.core.mail import send_mail
 
 from phonenumber_field.modelfields import PhoneNumberField
 
+import uuid
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, phone_number, username, password=None):
         if not email:
@@ -83,6 +84,10 @@ class CustomUser(AbstractBaseUser):
         # Simplest possible answer: All admins are staff
         return self.is_admin
 
+def image_directory_path(instance, filename):
+    print('{}.{}'.format(str(uuid.uuid4()), filename.split('.')[-1]))
+    return '{}.{}'.format(str(uuid.uuid4()), filename.split('.')[-1])
+   
 
 class UserInfo(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="user_info")
@@ -91,7 +96,7 @@ class UserInfo(models.Model):
     sex_choice = ((0, 'Female'),(1, 'male'),(2, 'other'))
     sex = models.IntegerField(choices=sex_choice, blank=True, null=True)
     introduction = models.TextField(blank=True,null=True)
-    profile_image = models.ImageField(upload_to='', blank=True, null=True)
+    profile_image = models.ImageField(upload_to=image_directory_path, blank=True, null=True)
     count_send_new_messages = models.IntegerField(blank=True,null=True)
     count_receive_new_messages = models.IntegerField(blank=True,null=True)
     count_bad_messages = models.IntegerField(blank=True,null=True)

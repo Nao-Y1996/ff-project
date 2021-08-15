@@ -39,7 +39,12 @@ def Top(request):
         form = UserInfoUpdateForm(instance=user_info)
         return render(request, 'users/userinfo_update.html', {'form':form})
     else:
-        return render(request, 'users/top.html')
+        exist_profile_image = bool(user_info.profile_image)
+        if exist_profile_image:
+            profile_image = 'media/'+str(user_info.profile_image)
+        else:
+            profile_image = 'media/no_image.png'
+        return render(request, 'users/top.html',{'profile_image':profile_image})
 
 @login_required
 def profile(request,pk):
@@ -58,10 +63,6 @@ def profile(request,pk):
     #     form = ReportForm()
     #     return render(request,'users/profile.html', {'form':form, 'id':pk})
 
-# class Profile(LoginRequiredMixin, OnlyYouMixin, generic.TemplateView):
-#     raise_exception = False # LoginRequiredMixinの設定（Falseにするとログインページへ、Trueだと403）
-#     form_class = ReportForm
-#     template_name = 'users/profile.html'
 
 def report(request):
     if request.method=='POST':
@@ -180,12 +181,9 @@ def EditUserInfo(request, info_id):
         # messages.success(request, 'レコードを新規追加しました。')
         form = UserInfoUpdateForm(request.POST, request.FILES, instance=user_info)
         if form.is_valid():
-            print('==========------------------============')
             form.save()
             return redirect('users:profile', pk=request.user.id)
         else:
-            print('======================')
-            print(form.errors)
             # return redirect('users:profile', pk=request.user.id)
             return render(request, 'users/userinfo_update.html', {'form':form})
     else:
