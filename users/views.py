@@ -38,7 +38,7 @@ def Top(request):
         # 国情報登録していなかったら
         if user_info.country==None:
             form = UserInfoUpdateForm(instance=user_info)
-            return render(request, 'users/userinfo_update.html', {'form':form})
+            return redirect('users:userinfo_edit', info_id=request.user.user_info.id)
         else:
             return redirect('users:profile')
     else:
@@ -50,7 +50,7 @@ def profile(request):
     #国が登録されていない時は登録ページに飛ぶ
     if user_info.country==None:
         form = UserInfoUpdateForm(instance=user_info)
-        return render(request, 'users/userinfo_update.html', {'form':form})
+        return redirect('users:userinfo_edit', info_id=request.user.user_info.id)
     else:
         exist_profile_image = bool(user_info.profile_image)
         if exist_profile_image:
