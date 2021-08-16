@@ -35,6 +35,16 @@
                 <button type="submit">送信</button>
             </form>
 
+            {% if Exist_favorites == False %}
+                
+                <a href="{% url 'postapp:talk_favorite_add' talk_id=talk_id %}">Add Favorite</a><br>
+            
+            {% else %}
+
+                <a href="{% url 'postapp:talk_favorite_delete' talk_id=talk_id %}">Delete Favorite</a><br>
+
+            {% endif %}
+            {{talk_id}}
         </p>
     </tbody>
 {% endblock %}

@@ -17,6 +17,8 @@ from django.http.response import JsonResponse
 import uuid
 import datetime
 
+from django.db.models import Q
+
 # Create your views here.
 
 
@@ -69,6 +71,17 @@ def talk_create(request): #新規トークフォーム
         return render(request, 'talk_create.html', {'form': form})
 
 
+def favorite_check(request,talk_id):
+    talk = Talks.objects.get(talk_id=talk_id)
+    try:
+        Exist_favorites = talk.favorites_set.all().filter(user_id=request.user)[0] in request.user.favorites_set.all()
+    except:
+        Exist_favorites =  False
+
+    return Exist_favorites
+
+
+
 def talk_detail(request,talk_id): #既存トークフォーム
     if request.method == 'POST':
         form = MessageForm(request.POST)
@@ -93,10 +106,34 @@ def talk_detail(request,talk_id): #既存トークフォーム
                         }
         form = MessageForm(initial=initial_dict)
         message = Message.objects.filter(talk_id_id=talk_id)
-        return render(request, 'talk_detail.html', {'message':message, 'form': form})
+
+        Exist_favorites = favorite_check(request,talk_id)
+
+        return render(request, 'talk_detail.html', {'message':message, 'form': form ,'talk_id':talk_id , 'Exist_favorites':Exist_favorites})
 
 
-    
+def talk_favorite_add(request,talk_id): #お気に入り追加
+
+    talk = Talks.objects.get(talk_id=talk_id)
+    favorites = Favorites(talk_id=talk,user_id=request.user)
+    favorites.save()
+
+    return talk_detail(request,talk_id)
+
+
+def talk_favorite_delete(request,talk_id): #お気に入り削除
+
+    print(talk_id,request.user.id)
+    talk = Talks.objects.get(talk_id=talk_id)
+
+    print(Favorites.objects.filter(talk_id__talk_id=talk_id))#, user_id=request.user))
+    Favorites.objects.filter(Q(talk_id=talk_id) & Q(user_id=request.user)).delete()
+    #talk = Talks.objects.get(talk_id=talk_id)
+    #print(talk)
+    #talk.get(user_id=request.user).delete()
+
+    return talk_detail(request,talk_id)
+
 
 """
 def formfunc(request):

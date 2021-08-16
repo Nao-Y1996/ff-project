@@ -6,13 +6,6 @@ from users.models import CustomUser
 
 
 # Create your models here.
-class Favorites(models.Model):
-    favorite_id = models.UUIDField(primary_key=True, default=uuid.uuid4)
-    talk_id = models.IntegerField(null=True)
-    user_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.tali_id
 
 
 class Talks(models.Model):
@@ -22,6 +15,22 @@ class Talks(models.Model):
     confirmed_by_to = models.BooleanField(default=False)
     confirmed_by_from = models.BooleanField(default=False)
     created_at = models.DateTimeField(default=timezone.now)
+
+class Favorites(models.Model):
+    favorite_id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    talk_id = models.ForeignKey(Talks,on_delete=models.CASCADE) 
+    user_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user_id","talk_id"],
+                name="favorite_unique"
+            ),
+        ]
+
+    # def __str__(self):
+    #     return self.talk_id
 
 
 class Message(models.Model):
