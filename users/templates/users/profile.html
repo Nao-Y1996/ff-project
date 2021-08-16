@@ -2,7 +2,9 @@
 {% block content %}
 <p>マイページです</p>
 {% if user.is_authenticated %}
-<p>{{user.email}}でログインしています。URLで受け取ったidは{{pk}}です</p>
+
+<img src="{{profile_image}}" width="100px" height="100px" class="rounded-circle" />
+<p>{{user.email}}でログインしています。</p>
 
 <li>
     <a class="btn btn-info" href="{% url 'users:email_change' %}">メールアドレスの変更</a>
@@ -16,6 +18,26 @@
 <li>
     <a class="btn btn-success" href="{% url 'users:report' %}">通報</a>
 </li>
+
+<li>ユーザーネームは{{user.username}}です。</li>
+<li>国は{{user.user_info.country}}です。</li>
+
+
+<li>通報された回数は{{user.reported.count}}回です。</li>
+
+<li>通報した回数は{{user.reporting.count}}回です。</li>
+
+
+
+<div class="card col-md-6">
+    <div class="card-body">
+        <a href="{% url 'postapp:talk_create' %}" class="btn btn-success btn-lg btn-block">新規投稿</a>
+    </div>
+    <div class="card-body">
+        <a href="{% url 'postapp:talk_all' %}" class="btn btn-success btn-lg btn-block">トーク一覧</a>
+    </div>
+</div>
+
 {% else %}
 <p>ログインしていません。</p>
 {% endif %}

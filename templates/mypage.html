@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<p><font size = "5">Mypage</font></p>
+<p>Login User : {{user.username}}</p>
+<table class="table">
+    <div class="card col-md-6">
+        <div class="card-body">
+            <a href="{% url 'postapp:talk_create' %}" class="btn btn-success btn-lg btn-block" >新規投稿</a>
+        </div>
+        <div class="card-body">
+            <a href="{% url 'postapp:talk_all' %}" class="btn btn-success btn-lg btn-block" >トーク一覧</a>
+        </div>
+    </div>
+</table>
+{% endblock %}

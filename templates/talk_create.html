@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<p>トーク作成</p>
+<table class="table">
+    <tbody>
+        <p>
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.message_id }}
+                {{ form.from_user_id }}
+                {{ form.content }}
+                {{ form.talk_id }}
+                {{ form.created_at }}
+                <button type="submit">送信</button>
+            </form>
+        </p>
+    </tbody>
+</table>
+{% endblock %}

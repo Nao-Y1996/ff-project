@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import (BaseUserManager, AbstractBaseUser)
 from django.core.mail import send_mail
+from django.core import validators
 
 from phonenumber_field.modelfields import PhoneNumberField
 
@@ -93,8 +94,11 @@ class UserInfo(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="user_info")
     country = models.CharField(max_length=20, blank=False, null=True)
     age = models.IntegerField(blank=True, null=True)
-    sex_choice = ((0, 'Female'),(1, 'male'),(2, 'other'))
-    sex = models.IntegerField(choices=sex_choice, blank=True, null=True)
+    # sex_choice = ((0, 'Female'),(1, 'male'),(2, 'other'))
+    gender = models.FloatField(validators=[validators.MinValueValidator(-1.0),
+        validators.MaxValueValidator(1.0)], blank=True, null=True)
+    gender_of_love = models.FloatField(validators=[validators.MinValueValidator(-1.0),
+        validators.MaxValueValidator(1.0)], blank=True, null=True)
     introduction = models.TextField(blank=True,null=True)
     profile_image = models.ImageField(upload_to=image_directory_path, blank=True, null=True)
     count_send_new_messages = models.IntegerField(blank=True,null=True)
