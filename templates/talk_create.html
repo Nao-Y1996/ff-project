@@ -6,7 +6,7 @@
         <p>
             <form method="POST">
                 {% csrf_token %}
-                {{ form.message_id }}
+                {{ form.message_id.as_hidden }}
                 {{ form.from_user_id }}
                 {{ form.content }}
                 {{ form.talk_id }}
