@@ -30,12 +30,25 @@ class OnlyYouMixin(UserPassesTestMixin):
         user = self.request.user
         return user.pk == self.kwargs['pk'] or user.is_admin
 
+# @login_required
+def Top(request):
+    # ログインしていたら
+    if request.user.is_authenticated:
+        user_info = request.user.user_info
+        # 国情報登録していなかったら
+        if user_info.country==None:
+            form = UserInfoUpdateForm(instance=user_info)
+            return render(request, 'users/userinfo_update.html', {'form':form})
+        else:
+            return redirect('users:profile')
+    else:
+        return render(request, 'users/top.html')
 
 @login_required
-def Top(request):
+def profile(request):
     user_info = request.user.user_info
+    #国が登録されていない時は登録ページに飛ぶ
     if user_info.country==None:
-        print('-----------------国が登録されていないので登録ページに飛ぶ---------------')
         form = UserInfoUpdateForm(instance=user_info)
         return render(request, 'users/userinfo_update.html', {'form':form})
     else:
@@ -44,14 +57,7 @@ def Top(request):
             profile_image = 'media/'+str(user_info.profile_image)
         else:
             profile_image = 'media/no_image.png'
-        return render(request, 'users/top.html',{'profile_image':profile_image})
-
-@login_required
-def profile(request,pk):
-    '''
-    現状、pk(ログインユーザーのid)は使わないが、受け取れるようにしておく
-    '''
-    return render(request,'users/profile.html', {'pk':pk})
+    return render(request,'users/profile.html', {'profile_image':profile_image})
     # if request.method == 'POST':
     #     if form.is_valid():
     #         form = ReportForm(request.POST)
@@ -63,7 +69,7 @@ def profile(request,pk):
     #     form = ReportForm()
     #     return render(request,'users/profile.html', {'form':form, 'id':pk})
 
-
+@login_required
 def report(request):
     if request.method=='POST':
         form = ReportForm(request.POST)
@@ -77,7 +83,7 @@ def report(request):
             report = Report(reason=reason, user_reported=user_reported,\
                 user_reporting=user_reporting, content=content)
             report.save()
-            return render(request, 'users/top.html')
+            return redirect('users:profile')
         else:
             return render(request, 'users/report.html',{'form':form})
     else:
@@ -171,18 +177,18 @@ class UserCreateComplete(generic.TemplateView):
 
         return HttpResponseBadRequest()
 
-
+@login_required
 def EditUserInfo(request, info_id):
     user_info = UserInfo.objects.get(id=info_id)
     if user_info.user != request.user:
-        return redirect('users:profile', pk=request.user.id)
+        return redirect('users:profile')
     if request.method == 'POST':
         # return reverse('users:profile', kwargs={'pk': request.user.id})
         # messages.success(request, 'レコードを新規追加しました。')
         form = UserInfoUpdateForm(request.POST, request.FILES, instance=user_info)
         if form.is_valid():
             form.save()
-            return redirect('users:profile', pk=request.user.id)
+            return redirect('users:profile')
         else:
             # return redirect('users:profile', pk=request.user.id)
             return render(request, 'users/userinfo_update.html', {'form':form})

@@ -29,10 +29,6 @@ class Message(models.Model):
     talk_id = models.ForeignKey(Talks, on_delete=models.CASCADE)
     from_user_id = models.IntegerField(null=True)
     content = models.CharField(max_length=500)
-    
-
-
-    
 
 
 # admin ユーザー名:superuser , パスワード:sora0214

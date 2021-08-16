@@ -20,27 +20,26 @@ import datetime
 # Create your views here.
 
 
-class Top(generic.TemplateView):
-    template_name = 'top.html'
+# class Top(generic.TemplateView):
+#     template_name = 'top.html'
 
 
-class Login(LoginView):
-    """ログインページ"""
-    form_class = LoginForm
-    template_name = 'login.html'
+# class Login(LoginView):
+#     """ログインページ"""
+#     form_class = LoginForm
+#     template_name = 'login.html'
 
 
-class Logout(LogoutView):
-    """ログアウトページ"""
-    template_name = 'top.html'
+# class Logout(LogoutView):
+#     """ログアウトページ"""
+#     template_name = 'top.html'
 
 def mypage(request):
     return render(request,"mypage.html")
 
 def talk_all(request):
-    
     data = datetime.datetime.now()
-    params = {"data":data}  
+    params = {"data":data}
     return render(request,"talk_all.html",params)
 
     #talk_list = serializers.serialize("json", Talks.objects.filter(to_user_id_id=request.user))
@@ -51,14 +50,13 @@ def talk_all(request):
 def talk_create(request): #新規トークフォーム
     if request.method == 'POST':
         form = NewTalkForm(request.POST)
-    
+
         if form.is_valid():
-            
-            new_talks = Talks(from_user_id_id=request.user.id,to_user_id_id=4) #to_user_id_idにどのようなidを入れるかで送り先が変わる
+            new_talks = Talks(from_user_id_id=request.user.id,to_user_id_id=3) #to_user_id_idにどのようなidを入れるかで送り先が変わる
             new_talks.save()
 
             post = form.save(commit=False)
-            
+
             post.talk_id_id = new_talks.talk_id
             post.save()
             return render(request,'talk_all.html')

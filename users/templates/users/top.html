@@ -1,16 +1,20 @@
 {% extends "base.html" %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'users/users.css' %}">
+
+
+
 {% block content %}
-<p>トップページです</p>
+
+<h1>トップページです</h1>
+<form method="POST">
+    <input type="range" class="custom-range" name="foo" min="0" max="10">
+
+    <input type="range" class="sex-range" name="speed" min="0" max="10">
+</form>
 {% if user.is_authenticated %}
-<li>{{user.email}}でログインしています。</li>
-<li>ユーザーネームは{{user.username}}です。</li>
-<li>国は{{user.user_info.country}}です。</li>
 
-<img src="{{profile_image}}" width="100px" height="100px" class="rounded-circle"/>
 
-<li>通報された回数は{{user.reported.count}}回です。</li>
-
-<li>通報した回数は{{user.reporting.count}}回です。</li>
 
 {% else %}
 <p>ログインしていません。</p>
