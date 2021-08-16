@@ -6,11 +6,9 @@
         <p>
             <form method="POST">
                 {% csrf_token %}
-                {{ form.message_id.as_hidden }}
-                {{ form.from_user_id }}
+                {{ form.id.as_hidden }}
+                {{ form.sending_user_id.as_hidden }}
                 {{ form.content }}
-                {{ form.talk_id }}
-                {{ form.created_at }}
                 <button type="submit">送信</button>
             </form>
         </p>

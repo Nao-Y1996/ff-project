@@ -7,16 +7,6 @@
 {% block content %}
 
 <h1>トップページです</h1>
-<form method="POST">
-    <input type="range" class="custom-range" name="foo" min="0" max="10">
-
-    <input type="range" class="sex-range" name="speed" min="0" max="10">
-</form>
-{% if user.is_authenticated %}
-
-
-
-{% else %}
 <p>ログインしていません。</p>
-{% endif %}
+
 {% endblock %}

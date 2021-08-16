@@ -4,22 +4,26 @@ import uuid
 from django.utils import timezone
 from users.models import CustomUser
 
-
 # Create your models here.
 
 
 class Talks(models.Model):
-    talk_id = models.UUIDField(primary_key=True, default=uuid.uuid4)
-    to_user_id = models.ForeignKey(CustomUser, related_name="tid" ,on_delete=models.CASCADE)
-    from_user_id = models.ForeignKey(CustomUser, related_name="fid" ,on_delete=models.CASCADE)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    # to_user_id = models.ForeignKey(CustomUser, related_name="tid" ,on_delete=models.CASCADE)
+    receiving_user = models.ForeignKey(CustomUser, related_name="tid" ,on_delete=models.CASCADE)
+    # from_user_id = models.ForeignKey(CustomUser, related_name="fid" ,on_delete=models.CASCADE)
+    sending_user = models.ForeignKey(CustomUser, related_name="fid" ,on_delete=models.CASCADE)
     confirmed_by_to = models.BooleanField(default=False)
     confirmed_by_from = models.BooleanField(default=False)
     created_at = models.DateTimeField(default=timezone.now)
+    
+    def __str__(self):
+        return str(self.sending_user) + '-' + str(self.receiving_user)
 
 class Favorites(models.Model):
     favorite_id = models.UUIDField(primary_key=True, default=uuid.uuid4)
-    talk_id = models.ForeignKey(Talks,on_delete=models.CASCADE)
-    user_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    talk = models.ForeignKey(Talks,on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     class Meta:
         constraints = [
@@ -34,9 +38,9 @@ class Favorites(models.Model):
 
 
 class Message(models.Model):
-    message_id = models.UUIDField(primary_key=True, default=uuid.uuid4)
-    talk_id = models.ForeignKey(Talks, on_delete=models.CASCADE)
-    from_user_id = models.IntegerField(null=True)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    talk = models.ForeignKey(Talks, on_delete=models.CASCADE)
+    sending_user_id = models.IntegerField(null=True)
     content = models.CharField(max_length=500)
 
 

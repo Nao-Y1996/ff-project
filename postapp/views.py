@@ -8,7 +8,7 @@ from django.contrib.auth.views import (
     LoginView, LogoutView
 )
 from django.views import generic
-from .forms import LoginForm,MessageForm,NewTalkForm
+from .forms import MessageForm,NewTalkForm
 from .models import Favorites,Message,Talks
 
 from django.core import serializers
@@ -19,34 +19,17 @@ import datetime
 
 from django.db.models import Q
 
-# Create your views here.
-
-
-# class Top(generic.TemplateView):
-#     template_name = 'top.html'
-
-
-# class Login(LoginView):
-#     """ログインページ"""
-#     form_class = LoginForm
-#     template_name = 'login.html'
-
-
-# class Logout(LogoutView):
-#     """ログアウトページ"""
-#     template_name = 'top.html'
-
 def mypage(request):
-    return render(request,"mypage.html")
+    return render(request,"postapp/mypage.html")
 
 def talk_all(request):
     data = datetime.datetime.now()
-    params = {"data":data}
-    return render(request,"talk_all.html",params)
+    # 自分の関わっているトークを全て取得
+    my_talks = Talks.objects.filter((Q(sending_user=request.user) | Q(receiving_user=request.user)))#.order_by('created_at').first()
+    print(my_talks)
+    params = {"data":data, "my_talks":my_talks}
+    return render(request,"postapp/talk_all.html",params)
 
-    #talk_list = serializers.serialize("json", Talks.objects.filter(to_user_id_id=request.user))
-    #ret = { "talk_list": talk_list }
-    #return JsonResponse(ret)
 
 
 def talk_create(request): #新規トークフォーム
@@ -54,23 +37,24 @@ def talk_create(request): #新規トークフォーム
         form = NewTalkForm(request.POST)
 
         if form.is_valid():
-            new_talks = Talks(from_user_id_id=request.user.id,to_user_id_id=2) #to_user_id_idにどのようなidを入れるかで送り先が変わる
-            new_talks.save()
+            new_talk = Talks(sending_user=request.user, receiving_user_id=2) #to_user_id_idにどのようなidを入れるかで送り先が変わる
+            new_talk.save()
 
             post = form.save(commit=False)
 
-            post.talk_id_id = new_talks.talk_id
+            post.talk = new_talk
             post.save()
-            return render(request,'talk_all.html')
+            return redirect('postapp:talk_all')
+        else:
+            return render(request, 'postapp/talk_create.html', {'form': form})
     else:
-        initial_dict = {"from_user_id":request.user.id,
-                        }
+        initial_dict = dict(sending_user_id=request.user.id,)
         form = NewTalkForm(initial=initial_dict)
-        return render(request, 'talk_create.html', {'form': form})
+        return render(request, 'postapp/talk_create.html', {'form': form})
 
 
 def favorite_check(request,talk_id):
-    talk = Talks.objects.get(talk_id=talk_id)
+    talk = Talks.objects.get(id=talk_id)
     try:
         Exist_favorites = talk.favorites_set.all().filter(user_id=request.user)[0] in request.user.favorites_set.all()
     except:
@@ -82,55 +66,44 @@ def favorite_check(request,talk_id):
 
 def talk_detail(request,talk_id): #既存トークフォーム
     if request.method == 'POST':
+        Exist_favorites = favorite_check(request,talk_id)
         form = MessageForm(request.POST)
         if form.is_valid():
             post = form.save(commit=False)
             post.save()
-            message = Message.objects.filter(talk_id_id=talk_id)
-            
-            initial_dict = {"from_user_id":request.user.id, 
-                            "talk_id":talk_id,
-                            }
+
+            initial_dict = {"sending_user_id":request.user.id, "talk":talk_id,}
             form = MessageForm(initial=initial_dict)
-            message = Message.objects.filter(talk_id_id=talk_id)
-            return redirect('postapp:talk_detail')
+            messages = Message.objects.filter(talk_id=talk_id).all
+            return redirect(request.META['HTTP_REFERER'])
+            # return render(request, 'postapp/talk_detail.html', {'messages':messages, 'form': form ,'talk_id':talk_id , 'Exist_favorites':Exist_favorites})
 
         else:
-            message = Message.objects.filter(talk_id_id=talk_id)
-            return render(request, 'talk_detail.html', {'message':message, 'form': form})
+            messages = Message.objects.filter(talk_id=talk_id).all
+            return render(request, 'postapp/talk_detail.html', {'messages':messages, 'form': form ,'talk_id':talk_id , 'Exist_favorites':Exist_favorites})
     else:
-        initial_dict = {"from_user_id":request.user.id, 
-                        "talk_id":talk_id,
-                        }
+        initial_dict = {"sending_user_id":request.user.id, "talk":talk_id,}
         form = MessageForm(initial=initial_dict)
-        message = Message.objects.filter(talk_id_id=talk_id)
-
+        messages = Message.objects.filter(talk_id=talk_id).all
         Exist_favorites = favorite_check(request,talk_id)
-
-        return render(request, 'talk_detail.html', {'message':message, 'form': form ,'talk_id':talk_id , 'Exist_favorites':Exist_favorites})
+        return render(request, 'postapp/talk_detail.html', {'messages':messages, 'form': form ,'talk_id':talk_id , 'Exist_favorites':Exist_favorites})
 
 
 def talk_favorite_add(request,talk_id): #お気に入り追加
 
-    talk = Talks.objects.get(talk_id=talk_id)
-    favorites = Favorites(talk_id=talk,user_id=request.user)
+    talk = Talks.objects.get(id=talk_id)
+    favorites = Favorites(talk=talk, user=request.user)
     favorites.save()
 
-    return talk_detail(request,talk_id)
+    return redirect(request.META['HTTP_REFERER'])
 
 
 def talk_favorite_delete(request,talk_id): #お気に入り削除
 
-    print(talk_id,request.user.id)
-    talk = Talks.objects.get(talk_id=talk_id)
+    # print(Favorites.objects.filter(talk__id=talk_id))#, user_id=request.user))
+    Favorites.objects.filter(Q(talk__id=talk_id) & Q(user=request.user)).delete()
 
-    print(Favorites.objects.filter(talk_id__talk_id=talk_id))#, user_id=request.user))
-    Favorites.objects.filter(Q(talk_id=talk_id) & Q(user_id=request.user)).delete()
-    #talk = Talks.objects.get(talk_id=talk_id)
-    #print(talk)
-    #talk.get(user_id=request.user).delete()
-
-    return talk_detail(request,talk_id)
+    return redirect(request.META['HTTP_REFERER'])
 
 
 """

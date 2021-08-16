@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users',
     'django_cleanup.apps.CleanupConfig',
-    "postapp.apps.PostappConfig",
+    "postapp",
 ]
 
 MIDDLEWARE = [

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<p>トーク一覧</p>
+
+{% for talk in my_talks %}
+<div>
+    <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">
+        <!-- トークの相手の名前を表示 -->
+        {% if talk.sending_user == user %}
+        {{talk.receiving_user}}
+        {% else %}
+        {{talk.sending_user}}
+        {% endif %}
+    </a><span> : {{talk.created_at}}</span>
+</div>
+{% endfor %}
+
+
+
+<p class="realtime"></p>
+
+<script>
+
+    function clock() {
+        let nowTime = new Date();
+        let nowHour = nowTime.getHours() - 9;
+        let nowMinute = nowTime.getMinutes();
+        let nowSecond = nowTime.getSeconds();
+        let msg = "現在時刻:" + nowHour + ":" + nowMinute + ":" + nowSecond;
+        document.querySelector(".realtime").innerHTML = msg;
+    };
+
+    clock();
+
+    setInterval(clock, 1000)
+
+</script>
+
+{% endblock %}

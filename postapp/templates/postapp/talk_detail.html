@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% for message in messages %}
+<div>
+    {% if message.sending_user_id == user.id %}
+    <div class='clearfix'>
+        <div class="float-right arrow_box_right">
+            {{message.content}}
+        </div>
+    </div>
+    {% else %}
+    <div class='clearfix'>
+        <div class="float-left arrow_box_left">
+            {{message.content}}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endfor %}
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form.id}}
+    {{ form.sending_user_id}}
+    {{ form.content }}
+    {{ form.talk }}
+    {{ form.created_at }}
+    <button type="submit">送信</button>
+</form>
+
+{% if Exist_favorites == False %}
+
+<a href="{% url 'postapp:talk_favorite_add' talk_id=talk_id %}">Add Favorite</a><br>
+
+{% else %}
+
+<a href="{% url 'postapp:talk_favorite_delete' talk_id=talk_id %}">Delete Favorite</a><br>
+
+{% endif %}
+{{talk_id}}
+{% endblock %}
