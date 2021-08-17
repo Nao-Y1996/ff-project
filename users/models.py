@@ -6,6 +6,9 @@ from django.core import validators
 from phonenumber_field.modelfields import PhoneNumberField
 
 import uuid
+
+# Start mod_userModel branch
+
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, phone_number, username, password=None):
         if not email:
