@@ -94,6 +94,7 @@ def image_directory_path(instance, filename):
    
 
 class UserInfo(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="user_info")
     country = models.CharField(max_length=20, blank=False, null=True)
     age = models.IntegerField(blank=True, null=True)
@@ -111,11 +112,13 @@ class UserInfo(models.Model):
         return str(self.user)
 
 class ReportReasons(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     choices = models.CharField(max_length=200, blank=False, null=True)
     def __str__(self):
         return self.choices
 
 class Report(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     reason = models.ForeignKey(ReportReasons, on_delete=models.CASCADE, related_name="reason")
     user_reported = models.ForeignKey(CustomUser,on_delete=models.CASCADE, related_name="reported")
     user_reporting = models.ForeignKey(CustomUser,on_delete=models.CASCADE, related_name="reporting")

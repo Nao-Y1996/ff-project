@@ -32,7 +32,7 @@ urlpatterns = [
     path('email/change/complete/<str:token>/', views.EmailChangeComplete.as_view(), name='email_change_complete'),
     
     # userinfoの編集
-    path('userinfo/edit/<int:info_id>/', views.EditUserInfo, name='userinfo_edit'),
+    path('userinfo/edit/<str:info_id>/', views.EditUserInfo, name='userinfo_edit'),
     
     # 通報
     path('report', views.report, name='report'),
