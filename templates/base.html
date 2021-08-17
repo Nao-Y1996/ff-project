@@ -21,7 +21,7 @@
 <body>
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">Messageアプリ</a>
+        <a class="navbar-brand" href="{% url 'users:top'%}">MessageApp</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
             aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -31,13 +31,11 @@
 
             <div class="navbar-nav">
                 {% if user.is_authenticated %}
-                <a class="nav-item nav-link active" href="{% url 'users:top'%}">トップページ</a>
-                <a class="nav-item nav-link active" href="{% url 'users:profile' %}">マイページ</a>
-                <a class="nav-item nav-link " href="{% url 'users:logout' %}">ログアウト</a>
+                <a class="nav-item nav-link active" href="{% url 'users:profile' %}">Profile</a>
+                <a class="nav-item nav-link " href="{% url 'users:logout' %}">Logout</a>
                 {% else %}
-                <a class="nav-item nav-link active" href="{% url 'users:top'%}">トップページ</a>
-                <a class="nav-item nav-link active" href="{% url 'users:login' %}">ログイン</a>
-                <a class="nav-item nav-link active" href="{% url 'users:user_create' %}">新規登録</a>
+                <a class="nav-item nav-link active" href="{% url 'users:login' %}">Login</a>
+                <a class="nav-item nav-link active" href="{% url 'users:user_create' %}">Sign Up</a>
                 {% endif %}
             </div>
         </div>
