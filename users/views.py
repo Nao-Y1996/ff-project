@@ -38,7 +38,7 @@ def Top(request):
         # 国情報登録していなかったら
         if user_info.country==None:
             form = UserInfoUpdateForm(instance=user_info)
-            return redirect('users:userinfo_edit', info_id=request.user.user_info.id)
+            return redirect('users:userinfo_edit', info_id=user_info.id)
         else:
             return redirect('users:profile')
     else:
@@ -50,7 +50,7 @@ def profile(request):
     #国が登録されていない時は登録ページに飛ぶ
     if user_info.country==None:
         form = UserInfoUpdateForm(instance=user_info)
-        return redirect('users:userinfo_edit', info_id=request.user.user_info.id)
+        return redirect('users:userinfo_edit', info_id=user_info.id)
     else:
         exist_profile_image = bool(user_info.profile_image)
         if exist_profile_image:
@@ -76,8 +76,8 @@ def report(request):
         if form.is_valid():
             #送信内容を1個ずつ取り出してReportを新規作成する（ModelFormを使う意味ない..もっと良い方法がありそう）
             post = request.POST
-            reason = ReportReasons.objects.get(id=int(post['reason']))
-            user_reported = CustomUser.objects.get(id=int(post['user_reported']))
+            reason = ReportReasons.objects.get(id=post['reason'])
+            user_reported = CustomUser.objects.get(id=post['user_reported'])
             user_reporting = request.user
             content = post['content']
             report = Report(reason=reason, user_reported=user_reported,\

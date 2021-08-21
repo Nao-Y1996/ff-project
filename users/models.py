@@ -6,6 +6,9 @@ from django.core import validators
 from phonenumber_field.modelfields import PhoneNumberField
 
 import uuid
+
+# Start mod_userModel branch
+
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, phone_number, username, password=None):
         if not email:
@@ -38,6 +41,7 @@ class CustomUserManager(BaseUserManager):
 
 # Create your models here.
 class CustomUser(AbstractBaseUser):
+    # id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     email = models.EmailField(
         verbose_name='email address',
         max_length=255,
@@ -88,9 +92,10 @@ class CustomUser(AbstractBaseUser):
 def image_directory_path(instance, filename):
     print('{}.{}'.format(str(uuid.uuid4()), filename.split('.')[-1]))
     return '{}.{}'.format(str(uuid.uuid4()), filename.split('.')[-1])
-   
+
 
 class UserInfo(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="user_info")
     country = models.CharField(max_length=20, blank=False, null=True)
     age = models.IntegerField(blank=True, null=True)
@@ -108,11 +113,13 @@ class UserInfo(models.Model):
         return str(self.user)
 
 class ReportReasons(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     choices = models.CharField(max_length=200, blank=False, null=True)
     def __str__(self):
         return self.choices
 
 class Report(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     reason = models.ForeignKey(ReportReasons, on_delete=models.CASCADE, related_name="reason")
     user_reported = models.ForeignKey(CustomUser,on_delete=models.CASCADE, related_name="reported")
     user_reporting = models.ForeignKey(CustomUser,on_delete=models.CASCADE, related_name="reporting")
