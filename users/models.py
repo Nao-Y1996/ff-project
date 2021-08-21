@@ -41,6 +41,7 @@ class CustomUserManager(BaseUserManager):
 
 # Create your models here.
 class CustomUser(AbstractBaseUser):
+    # id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     email = models.EmailField(
         verbose_name='email address',
         max_length=255,
@@ -91,7 +92,7 @@ class CustomUser(AbstractBaseUser):
 def image_directory_path(instance, filename):
     print('{}.{}'.format(str(uuid.uuid4()), filename.split('.')[-1]))
     return '{}.{}'.format(str(uuid.uuid4()), filename.split('.')[-1])
-   
+
 
 class UserInfo(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
