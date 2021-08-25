@@ -4,6 +4,7 @@ from django.core.mail import send_mail
 from django.core import validators
 
 from phonenumber_field.modelfields import PhoneNumberField
+from django_countries.fields import CountryField
 
 import uuid
 
@@ -97,7 +98,7 @@ def image_directory_path(instance, filename):
 class UserInfo(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="user_info")
-    country = models.CharField(max_length=20, blank=False, null=True)
+    country = CountryField(blank_label='(select country)',blank=False, null=True)
     age = models.IntegerField(blank=True, null=True)
     # sex_choice = ((0, 'Female'),(1, 'male'),(2, 'other'))
     gender = models.FloatField(validators=[validators.MinValueValidator(-1.0),
