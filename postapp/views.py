@@ -25,7 +25,7 @@ def mypage(request):
 def talk_all(request):
     data = datetime.datetime.now()
     # 自分の関わっているトークを全て取得
-    my_talks = Talks.objects.filter((Q(sending_user=request.user) | Q(receiving_user=request.user)))#.order_by('created_at').first()
+    my_talks = Talks.objects.filter((Q(sending_user=request.user) | Q(receiving_user=request.user))).order_by('-created_at')#.first()
     print(my_talks)
     params = {"data":data, "my_talks":my_talks}
     return render(request,"postapp/talk_all.html",params)
@@ -37,7 +37,7 @@ def talk_create(request): #新規トークフォーム
         form = NewTalkForm(request.POST)
 
         if form.is_valid():
-            new_talk = Talks(sending_user=request.user, receiving_user_id=2) #to_user_id_idにどのようなidを入れるかで送り先が変わる
+            new_talk = Talks(sending_user=request.user, receiving_user_id=3) #to_user_id_idにどのようなidを入れるかで送り先が変わる
             new_talk.save()
 
             post = form.save(commit=False)
@@ -86,6 +86,13 @@ def talk_detail(request,talk_id): #既存トークフォーム
         form = MessageForm(initial=initial_dict)
         messages = Message.objects.filter(talk_id=talk_id).all
         Exist_favorites = favorite_check(request,talk_id)
+
+        messages_count = Message.objects.filter(talk_id=talk_id).all().count()
+        if messages_count == 2:
+            update_talk = Talks.objects.get(id=talk_id)
+            update_talk.exist_reply = True
+            update_talk.save()
+
         return render(request, 'postapp/talk_detail.html', {'messages':messages, 'form': form ,'talk_id':talk_id , 'Exist_favorites':Exist_favorites})
 
 
