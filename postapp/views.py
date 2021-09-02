@@ -24,29 +24,16 @@ import json
 from django.http.response import JsonResponse
 from datetime import date
 
-# def json_serial(obj):
-#     # 日付型の場合には、文字列に変換します
-#     if isinstance(obj, (datetime, date)):
-#         return obj.isoformat()
-#     # 上記以外はサポート対象外.
-#     raise TypeError ("Type %s not serializable" % type(obj))
 
 def mypage(request):
     return render(request,"postapp/mypage.html")
 
 def talk_all(request):
     data = datetime.datetime.now()
-    # 自分の関わっているトークを全て取得
-    my_talks = Talks.objects.filter((Q(sending_user=request.user) | Q(receiving_user=request.user))).order_by('-created_at')#.first()
-    print(my_talks)
-
+    my_talks = Talks.objects.filter((Q(sending_user=request.user) | Q(receiving_user=request.user))).order_by('-created_at')# 自分の関わっているトークを全て取得
     create_data = {}
-    k=0
-    for i in my_talks:
-        create_data[k] = str(i.created_at).replace(' ', 'T')
-        k += 1
-    print(create_data)
-
+    for i, talk in enumerate(my_talks):
+        create_data[i] = str(talk.created_at).replace(' ', 'T')
     params = {"data":data, "my_talks":my_talks, 'data_json':json.dumps(create_data)}
     return render(request,"postapp/talk_all.html",params)
 
@@ -81,7 +68,6 @@ def favorite_check(request,talk_id):
         Exist_favorites =  False
 
     return Exist_favorites
-
 
 
 def talk_detail(request,talk_id): #既存トークフォーム
@@ -140,27 +126,3 @@ def talk_favorite_delete(request,talk_id): #お気に入り削除
     Favorites.objects.filter(Q(talk__id=talk_id) & Q(user=request.user)).delete()
 
     return redirect(request.META['HTTP_REFERER'])
-
-
-"""
-def formfunc(request):
-    if request.method == 'POST':
-        form = MessageForm(request.POST)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.save()
-            return redirect('talk_detail')
-    else:
-        form = PostForm()
-    return render(request, 'talk_detail.html', {'form': form})
-
-
-def create_view(request):
-    form = MessageForm(request.POST)
-    if not form.is_valid():
-        return HttpResponse('invalid', status=500)
-
-    post = form.save()
-
-    return HttpResponse(f'{post.id}', status=200)
-"""
