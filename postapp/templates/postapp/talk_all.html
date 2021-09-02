@@ -27,23 +27,66 @@
 {% endfor %}
 
 
+<div id="parent-div">
+</div>
 
-<p class="realtime"></p>
 
 <script>
 
-    function clock() {
+    function aaa(){
         let nowTime = new Date();
-        let nowHour = nowTime.getHours() - 9;
-        let nowMinute = nowTime.getMinutes();
-        let nowSecond = nowTime.getSeconds();
-        let msg = "現在時刻:" + nowHour + ":" + nowMinute + ":" + nowSecond;
-        document.querySelector(".realtime").innerHTML = msg;
-    };
+        let limit_date = new Date(days=14)
+        const data = JSON.parse('{{ data_json|safe }}');
+        for (let d in data){
+            
+            var newElement = document.createElement("p"); // p要素作成
+            newElement.setAttribute("id","realtime"+d); // p要素にidを設定
 
-    clock();
+            var parentDiv = document.getElementById("parent-div");
+            parentDiv.insertBefore(newElement, parentDiv.firstChild);
+        }
+    }
 
-    setInterval(clock, 1000)
+    function clock2() {
+        let nowTime = new Date();
+        let limit_date = new Date(days=14)
+        const data = JSON.parse('{{ data_json|safe }}');
+        id_count = 0
+        for (let d in data){
+            let created_at = new Date(data[d])
+            created_at.setDate(created_at.getDate() + 14);
+            let left_time = (created_at - nowTime)/ 1000
+
+            let daysLeft = Math.floor(left_time / (24 * 60 * 60));
+            let hoursLeft = (Math.floor(left_time / (60 * 60))) % 24;
+            let minitesLeft = (Math.floor(left_time / 60)) % 60;
+            let secondsLeft = Math.floor(left_time) % 60;
+            // 二桁表示
+            minitesLeft = ("0" + minitesLeft).slice(-2)
+            secondsLeft = ("0" + secondsLeft).slice(-2)
+            // 出力
+            document.querySelector("#realtime"+d).innerHTML = ("残り時間は" + daysLeft + "日" + hoursLeft + "時間" + minitesLeft + "分" + secondsLeft + "秒です");
+
+
+            id_count += 1
+        }
+    }
+    aaa();
+    clock2();
+
+    setInterval(clock2, 1000)
+    // console.log();
+    // views.py からデータを取得
+
+    // 追加する要素を作成します
+// ----------------------------
+    
+    
+    // ----------------------------
+    // 子要素１の後に追加します
+    // ----------------------------
+    // 親要素（div）への参照を取得
+    
 
 </script>
 

@@ -19,6 +19,17 @@ import datetime
 
 from django.db.models import Q
 
+import json
+from django.http.response import JsonResponse
+from datetime import date
+
+# def json_serial(obj):
+#     # 日付型の場合には、文字列に変換します
+#     if isinstance(obj, (datetime, date)):
+#         return obj.isoformat()
+#     # 上記以外はサポート対象外.
+#     raise TypeError ("Type %s not serializable" % type(obj))
+
 def mypage(request):
     return render(request,"postapp/mypage.html")
 
@@ -27,7 +38,15 @@ def talk_all(request):
     # 自分の関わっているトークを全て取得
     my_talks = Talks.objects.filter((Q(sending_user=request.user) | Q(receiving_user=request.user))).order_by('-created_at')#.first()
     print(my_talks)
-    params = {"data":data, "my_talks":my_talks}
+
+    create_data = {}
+    k=0
+    for i in my_talks:
+        create_data[k] = str(i.created_at).replace(' ', 'T')
+        k += 1
+    print(create_data)
+
+    params = {"data":data, "my_talks":my_talks, 'data_json':json.dumps(create_data)}
     return render(request,"postapp/talk_all.html",params)
 
 
