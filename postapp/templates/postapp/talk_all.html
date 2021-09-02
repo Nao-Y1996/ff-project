@@ -38,7 +38,7 @@
         let limit_date = new Date(days=14)
         const data = JSON.parse('{{ data_json|safe }}');
         for (let d in data){
-            
+
             var newElement = document.createElement("p"); // p要素作成
             newElement.setAttribute("id","realtime"+d); // p要素にidを設定
 
@@ -46,7 +46,7 @@
             parentDiv.insertBefore(newElement, parentDiv.firstChild);
         }
     }
-
+    
     function clock2() {
         let nowTime = new Date();
         let limit_date = new Date(days=14)
