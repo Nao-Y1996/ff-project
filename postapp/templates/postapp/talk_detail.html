@@ -22,7 +22,7 @@
 <form method="POST">
     {% csrf_token %}
     {{ form.id}}
-    {{ form.sending_user_id}}
+    {{ form.sending_user}}
     {{ form.content }}
     {{ form.talk }}
     {{ form.created_at }}

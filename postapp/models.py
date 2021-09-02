@@ -41,7 +41,7 @@ class Favorites(models.Model):
 class Message(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     talk = models.ForeignKey(Talks, on_delete=models.CASCADE)
-    sending_user_id = models.IntegerField(null=True)
+    sending_user = models.ForeignKey(CustomUser, related_name="sending_user" ,on_delete=models.CASCADE)
     content = models.CharField(max_length=500)
 
 
