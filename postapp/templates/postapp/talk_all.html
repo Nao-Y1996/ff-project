@@ -5,57 +5,52 @@
 {% for talk in my_talks %}
 <div>
     {% if talk.sending_user == user %}
-        {% if talk.exist_reply == True %}
-            <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">
-                <!-- トークの相手の名前を表示 -->
-                {{talk.receiving_user}}
-            </a>
-        {% else %}
-            <a>
-                <!-- トークの相手の名前を表示するが返信不可 -->
-                {{talk.receiving_user}}:返信待ち
-            </a>
-        {% endif %}
+    {% if talk.exist_reply == True %}
+    <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">
+        <!-- トークの相手の名前を表示 -->
+        {{talk.receiving_user}}
+    </a>
     {% else %}
-        <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">
-            <!-- 相手からの送信なので名前を表示 -->
-            {{talk.sending_user}}
-        </a>
+    <a>
+        <!-- トークの相手の名前を表示するが返信不可 -->
+        {{talk.receiving_user}}:返信待ち
+    </a>
     {% endif %}
-        <span> : {{talk.created_at}}</span>
+    {% else %}
+    <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">
+        <!-- 相手からの送信なので名前を表示 -->
+        {{talk.sending_user}}
+    </a>
+    {% endif %}
+    <span> : {{talk.created_at}}</span>
 </div>
 {% endfor %}
 
 
-<div id="parent-div">
+<div id="all-talks">
 </div>
 
 
 <script>
+    const data = JSON.parse('{{ data_json|safe }}');
 
-    function aaa(){
-        let nowTime = new Date();
-        let limit_date = new Date(days=14)
-        const data = JSON.parse('{{ data_json|safe }}');
-        for (let d in data){
-            
+    function init_display() {
+        for (let d in data) {
             var newElement = document.createElement("p"); // p要素作成
-            newElement.setAttribute("id","realtime"+d); // p要素にidを設定
+            newElement.setAttribute("id", "talk" + d); // p要素にidを設定
 
-            var parentDiv = document.getElementById("parent-div");
+            var parentDiv = document.getElementById("all-talks");
             parentDiv.insertBefore(newElement, parentDiv.firstChild);
         }
     }
 
-    function clock2() {
+    function update_time() {
         let nowTime = new Date();
-        let limit_date = new Date(days=14)
-        const data = JSON.parse('{{ data_json|safe }}');
-        id_count = 0
-        for (let d in data){
+        let limit_date = new Date(days = 14)
+        for (let d in data) {
             let created_at = new Date(data[d])
             created_at.setDate(created_at.getDate() + 14);
-            let left_time = (created_at - nowTime)/ 1000
+            let left_time = (created_at - nowTime) / 1000
 
             let daysLeft = Math.floor(left_time / (24 * 60 * 60));
             let hoursLeft = (Math.floor(left_time / (60 * 60))) % 24;
@@ -65,28 +60,13 @@
             minitesLeft = ("0" + minitesLeft).slice(-2)
             secondsLeft = ("0" + secondsLeft).slice(-2)
             // 出力
-            document.querySelector("#realtime"+d).innerHTML = ("残り時間は" + daysLeft + "日" + hoursLeft + "時間" + minitesLeft + "分" + secondsLeft + "秒です");
-
-
-            id_count += 1
+            document.querySelector("#talk" + d).innerHTML = ("残り時間は" + daysLeft + "日" + hoursLeft + "時間" + minitesLeft + "分" + secondsLeft + "秒です");
         }
     }
-    aaa();
-    clock2();
+    init_display();
+    update_time();
 
-    setInterval(clock2, 1000)
-    // console.log();
-    // views.py からデータを取得
-
-    // 追加する要素を作成します
-// ----------------------------
-    
-    
-    // ----------------------------
-    // 子要素１の後に追加します
-    // ----------------------------
-    // 親要素（div）への参照を取得
-    
+    setInterval(update_time, 1000)
 
 </script>
 
