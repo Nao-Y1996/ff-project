@@ -17,7 +17,8 @@ from django.views.generic import FormView, UpdateView
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
-from .forms import LoginForm, UserCreateForm, MyPasswordChangeForm, MyPasswordResetForm, MySetPasswordForm, EmailChangeForm, UserInfoUpdateForm, ReportForm
+from .forms import LoginForm, UserCreateForm, MyPasswordChangeForm, MyPasswordResetForm, \
+    MySetPasswordForm, EmailChangeForm, UserInfoUpdateForm, ReportForm #WithdrawalForm
 from .models import UserInfo, Report, ReportReasons,CustomUser
 User = get_user_model()
 
@@ -295,3 +296,18 @@ class EmailChangeComplete(LoginRequiredMixin, generic.TemplateView):
             return super().get(request, **kwargs)
 
 # --------------------------------------------------------------
+from django.contrib.auth import logout
+@login_required
+def withdrawal(request):
+    if request.method == 'POST':
+        user = request.user
+        try:
+            user.is_active = False
+            user.save()
+            logout(request)
+            return redirect('users:top')
+        except:
+            return render(request, 'users/withdrawal.html')
+    else:
+        # form = WithdrawalForm
+        return render(request, 'users/withdrawal.html')

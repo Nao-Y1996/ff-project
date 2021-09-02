@@ -80,7 +80,10 @@ class EmailChangeForm(forms.ModelForm):
         User.objects.filter(email=email, is_active=False).delete()
         return email
 
-
+# class WithdrawalForm(forms.ModelForm):
+#     class Meta:
+#         model = User
+#         fields = ('is_active',)
 # class CustomUserUpdateForm(forms.ModelForm):
 #     model = CustomUser()
 #     fields = ('username', )

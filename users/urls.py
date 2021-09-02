@@ -36,6 +36,9 @@ urlpatterns = [
     
     # 通報
     path('report', views.report, name='report'),
+    
+    # 退会
+    path('withdrawal', views.withdrawal, name='withdrawal'),
 ]
 # 画像ファイルを扱うための記述
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

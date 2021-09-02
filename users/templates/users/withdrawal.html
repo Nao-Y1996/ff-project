@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<p>退会ページ</p>
+<p>{{user.email}}でログインしています</p>
+<div>
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit">退会</button>
+    </form>
+</div>
+{% endblock %}
