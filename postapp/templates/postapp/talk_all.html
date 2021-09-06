@@ -2,48 +2,67 @@
 {% block content %}
 <p>トーク一覧</p>
 
-{% for talk in my_talks %}
-<div>
-    {% if talk.sending_user == user %}
-        {% if talk.exist_reply == True %}
-            <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">
-                <!-- トークの相手の名前を表示 -->
-                {{talk.receiving_user}}
-            </a>
-        {% else %}
-            <a>
-                <!-- トークの相手の名前を表示するが返信不可 -->
+<div class='container'>
+    <div class='row'>
+        <div class='col-6' id="talks">
+            {% for talk in my_talks %}
+            <p>
+                {% if talk.sending_user == user %}
+                {% if talk.exist_reply == True %}
+                <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">{{talk.receiving_user}}</a>
+                {% else %}
                 {{talk.receiving_user}}:返信待ち
-            </a>
-        {% endif %}
-    {% else %}
-        <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">
-            <!-- 相手からの送信なので名前を表示 -->
-            {{talk.sending_user}}
-        </a>
-    {% endif %}
-        <span> : {{talk.created_at}}</span>
+                {% endif %}
+                {% else %}
+                <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">{{talk.sending_user}}</a>
+                {% endif %}
+                <span> : {{talk.created_at}}</span>
+            </p>
+            {% endfor %}
+        </div>
+        <div class='col-6' id="talks-time_limit">
+        </div>
+    </div>
 </div>
-{% endfor %}
 
 
-
-<p class="realtime"></p>
 
 <script>
+    const data = JSON.parse('{{ data_json|safe }}');
 
-    function clock() {
+    function init_display() {
+        for (let d in data) {
+            var newElement = document.createElement("p"); // p要素作成
+            newElement.setAttribute("id", "talk" + d); // p要素にidを設定
+
+            var parentDiv = document.getElementById("talks-time_limit");
+            parentDiv.insertBefore(newElement, parentDiv.lastChild);
+        }
+    }
+
+    function update_time() {
         let nowTime = new Date();
-        let nowHour = nowTime.getHours() - 9;
-        let nowMinute = nowTime.getMinutes();
-        let nowSecond = nowTime.getSeconds();
-        let msg = "現在時刻:" + nowHour + ":" + nowMinute + ":" + nowSecond;
-        document.querySelector(".realtime").innerHTML = msg;
-    };
+        let limit_date = new Date(days = 14)
+        for (let d in data) {
+            let created_at = new Date(data[d])
+            created_at.setDate(created_at.getDate() + 14);
+            let left_time = (created_at - nowTime) / 1000
 
-    clock();
+            let daysLeft = Math.floor(left_time / (24 * 60 * 60));
+            let hoursLeft = (Math.floor(left_time / (60 * 60))) % 24;
+            let minitesLeft = (Math.floor(left_time / 60)) % 60;
+            let secondsLeft = Math.floor(left_time) % 60;
+            // 二桁表示
+            minitesLeft = ("0" + minitesLeft).slice(-2)
+            secondsLeft = ("0" + secondsLeft).slice(-2)
+            // 出力
+            document.querySelector("#talk" + d).innerHTML = ("残り時間は" + daysLeft + "日" + hoursLeft + "時間" + minitesLeft + "分" + secondsLeft + "秒です");
+        }
+    }
+    init_display();
+    update_time();
 
-    setInterval(clock, 1000)
+    setInterval(update_time, 1000)
 
 </script>
 

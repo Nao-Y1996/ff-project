@@ -8,10 +8,10 @@ from .models import Message
 class NewTalkForm(forms.ModelForm): #新規トーク作成
     class Meta:
         model = Message
-        fields = ("id","sending_user_id","content")
+        fields = ("id","sending_user","content")
 
 
 class MessageForm(forms.ModelForm): #既存トーク
     class Meta:
         model = Message
-        fields = ("id","sending_user_id","content","talk")
+        fields = ("id","sending_user","content","talk")
