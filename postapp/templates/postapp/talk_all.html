@@ -34,17 +34,8 @@
 <script>
     const data = JSON.parse('{{ data_json|safe }}');
 
-<<<<<<< HEAD
-    function aaa(){
-        let nowTime = new Date();
-        let limit_date = new Date(days=14)
-        const data = JSON.parse('{{ data_json|safe }}');
-        for (let d in data){
-
-=======
     function init_display() {
         for (let d in data) {
->>>>>>> 7daad8d1a7f69c330556326a8c9690da43b3e4b9
             var newElement = document.createElement("p"); // p要素作成
             newElement.setAttribute("id", "talk" + d); // p要素にidを設定
 
@@ -52,13 +43,8 @@
             parentDiv.insertBefore(newElement, parentDiv.firstChild);
         }
     }
-<<<<<<< HEAD
-    
-    function clock2() {
-=======
 
     function update_time() {
->>>>>>> 7daad8d1a7f69c330556326a8c9690da43b3e4b9
         let nowTime = new Date();
         let limit_date = new Date(days = 14)
         for (let d in data) {
