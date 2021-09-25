@@ -9,6 +9,7 @@
             <p>
                 {% if talk.sending_user == user %}
                 {% if talk.exist_reply == True %}
+
                 <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">{{talk.receiving_user}}</a>
                 {% else %}
                 {{talk.receiving_user}}:返信待ち

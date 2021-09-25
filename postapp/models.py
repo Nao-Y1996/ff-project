@@ -6,7 +6,6 @@ from users.models import CustomUser
 
 # Create your models here.
 
-
 class Talks(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     # to_user_id = models.ForeignKey(CustomUser, related_name="tid" ,on_delete=models.CASCADE)
@@ -20,6 +19,8 @@ class Talks(models.Model):
     
     def __str__(self):
         return str(self.sending_user) + '-' + str(self.receiving_user)
+
+
 
 class Favorites(models.Model):
     favorite_id = models.UUIDField(primary_key=True, default=uuid.uuid4)

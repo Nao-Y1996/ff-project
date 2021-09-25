@@ -10,7 +10,7 @@ from django.contrib.auth.views import (
 from django.views import generic
 from .forms import MessageForm,NewTalkForm
 from .models import Favorites,Message,Talks
-from users.models import CustomUser
+from users.models import CustomUser,UserInfo
 
 from django.core import serializers
 from django.http.response import JsonResponse
@@ -93,21 +93,36 @@ def talk_detail(request,talk_id): #既存トークフォーム
         if (not talk.exist_reply) & (talk.sending_user==request.user):
             return redirect("postapp:talk_all")
         else:
-            initial_dict = {"sending_user":request.user, "talk":talk_id,}
-            form = MessageForm(initial=initial_dict)
-            messages = Message.objects.filter(talk_id=talk_id).all
-            Exist_favorites = favorite_check(request,talk_id)
+            data = datetime.datetime.now()
 
             talk = Talks.objects.get(id=talk_id)
-            if not talk.exist_reply:
-                receiving_user = talk.receiving_user
-                # このトークにおける受信者が、送信者となっているメッセージ(すなわち返信)の数
-                reply_count = Message.objects.filter(Q(talk_id=talk_id) & Q(sending_user=receiving_user)).count()
-                # print(reply)
-                if reply_count != 0:
-                    talk.exist_reply = True
-                    talk.save()
+            created_at = talk.created_at.replace(tzinfo=None) + datetime.timedelta(days=14) + datetime.timedelta(hours=9)
+            #left_time = created_at - data
+            #print(left_time)
 
+            #トーク可能時間内かどうか判定し時間外なら事後公開情報画面へ推移
+            if  created_at < data:
+                Exist_favorites = favorite_check(request,talk_id)
+                sending_user = talk.sending_user
+                user_info = UserInfo.objects.get(user_id=sending_user)
+
+                return render(request, 'postapp/post_release.html', {'user_info':user_info, 'sending_user':sending_user, 'Exist_favorites':Exist_favorites,'talk_id':talk_id})
+
+            else:
+                initial_dict = {"sending_user":request.user, "talk":talk_id,}
+                form = MessageForm(initial=initial_dict)
+                messages = Message.objects.filter(talk_id=talk_id).all
+                Exist_favorites = favorite_check(request,talk_id)
+                
+                if not talk.exist_reply:
+                    receiving_user = talk.receiving_user
+                    # このトークにおける受信者が、送信者となっているメッセージ(すなわち返信)の数
+                    reply_count = Message.objects.filter(Q(talk_id=talk_id) & Q(sending_user=receiving_user)).count()
+                    # print(reply)
+                    if reply_count != 0:
+                        talk.exist_reply = True
+                        talk.save()
+        
         return render(request, 'postapp/talk_detail.html', {'messages':messages, 'form': form ,'talk_id':talk_id , 'Exist_favorites':Exist_favorites})
 
 
@@ -125,4 +140,47 @@ def talk_favorite_delete(request,talk_id): #お気に入り削除
     # print(Favorites.objects.filter(talk__id=talk_id))#, user_id=request.user))
     Favorites.objects.filter(Q(talk__id=talk_id) & Q(user=request.user)).delete()
 
+    talk = Talks.objects.get(id=talk_id)
+    CheckExist = not(Favorites.objects.filter(talk__id=talk_id).exists())
+
+    if talk.confirmed_by_from == 1 & talk.confirmed_by_to == 1 & CheckExist: #トークを削除するかの判定
+        talk.delete()
+    
     return redirect(request.META['HTTP_REFERER'])
+
+
+def final_favorite_add(request,talk_id): #お気に入り追加_最終チェック
+
+    talk = Talks.objects.get(id=talk_id)
+    favorites = Favorites(talk=talk, user=request.user)
+    favorites.save()
+
+    if talk.sending_user == request.user:
+        talk.confirmed_by_to = 1
+    else:
+        talk.confirmed_by_from = 1
+
+    talk.save()
+
+    return redirect("postapp:talk_all")
+
+
+def final_favorite_delete(request,talk_id): #状況に応じてトークの削除
+
+    # print(Favorites.objects.filter(talk__id=talk_id))#, user_id=request.user))
+    talk = Talks.objects.get(id=talk_id)
+
+    if talk.sending_user == request.user:
+        talk.confirmed_by_to = 1
+    else:
+        talk.confirmed_by_from = 1
+
+    talk.save()
+
+    CheckExist = not(Favorites.objects.filter(talk__id=talk_id).exists())
+
+    if talk.confirmed_by_from == 1 & talk.confirmed_by_to == 1 & CheckExist: #トークを削除するかの判定
+        talk.delete()
+    
+    return redirect("postapp:talk_all")
+
