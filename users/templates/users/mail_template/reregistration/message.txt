@@ -1,0 +1,6 @@
+{{ user.email }} 様
+
+下記URLよりサイトにアクセスの上、引き続き再開手続きをお願いいたします。
+
+再開用URL
+{{ protocol}}://{{ domain }}{% url 'users:UserReregistrationComplete' token %}

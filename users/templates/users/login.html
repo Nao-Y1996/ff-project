@@ -15,6 +15,12 @@
 {% endif %}
 {% endif %}
 
+{% if messages %}
+    {% for message in messages %}
+    <p> {{ message }}</p>
+    {% endfor %}
+{% endif %}
+
 <form method="post" action="{% url 'users:login' %}">
     {% csrf_token %}
     <table>
@@ -35,6 +41,7 @@
 <div class="card-body">
     <a href="{% url 'users:user_create' %}" class="btn btn-success btn-lg btn-block">会員登録</a>
     <a href="{% url 'users:password_reset' %}" class="btn btn-outline-info btn-lg btn-block">パスワードを忘れた方はこちら</a>
+    <a href="{% url 'users:reregistration' %}" class="btn btn-success btn-lg btn-block">再開</a>
 </div>
 
 {% endblock %}

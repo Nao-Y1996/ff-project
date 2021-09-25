@@ -1,8 +1,9 @@
+from django.contrib.auth import logout
 from django.shortcuts import render
 from django.contrib.auth.forms import UserCreationForm
 # from django.contrib.auth.models import CustomUser
 from django.conf import settings
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView, PasswordChangeDoneView, PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 from django.urls import reverse_lazy
@@ -16,10 +17,11 @@ from django.core.mail import send_mail
 from django.views.generic import FormView, UpdateView
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 from .forms import LoginForm, UserCreateForm, MyPasswordChangeForm, MyPasswordResetForm, \
-    MySetPasswordForm, EmailChangeForm, UserInfoUpdateForm, ReportForm #WithdrawalForm
-from .models import UserInfo, Report, ReportReasons,CustomUser
+    MySetPasswordForm, EmailChangeForm, UserInfoUpdateForm, ReportForm, UserReregistrationForm  # WithdrawalForm
+from .models import UserInfo, Report, ReportReasons, CustomUser
 User = get_user_model()
 
 # ログインユーザー自身以外は遷移できないようにするクラス
@@ -31,13 +33,13 @@ class OnlyYouMixin(UserPassesTestMixin):
         user = self.request.user
         return user.pk == self.kwargs['pk'] or user.is_admin
 
-# @login_required
+
 def Top(request):
     # ログインしていたら
     if request.user.is_authenticated:
         user_info = request.user.user_info
         # 国情報登録していなかったら
-        if user_info.country==None:
+        if user_info.country == None:
             form = UserInfoUpdateForm(instance=user_info)
             return redirect('users:userinfo_edit', info_id=user_info.id)
         else:
@@ -45,11 +47,12 @@ def Top(request):
     else:
         return render(request, 'users/top.html')
 
+
 @login_required
 def profile(request):
     user_info = request.user.user_info
-    #国が登録されていない時は登録ページに飛ぶ
-    if user_info.country==None:
+    # 国が登録されていない時は登録ページに飛ぶ
+    if user_info.country == None:
         form = UserInfoUpdateForm(instance=user_info)
         return redirect('users:userinfo_edit', info_id=user_info.id)
     else:
@@ -58,7 +61,7 @@ def profile(request):
             profile_image = 'media/'+str(user_info.profile_image)
         else:
             profile_image = 'media/no_image.png'
-    return render(request,'users/profile.html', {'profile_image':profile_image})
+    return render(request, 'users/profile.html', {'profile_image': profile_image})
     # if request.method == 'POST':
     #     if form.is_valid():
     #         form = ReportForm(request.POST)
@@ -70,31 +73,57 @@ def profile(request):
     #     form = ReportForm()
     #     return render(request,'users/profile.html', {'form':form, 'id':pk})
 
+
 @login_required
 def report(request):
-    if request.method=='POST':
+    if request.method == 'POST':
         form = ReportForm(request.POST)
         if form.is_valid():
-            #送信内容を1個ずつ取り出してReportを新規作成する（ModelFormを使う意味ない..もっと良い方法がありそう）
+            # 送信内容を1個ずつ取り出してReportを新規作成する（ModelFormを使う意味ない..もっと良い方法がありそう）
             post = request.POST
             reason = ReportReasons.objects.get(id=post['reason'])
             user_reported = CustomUser.objects.get(id=post['user_reported'])
             user_reporting = request.user
             content = post['content']
-            report = Report(reason=reason, user_reported=user_reported,\
-                user_reporting=user_reporting, content=content)
+            report = Report(reason=reason, user_reported=user_reported,
+                            user_reporting=user_reporting, content=content)
             report.save()
             return redirect('users:profile')
         else:
-            return render(request, 'users/report.html',{'form':form})
+            return render(request, 'users/report.html', {'form': form})
     else:
         form = ReportForm()
-        return render(request, 'users/report.html',{'form':form})
+        return render(request, 'users/report.html', {'form': form})
 
-class Login(LoginView):
-    """ログインページ"""
-    form_class = LoginForm
-    template_name = 'users/login.html'
+
+def Login(request):
+    if request.method == 'POST':
+        email = request.POST['username']
+        password = request.POST['password']
+        # 退会済みかどうかのチェック
+        try:
+            user = CustomUser.objects.get(email=email)
+            if not user.is_active:
+                messages.info(
+                    request, f'You have already withdrawn from this site.')
+                form = LoginForm({"email": email, "password": password})
+                return render(request, 'users/login.html', {'form': form})
+        except CustomUser.DoesNotExist:
+            pass
+        # パスワードとメールで認証
+        user = authenticate(request, email=email, password=password)
+        if user is not None:
+            login(request, user)  # ログイン
+            return redirect('users:profile')
+        else:
+            # form = LoginForm(initial={"username":email, 'password':password}) # htmlで　form.errosでエラーが出なくなってしまう
+            form = LoginForm(request, request.POST)
+            form.is_valid()
+            # form.add_error(None, 'LOGIN_ID、またはPASSWORDが違います。')
+            return render(request, 'users/login.html', {'form': form})
+    else:
+        form = LoginForm()
+        return render(request, 'users/login.html', {'form': form})
 
 
 class Logout(LogoutView):
@@ -102,7 +131,93 @@ class Logout(LogoutView):
     template_name = 'users/top.html'
 
 
+def Reregistration(request):
+    if request.method == 'POST':
+        """ユーザー再登録"""
+        # template_name = 'users/reregistration.html'
+        form = UserReregistrationForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            try:
+                user = User.objects.get(email=email)
+            except CustomUser.DoesNotExist:
+                form.add_error(None, 'The user with such email does not exist')
+                return render(request, 'users/reregistration.html', {'form': form})
+            except:
+                import traceback
+                traceback.print_exc()
+                pass
+                return render(request, 'users/reregistration.html', {'form': form})
+            if user.is_active:
+                form.add_error(
+                    None, 'Your account is active. Please try login')
+                return render(request, 'users/reregistration.html', {'form': form})
+            else:
+                # アクティベーションURLの送付
+                current_site = get_current_site(request)
+                domain = current_site.domain
+                context = {
+                    'protocol': request.scheme,
+                    'domain': domain,
+                    'token': dumps(user.pk),
+                    'user': user,
+                }
+            # subject = render_to_string(
+            #     'users/mail_template/create/subject.txt', context)
+            subject = 'Reregistration'
+            message = render_to_string(
+                'users/mail_template/reregistration/message.txt', context)
+            user.email_user(subject, message)
+            messages.info(
+                request, f'メールを確認して再登録用のリンクからログインしてください.')
+            return redirect('users:top')
+        else:
+            return render(request, 'users/reregistration.html', {'form': form})
+    else:
+        form = UserReregistrationForm()
+        return render(request, 'users/reregistration.html', {'form': form})
+
+
+def UserReregistrationComplete(request, **kwargs):
+    # template_name = 'users/user_create_complete.html'
+    timeout_seconds = getattr(
+        settings, 'ACTIVATION_TIMEOUT_SECONDS', 60*60*24)  # デフォルトでは1日以内
+
+    # def get(self, request, **kwargs):
+    user_create_completed = False
+    token = kwargs.get('token')
+    try:
+        user_pk = loads(token, max_age=timeout_seconds)
+
+    # 期限切れ
+    except SignatureExpired:
+        return HttpResponseBadRequest()
+
+    # tokenが間違っている
+    except BadSignature:
+        return HttpResponseBadRequest()
+
+    # tokenは問題なし
+    else:
+        try:
+            user = User.objects.get(pk=user_pk)
+        except User.DoesNotExist:
+            return HttpResponseBadRequest()
+        else:
+            if not user.is_active:
+                # 問題なければ本登録とする
+                user.is_active = True
+                user.save()
+                user_create_completed = True
+                # return super().get(request, **kwargs)
+    messages.info(
+        request, f'再開処理を完了しました。ログインできます。')
+    form = LoginForm()
+    return render(request, 'users/login.html', {'form': form})
+
 # --------------------------------------------------------------
+
+
 class UserCreate(generic.CreateView):
     """ユーザー仮登録"""
     template_name = 'users/user_create.html'
@@ -126,8 +241,10 @@ class UserCreate(generic.CreateView):
             'user': user,
         }
 
-        subject = render_to_string('users/mail_template/create/subject.txt', context)
-        message = render_to_string('users/mail_template/create/message.txt', context)
+        subject = render_to_string(
+            'users/mail_template/create/subject.txt', context)
+        message = render_to_string(
+            'users/mail_template/create/message.txt', context)
 
         user.email_user(subject, message)
         return redirect('users:user_create_done')
@@ -141,7 +258,8 @@ class UserCreateDone(generic.TemplateView):
 class UserCreateComplete(generic.TemplateView):
     """メール内URLアクセス後のユーザー本登録"""
     template_name = 'users/user_create_complete.html'
-    timeout_seconds = getattr(settings, 'ACTIVATION_TIMEOUT_SECONDS', 60*60*24)  # デフォルトでは1日以内
+    timeout_seconds = getattr(
+        settings, 'ACTIVATION_TIMEOUT_SECONDS', 60*60*24)  # デフォルトでは1日以内
 
     def get(self, request, **kwargs):
         """tokenが正しければ本登録."""
@@ -178,6 +296,7 @@ class UserCreateComplete(generic.TemplateView):
 
         return HttpResponseBadRequest()
 
+
 @login_required
 def EditUserInfo(request, info_id):
     user_info = UserInfo.objects.get(id=info_id)
@@ -186,16 +305,17 @@ def EditUserInfo(request, info_id):
     if request.method == 'POST':
         # return reverse('users:profile', kwargs={'pk': request.user.id})
         # messages.success(request, 'レコードを新規追加しました。')
-        form = UserInfoUpdateForm(request.POST, request.FILES, instance=user_info)
+        form = UserInfoUpdateForm(
+            request.POST, request.FILES, instance=user_info)
         if form.is_valid():
             form.save()
             return redirect('users:profile')
         else:
             # return redirect('users:profile', pk=request.user.id)
-            return render(request, 'users/userinfo_update.html', {'form':form})
+            return render(request, 'users/userinfo_update.html', {'form': form})
     else:
         form = UserInfoUpdateForm(instance=user_info)
-        return render(request, 'users/userinfo_update.html', {'form':form})
+        return render(request, 'users/userinfo_update.html', {'form': form})
 
 
 # --------------------------------------------------------------
@@ -258,8 +378,10 @@ class EmailChange(LoginRequiredMixin, generic.FormView):
             'user': user,
         }
 
-        subject = render_to_string('users/mail_template/email_change/subject.txt', context)
-        message = render_to_string('users/mail_template/email_change/message.txt', context)
+        subject = render_to_string(
+            'users/mail_template/email_change/subject.txt', context)
+        message = render_to_string(
+            'users/mail_template/email_change/message.txt', context)
         send_mail(subject, message, None, [new_email])
 
         return redirect('users:email_change_done')
@@ -273,7 +395,8 @@ class EmailChangeDone(LoginRequiredMixin, generic.TemplateView):
 class EmailChangeComplete(LoginRequiredMixin, generic.TemplateView):
     """リンクを踏んだ後に呼ばれるメアド変更ビュー"""
     template_name = 'users/email_change_complete.html'
-    timeout_seconds = getattr(settings, 'ACTIVATION_TIMEOUT_SECONDS', 60*60*24)  # デフォルトでは1日以内
+    timeout_seconds = getattr(
+        settings, 'ACTIVATION_TIMEOUT_SECONDS', 60*60*24)  # デフォルトでは1日以内
 
     def get(self, request, **kwargs):
         token = kwargs.get('token')
@@ -295,8 +418,10 @@ class EmailChangeComplete(LoginRequiredMixin, generic.TemplateView):
             request.user.save()
             return super().get(request, **kwargs)
 
+
 # --------------------------------------------------------------
-from django.contrib.auth import logout
+
+
 @login_required
 def withdrawal(request):
     if request.method == 'POST':
