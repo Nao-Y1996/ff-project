@@ -104,7 +104,7 @@ def Login(request):
         try:
             user = CustomUser.objects.get(email=email)
             if not user.is_active:
-                messages.info(
+                messages.warning(
                     request, f'You have already withdrawn from this site.')
                 form = LoginForm({"email": email, "password": password})
                 return render(request, 'users/login.html', {'form': form})
@@ -169,7 +169,7 @@ def Reregistration(request):
                 'users/mail_template/reregistration/message.txt', context)
             user.email_user(subject, message)
             messages.info(
-                request, f'メールを確認して再登録用のリンクからログインしてください.')
+                request, f'メールを確認してください。再登録用のリンクを登録されたメールアドレス宛にに送信しました。')
             return redirect('users:top')
         else:
             return render(request, 'users/reregistration.html', {'form': form})

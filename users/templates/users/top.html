@@ -7,11 +7,12 @@
 {% block content %}
 
 {% if messages %}
-    {% for message in messages %}
-    <p> {{ message }}</p>
-    {% endfor %}
+	<ul class="messages_ul">
+		{% for message in messages %}
+			<p class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</p>
+		{% endfor %}
+	</ul>
 {% endif %}
-
 <h1>トップページです</h1>
 <p>ログインしていません。</p>
 
