@@ -19,7 +19,7 @@
 <a href="{% url 'postapp:final_favorite_delete' talk_id=talk_id %}">お気に入りしない</a>
 {% else %}
 
-<a href="{% url 'postapp:talk_all' %}">確認を終了してトーク一覧へ戻る</a><br>
+<a href="{% url 'postapp:confirmed_add' talk_id=talk_id %}">確認を終了してトーク一覧へ戻る</a><br>
 
 {% endif %}
 {% endblock %}
