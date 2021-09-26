@@ -28,6 +28,17 @@ from datetime import date
 def mypage(request):
     return render(request,"postapp/mypage.html")
 
+
+def favorite_check(request,talk_id):
+    talk = Talks.objects.get(id=talk_id)
+    try:
+        Exist_favorites = talk.favorites_set.all().filter(user_id=request.user)[0] in request.user.favorites_set.all()
+    except:
+        Exist_favorites =  False
+
+    return Exist_favorites
+
+
 def talk_all(request):
     data = datetime.datetime.now()
     my_talks = Talks.objects.filter((Q(sending_user=request.user) | Q(receiving_user=request.user))).order_by('-created_at')# 自分の関わっているトークを全て取得
@@ -58,16 +69,6 @@ def talk_create(request): #新規トークフォーム
         initial_dict = dict(sending_user=request.user,)
         form = NewTalkForm(initial=initial_dict)
         return render(request, 'postapp/talk_create.html', {'form': form})
-
-
-def favorite_check(request,talk_id):
-    talk = Talks.objects.get(id=talk_id)
-    try:
-        Exist_favorites = talk.favorites_set.all().filter(user_id=request.user)[0] in request.user.favorites_set.all()
-    except:
-        Exist_favorites =  False
-
-    return Exist_favorites
 
 
 def talk_detail(request,talk_id): #既存トークフォーム
@@ -182,5 +183,18 @@ def final_favorite_delete(request,talk_id): #状況に応じてトークの削�
     if talk.confirmed_by_from == 1 & talk.confirmed_by_to == 1 & CheckExist: #トークを削除するかの判定
         talk.delete()
     
+    return redirect("postapp:talk_all")
+
+def confirmed_add(request,talk_id): #すでにお気に入りしているため、confirmed_byを1へ
+
+    talk = Talks.objects.get(id=talk_id)
+
+    if talk.sending_user == request.user:
+        talk.confirmed_by_to = 1
+    else:
+        talk.confirmed_by_from = 1
+
+    talk.save()
+
     return redirect("postapp:talk_all")
 

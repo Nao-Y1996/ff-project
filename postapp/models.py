@@ -16,6 +16,8 @@ class Talks(models.Model):
     confirmed_by_from = models.BooleanField(default=False)
     created_at = models.DateTimeField(default=timezone.now)
     exist_reply = models.BooleanField(default=False)
+    latest_message_time = models.DateTimeField(default=timezone.now)
+    detail_opened = models.BooleanField(default=False)
     
     def __str__(self):
         return str(self.sending_user) + '-' + str(self.receiving_user)
