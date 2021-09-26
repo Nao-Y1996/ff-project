@@ -9,27 +9,27 @@
             {% for talk in my_talks %}
             <p>
                 {% if talk.sending_user == user %}
-                    {% if talk.exist_reply == True %}
+                {% if talk.exist_reply == True %}
 
-                    <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">{{talk.receiving_user}}</a>
-                        {% favorite_check user talk.id as flag %}
-                        {% if flag %}
-                        <span><a href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}">Delete Favorite</a></span>
-                        {% else %}
-                        <span><a href="{% url 'postapp:talk_favorite_add' talk_id=talk.id %}">Add Favorite</a></span>
-                        {% endif %}
-                    {% else %}
+                <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">{{talk.receiving_user}}</a>
+                {% favorite_check user talk.id as flag %}
+                {% if flag %}
+                <span><a href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}">Delete Favorite</a></span>
+                {% else %}
+                <span><a href="{% url 'postapp:talk_favorite_add' talk_id=talk.id %}">Add Favorite</a></span>
+                {% endif %}
+                {% else %}
 
-                    {{talk.receiving_user}}:返信待ち
-                    {% endif %}
+                {{talk.receiving_user}}:返信待ち
+                {% endif %}
                 {% else %}
                 <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">{{talk.sending_user}}</a>
-                    {% favorite_check user talk.id as flag %}
-                    {% if flag %}
-                    <span><a href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}">Delete Favorite</a></span>
-                    {% else %}
-                    <span><a href="{% url 'postapp:talk_favorite_add' talk_id=talk.id %}">Add Favorite</a></span>
-                    {% endif %}
+                {% favorite_check user talk.id as flag %}
+                {% if flag %}
+                <span><a href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}">Delete Favorite</a></span>
+                {% else %}
+                <span><a href="{% url 'postapp:talk_favorite_add' talk_id=talk.id %}">Add Favorite</a></span>
+                {% endif %}
                 {% endif %}
                 <span> : {{talk.created_at}}</span>
             </p>
@@ -37,6 +37,99 @@
         </div>
         <div class='col-6' id="talks-time_limit">
         </div>
+    </div>
+    <div class='' id="">
+        <div>既読トーク</div>
+        {% for talk in read_talks %}
+        <p>
+            {% if talk.sending_user == user %}
+            {% if talk.exist_reply == True %}
+
+            <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">{{talk.receiving_user}}</a>
+            {% favorite_check user talk.id as flag %}
+            {% if flag %}
+            <span><a href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}">Delete Favorite</a></span>
+            {% else %}
+            <span><a href="{% url 'postapp:talk_favorite_add' talk_id=talk.id %}">Add Favorite</a></span>
+            {% endif %}
+            {% else %}
+
+            {{talk.receiving_user}}:返信待ち
+            {% endif %}
+            {% else %}
+            <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">{{talk.sending_user}}</a>
+            {% favorite_check user talk.id as flag %}
+            {% if flag %}
+            <span><a href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}">Delete Favorite</a></span>
+            {% else %}
+            <span><a href="{% url 'postapp:talk_favorite_add' talk_id=talk.id %}">Add Favorite</a></span>
+            {% endif %}
+            {% endif %}
+            <span> : {{talk.created_at}}</span>
+        </p>
+        {% endfor %}
+    </div>
+    <div class='' id="">
+        <div>未読トーク</div>
+        {% for talk in unread_talks %}
+        <p>
+            {% if talk.sending_user == user %}
+            {% if talk.exist_reply == True %}
+
+            <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">{{talk.receiving_user}}</a>
+            {% favorite_check user talk.id as flag %}
+            {% if flag %}
+            <span><a href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}">Delete Favorite</a></span>
+            {% else %}
+            <span><a href="{% url 'postapp:talk_favorite_add' talk_id=talk.id %}">Add Favorite</a></span>
+            {% endif %}
+            {% else %}
+
+            {{talk.receiving_user}}:返信待ち
+            {% endif %}
+            {% else %}
+            <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">{{talk.sending_user}}</a>
+            {% favorite_check user talk.id as flag %}
+            {% if flag %}
+            <span><a href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}">Delete Favorite</a></span>
+            {% else %}
+            <span><a href="{% url 'postapp:talk_favorite_add' talk_id=talk.id %}">Add Favorite</a></span>
+            {% endif %}
+            {% endif %}
+            <span> : {{talk.created_at}}</span>
+        </p>
+        {% endfor %}
+    </div>
+    <div class='' id="">
+        <div>未確認の終了トーク</div>
+        {% for talk in unchecked_dead_talks %}
+        <p>
+            {% if talk.sending_user == user %}
+            {% if talk.exist_reply == True %}
+
+            <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">{{talk.receiving_user}}</a>
+            {% favorite_check user talk.id as flag %}
+            {% if flag %}
+            <span><a href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}">Delete Favorite</a></span>
+            {% else %}
+            <span><a href="{% url 'postapp:talk_favorite_add' talk_id=talk.id %}">Add Favorite</a></span>
+            {% endif %}
+            {% else %}
+
+            {{talk.receiving_user}}:返信待ち
+            {% endif %}
+            {% else %}
+            <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">{{talk.sending_user}}</a>
+            {% favorite_check user talk.id as flag %}
+            {% if flag %}
+            <span><a href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}">Delete Favorite</a></span>
+            {% else %}
+            <span><a href="{% url 'postapp:talk_favorite_add' talk_id=talk.id %}">Add Favorite</a></span>
+            {% endif %}
+            {% endif %}
+            <span> : {{talk.created_at}}</span>
+        </p>
+        {% endfor %}
     </div>
 </div>
 
