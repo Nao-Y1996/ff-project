@@ -46,6 +46,7 @@ class Message(models.Model):
     talk = models.ForeignKey(Talks, on_delete=models.CASCADE)
     sending_user = models.ForeignKey(CustomUser, related_name="sending_user" ,on_delete=models.CASCADE)
     content = models.CharField(max_length=500)
+    created_at = models.DateTimeField(default=timezone.now)
 
 
 # admin ユーザー名:superuser , パスワード:sora0214

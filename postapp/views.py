@@ -42,12 +42,22 @@ def favorite_check(request, talk_id):
 
 def talk_all(request):
     def was_read(talk):
-        newest_message = Message.objects.filter(talk_id=talk.id).first()
-        print(newest_message.sending_user)
+        newest_message = Message.objects.filter(talk_id=talk.id).latest("created_at")
         if (talk.detail_opened is False) and (newest_message.sending_user != request.user):
             return False
         else:
             return True
+
+    def is_active(talk):
+        now = datetime.datetime.now()
+        deadline = talk.created_at.replace(
+            tzinfo=None) + datetime.timedelta(days=0) + datetime.timedelta(hours=9) + datetime.timedelta(minutes=2)
+        if deadline < now:
+            is_talk_active = False
+        else:
+            is_talk_active = True
+        return is_talk_active
+    
     data = datetime.datetime.now()
     my_talks = Talks.objects.filter((Q(sending_user=request.user) | Q(
         receiving_user=request.user)))  # .order_by('-created_at')  # 自分の関わっているトークを全て取得
@@ -70,6 +80,8 @@ def talk_all(request):
                 read_talks.append(talk)
             else:
                 unread_talks.append(talk)
+    print('='*20)
+    print(len(my_talks), len(unchecked_dead_talks)+len(unread_talks)+len(read_talks))
 
     create_data = {}
     for i, talk in enumerate(my_talks):
@@ -105,15 +117,7 @@ def talk_create(request):  # 新規トークフォーム
         return render(request, 'postapp/talk_create.html', {'form': form})
 
 
-def is_active(talk):
-    now = datetime.datetime.now()
-    deadline = talk.created_at.replace(
-        tzinfo=None) + datetime.timedelta(days=14) + datetime.timedelta(hours=9) + datetime.timedelta(minutes=0)
-    if deadline < now:
-        is_talk_active = True
-    else:
-        is_talk_active = False
-    return is_talk_active
+
 
 
 def favorite_check(request, talk_id):
@@ -139,6 +143,9 @@ def talk_detail(request, talk_id):  # 既存トークフォーム
             talk.detail_opened = False
             talk.save()
 
+            print("*"*40)
+            print(talk.detail_opened)
+
             initial_dict = {"sending_user": request.user, "talk": talk_id, }
             form = MessageForm(initial=initial_dict)
             messages = Message.objects.filter(talk_id=talk_id).all
@@ -154,12 +161,17 @@ def talk_detail(request, talk_id):  # 既存トークフォーム
         if (not talk.exist_reply) & (talk.sending_user == request.user):
             return redirect("postapp:talk_all")
         else:
-            print("*"*40)
-            newest_message = Message.objects.filter(talk_id=talk_id).first()
-            print(newest_message.sending_user)
+            print('詳細にはいった！！')
+            newest_message = Message.objects.filter(talk_id=talk_id).latest("created_at")#.order_by('-created_at')[0]
+            print("message : ",newest_message.content)
+            print(Message.objects.filter(talk_id=talk_id).count())
             if newest_message.sending_user != request.user:
+                print("in if before save",talk.detail_opened)
                 talk.detail_opened = True
                 talk.save()
+                print("in if before save",talk.detail_opened)
+            print("*"*40)
+            print("out of if ",talk.detail_opened)
 
             now = datetime.datetime.now()
             talk = Talks.objects.get(id=talk_id)
