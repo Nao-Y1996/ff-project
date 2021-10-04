@@ -21,6 +21,7 @@
                 <span><a href="{% url 'postapp:talk_favorite_add' talk_id=talk.id %}">Add Favorite</a></span>
                 {% endif %}
                 {% else %}
+                最新メッセージ：{% get_newest_message talk.id %}
 
                 {{talk.receiving_user}}:返信待ち
                 {% endif %}
@@ -33,7 +34,7 @@
                 <span><a href="{% url 'postapp:talk_favorite_add' talk_id=talk.id %}">Add Favorite</a></span>
                 {% endif %}
                 {% endif %}
-                <span> : {{talk.created_at}}</span>
+                最新メッセージ：{% get_newest_message talk.id %}
             </p>
             {% endfor %}
             <div>未読トーク</div>
@@ -50,6 +51,7 @@
                 <span><a href="{% url 'postapp:talk_favorite_add' talk_id=talk.id %}">Add Favorite</a></span>
                 {% endif %}
                 {% else %}
+                最新メッセージ：{% get_newest_message talk.id %}
 
                 {{talk.receiving_user}}:返信待ち
                 {% endif %}
@@ -62,7 +64,8 @@
                 <span><a href="{% url 'postapp:talk_favorite_add' talk_id=talk.id %}">Add Favorite</a></span>
                 {% endif %}
                 {% endif %}
-                <span> : {{talk.created_at}}</span>
+                最新メッセージ：{% get_newest_message talk.id %}
+
             </p>
             {% endfor %}
             <div>既読トーク</div>
@@ -79,6 +82,7 @@
                 <span><a href="{% url 'postapp:talk_favorite_add' talk_id=talk.id %}">Add Favorite</a></span>
                 {% endif %}
                 {% else %}
+                最新メッセージ：{% get_newest_message talk.id %}
 
                 {{talk.receiving_user}}:返信待ち
                 {% endif %}
@@ -91,13 +95,15 @@
                 <span><a href="{% url 'postapp:talk_favorite_add' talk_id=talk.id %}">Add Favorite</a></span>
                 {% endif %}
                 {% endif %}
-                <span> : {{talk.created_at}}</span>
+                最新メッセージ：{% get_newest_message talk.id %}
+                
             </p>
             {% endfor %}
         </div>
         <div class='col-6' id="talks-time_limit">
         </div>
     </div>
+    <br>---------------------------------------------------------------------------------------</br>
     <div class='row'>
         <div class='col-6' id="talks">
             {% for talk in my_talks %}

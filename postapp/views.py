@@ -178,7 +178,7 @@ def talk_detail(request, talk_id):  # 既存トークフォーム
             now = datetime.datetime.now()
             talk = Talks.objects.get(id=talk_id)
             created_at = talk.created_at.replace(
-                tzinfo=None) + datetime.timedelta(days=0) + datetime.timedelta(hours=9) + datetime.timedelta(minutes=2)
+                tzinfo=None) + datetime.timedelta(days=14) + datetime.timedelta(hours=9) + datetime.timedelta(minutes=2)
             #left_time = created_at - data
             # print(left_time)
 
