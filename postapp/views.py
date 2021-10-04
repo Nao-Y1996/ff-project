@@ -57,7 +57,6 @@ def talk_all(request):
         else:
             is_talk_active = True
         return is_talk_active
-    
     data = datetime.datetime.now()
     my_talks = Talks.objects.filter((Q(sending_user=request.user) | Q(
         receiving_user=request.user)))  # .order_by('-created_at')  # 自分の関わっているトークを全て取得
@@ -66,7 +65,10 @@ def talk_all(request):
     unread_talks = []
     read_talks = []
     for talk in my_talks:
-        if not is_active(talk):
+        if not is_active(talk):# 期限終了の時
+            if not talk.exist_reply:# 返信がない時
+                talk.delete()
+                continue
             if talk.sending_user == request.user and talk.confirmed_by_to == False:
                 checked_userinfo = True
             elif talk.receiving_user == request.user and talk.confirmed_by_from == False:
