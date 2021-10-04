@@ -5,7 +5,7 @@ from django.contrib.auth.forms import (
 )
 from django.contrib.auth import get_user_model
 # from .models import CustomUser
-from .models import UserInfo, Report
+from .models import UserInfo, Report, CustomUser
 
 User = get_user_model()
 
@@ -17,13 +17,17 @@ class LoginForm(AuthenticationForm):
             field.widget.attrs['class'] = 'form-control'
             field.widget.attrs['placeholder'] = field.label
 
+    class Meta:
+        model = CustomUser
+        fields = ('email', 'password')
+
 
 class UserCreateForm(UserCreationForm):
     """ユーザー登録用フォーム"""
 
     class Meta:
         model = User
-        fields = ('email','username')
+        fields = ('email', 'username')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -81,21 +85,28 @@ class EmailChangeForm(forms.ModelForm):
         return email
 
 
-# class CustomUserUpdateForm(forms.ModelForm):
-#     model = CustomUser()
-#     fields = ('username', )
-
-
 class UserInfoUpdateForm(forms.ModelForm):
     class Meta:
         model = UserInfo
-        fields = ('country', 'age', 'gender', 'gender_of_love', 'introduction', 'profile_image')
+        fields = ('country', 'age', 'gender', 'gender_of_love',
+                  'introduction', 'profile_image')
         widgets = {
-         'gender': forms.NumberInput(attrs={'type': 'range', 'min':-1, 'max':1, 'class':'custom-range'}),
-         'gender_of_love': forms.NumberInput(attrs={'type': 'range', 'min':-1, 'max':1, 'class':'custom-range'})
-         }
+            'gender': forms.NumberInput(attrs={'type': 'range', 'min': -1, 'max': 1, 'class': 'custom-range'}),
+            'gender_of_love': forms.NumberInput(attrs={'type': 'range', 'min': -1, 'max': 1, 'class': 'custom-range'})
+        }
+
 
 class ReportForm(forms.ModelForm):
     class Meta:
         model = Report
         fields = ('reason', 'user_reported', 'content')
+
+
+class UserReregistrationForm(forms.Form):
+    """ユーザー再開用フォーム"""
+    email = forms.EmailField(label='email')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control'

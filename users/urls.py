@@ -8,7 +8,8 @@ app_name="users"
 urlpatterns = [
     path('', views.Top, name='top'),
     path('profile', views.profile, name='profile'),
-    path('login', views.Login.as_view(), name='login'),
+    # path('login', views.Login.as_view(), name='login'),
+    path('login', views.Login, name='login'),
     path('logout',  views.Logout.as_view(), name='logout'),
 
     #新規登録用
@@ -36,6 +37,14 @@ urlpatterns = [
     
     # 通報
     path('report', views.report, name='report'),
+    
+    # 退会
+    path('withdrawal', views.withdrawal, name='withdrawal'),
+    
+    # 再開
+    path('reregistration', views.Reregistration, name='reregistration'),
+    path('UserReregistrationComplete/<token>/', views.UserReregistrationComplete, name='UserReregistrationComplete'),
+    
 ]
 # 画像ファイルを扱うための記述
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

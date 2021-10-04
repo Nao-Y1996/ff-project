@@ -18,9 +18,13 @@
 <li>
     <a class="btn btn-success" href="{% url 'users:report' %}">通報</a>
 </li>
+<li>
+    <a class="btn btn-warning" href="{% url 'users:withdrawal' %}">退会</a>
+</li>
 
 <li>ユーザーネームは{{user.username}}です。</li>
 <li>国は{{user.user_info.country}}です。</li>
+<li>is_activeは{{user.is_active}}です。</li>
 
 
 <li>通報された回数は{{user.reported.count}}回です。</li>
