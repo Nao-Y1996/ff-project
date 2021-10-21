@@ -13,6 +13,14 @@ def favorite_check(user,talk):
         Exist_favorites =  False
 
     return Exist_favorites
+
+@register.simple_tag
+def get_newest_message(talk_id):
+
+    newest_message = Message.objects.filter(talk_id=talk_id).latest("created_at")#.order_by('-created_at')[0]
+    newest_message = newest_message.content
+
+    return newest_message
 # def multiply(value1, value2):
 #     return value1 * value2
 
