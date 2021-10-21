@@ -4,13 +4,15 @@
 <table class="table">
     <tbody>
         <p>
-            <form method="POST">
-                {% csrf_token %}
-                {{ form.id.as_hidden }}
-                {{ form.sending_user.as_hidden }}
-                {{ form.content }}
-                <button type="submit">送信</button>
-            </form>
+        <form method="POST" onsubmit="return false;" wrap="soft">
+            {% csrf_token %}
+            {{ form.id.as_hidden }}
+            {{ form.sending_user.as_hidden }}
+            {{ form.content }}
+            <div class="btn_inner">
+                <input type="button" value="送信" onclick="submit();">
+            </div>
+        </form>
         </p>
     </tbody>
 </table>

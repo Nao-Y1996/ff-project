@@ -45,7 +45,7 @@ class Message(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     talk = models.ForeignKey(Talks, on_delete=models.CASCADE)
     sending_user = models.ForeignKey(CustomUser, related_name="sending_user" ,on_delete=models.CASCADE)
-    content = models.CharField(max_length=500)
+    content = models.TextField(max_length=500)
     created_at = models.DateTimeField(default=timezone.now)
 
 
