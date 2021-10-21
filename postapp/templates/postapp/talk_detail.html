@@ -6,13 +6,13 @@
     {% if message.sending_user_id == user.id %}
     <div class='clearfix'>
         <div class="float-right arrow_box_right">
-            {{message.content}}
+            <p style=" white-space: pre-wrap; margin:0;">{{message.content}}</p>
         </div>
     </div>
     {% else %}
     <div class='clearfix'>
-        <div class="float-left arrow_box_left">
-            {{message.content}}
+        <div class="float-left arrow_box_left" >
+            <p style=" white-space: pre-wrap; margin:0;">{{message.content}}</p>
         </div>
     </div>
     {% endif %}

@@ -66,7 +66,9 @@ def talk_all(request):
     read_talks = []
     for talk in my_talks:
         if not is_active(talk):# 期限終了の時
-            if not talk.exist_reply:# 返信がない時
+            messages = Message.objects.filter(talk_id=talk.id).all()
+            #if not talk.exist_reply:# 返信がない時
+            if messages.count() == 1:
                 talk.delete()
                 continue
             if talk.sending_user == request.user and talk.confirmed_by_to == False:
@@ -88,6 +90,7 @@ def talk_all(request):
     create_data = {}
     for i, talk in enumerate(my_talks):
         create_data[i] = str(talk.created_at).replace(' ', 'T')
+        print(create_data[i])
     params = {"data": data, "my_talks": my_talks,
               'data_json': json.dumps(create_data),
               'unchecked_dead_talks': unchecked_dead_talks,
