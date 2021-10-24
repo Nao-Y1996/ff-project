@@ -40,6 +40,15 @@ def favorite_check(request, talk):
 
     return Exist_favorites
 
+def is_talk_active(talk):
+    now = datetime.datetime.now()
+    deadline = talk.created_at.replace(
+        tzinfo=None) + datetime.timedelta(days=DAYS) + datetime.timedelta(hours=HOURS) + datetime.timedelta(minutes=MINUTES)
+    if deadline < now:
+        is_talk_active = False
+    else:
+        is_talk_active = True
+    return is_talk_active
 
 def talk_all(request):
     def was_read(talk):
@@ -49,15 +58,6 @@ def talk_all(request):
         else:
             return True
 
-    def is_active(talk):
-        now = datetime.datetime.now()
-        deadline = talk.created_at.replace(
-            tzinfo=None) + datetime.timedelta(days=DAYS) + datetime.timedelta(hours=HOURS) + datetime.timedelta(minutes=MINUTES)
-        if deadline < now:
-            is_talk_active = False
-        else:
-            is_talk_active = True
-        return is_talk_active
     data = datetime.datetime.now()
     my_talks = Talks.objects.filter((Q(sending_user=request.user) | Q(
         receiving_user=request.user)))  # .order_by('-created_at')  # 自分の関わっているトークを全て取得
@@ -66,7 +66,7 @@ def talk_all(request):
     unread_talks = []
     read_talks = []
     for talk in my_talks:
-        if not is_active(talk):# 期限終了の時
+        if not is_talk_active(talk):# 期限終了の時
             messages = Message.objects.filter(talk_id=talk.id).all()
             #if not talk.exist_reply:# 返信がない時
             if messages.count() == 1:
@@ -80,7 +80,7 @@ def talk_all(request):
                 checked_userinfo = False
             if checked_userinfo:
                 unchecked_dead_talks.append(talk)
-        else:  # is_active(talk):
+        else:
             if was_read(talk):
                 read_talks.append(talk)
             else:
@@ -158,21 +158,12 @@ def talk_detail(request, talk_id):  # 既存トークフォーム
                 talk.detail_opened = True
                 talk.save()
 
-            now = datetime.datetime.now()
-            # talk = Talks.objects.get(id=talk_id)
-            dead_line = talk.created_at.replace(
-                tzinfo=None) + datetime.timedelta(days=DAYS) + datetime.timedelta(hours=HOURS) + datetime.timedelta(minutes=HOURS)
-            #left_time = created_at - data
-            # print(left_time)
-
             # トーク可能時間内かどうか判定し時間外なら事後公開情報画面へ推移
-            if dead_line < now:
+            if not is_talk_active(talk):
                 Exist_favorites = favorite_check(request, talk)
                 sending_user = talk.sending_user
                 user_info = UserInfo.objects.get(user_id=sending_user)
-
                 return render(request, 'postapp/post_release.html', {'user_info': user_info, 'sending_user': sending_user, 'Exist_favorites': Exist_favorites, 'talk_id': talk_id})
-
             else:
                 initial_dict = {
                     "sending_user": request.user, "talk": talk_id, }
