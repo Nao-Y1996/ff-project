@@ -6,7 +6,6 @@ register = template.Library()
 #@register.filter(name="change_Range")
 @register.simple_tag
 def favorite_check(user,talk):
-    # talk = Talks.objects.get(id=talk_id)
     try:
         Exist_favorites = talk.favorites_set.all().filter(user_id=user)[0] in user.favorites_set.all()
     except:
