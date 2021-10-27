@@ -90,6 +90,7 @@ class CustomUser(AbstractBaseUser):
         # Simplest possible answer: All admins are staff
         return self.is_admin
 
+
 def image_directory_path(instance, filename):
     print('{}.{}'.format(str(uuid.uuid4()), filename.split('.')[-1]))
     return '{}.{}'.format(str(uuid.uuid4()), filename.split('.')[-1])
@@ -98,7 +99,7 @@ def image_directory_path(instance, filename):
 class UserInfo(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="user_info")
-    country = CountryField(blank_label='(select country)',blank=False, null=True)
+    nationality = CountryField(blank_label='(select country)',blank=False, null=True)
     age = models.IntegerField(blank=True, null=True)
     # sex_choice = ((0, 'Female'),(1, 'male'),(2, 'other'))
     gender = models.FloatField(validators=[validators.MinValueValidator(-1.0),

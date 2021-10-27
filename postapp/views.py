@@ -85,9 +85,9 @@ def talk_all(request):
             if messages.count() == 1:
                 talk.delete()
                 continue
-            if talk.sending_user == request.user and talk.confirmed_by_to == False:
+            if talk.sending_user == request.user and talk.confirmed_by_sending_user == False:
                 checked_userinfo = True
-            elif talk.receiving_user == request.user and talk.confirmed_by_from == False:
+            elif talk.receiving_user == request.user and talk.confirmed_by_receiving_user == False:
                 checked_userinfo = True
             else:
                 checked_userinfo = False
@@ -243,7 +243,7 @@ def talk_favorite_delete(request, talk_id):  # お気に入り削除
     talk = Talks.objects.get(id=talk_id)
     CheckExist = not(Favorites.objects.filter(talk__id=talk_id).exists())
 
-    if talk.confirmed_by_from == 1 & talk.confirmed_by_to == 1 & CheckExist:  # トークを削除するかの判定
+    if talk.confirmed_by_receiving_user == 1 & talk.confirmed_by_sending_user == 1 & CheckExist:  # トークを削除するかの判定
         talk.delete()
 
     return redirect(request.META['HTTP_REFERER'])
@@ -256,9 +256,9 @@ def final_favorite_add(request, talk_id):  # お気に入り追加_最終チェ�
     favorites.save()
 
     if talk.sending_user == request.user:
-        talk.confirmed_by_to = 1
+        talk.confirmed_by_sending_user = 1
     else:
-        talk.confirmed_by_from = 1
+        talk.confirmed_by_receiving_user = 1
 
     talk.save()
 
@@ -271,15 +271,15 @@ def final_favorite_delete(request, talk_id):  # 状況に応じてトークの�
     talk = Talks.objects.get(id=talk_id)
 
     if talk.sending_user == request.user:
-        talk.confirmed_by_to = 1
+        talk.confirmed_by_sending_user = 1
     else:
-        talk.confirmed_by_from = 1
+        talk.confirmed_by_receiving_user = 1
 
     talk.save()
 
     CheckExist = not(Favorites.objects.filter(talk__id=talk_id).exists())
 
-    if talk.confirmed_by_from == 1 & talk.confirmed_by_to == 1 & CheckExist:  # トークを削除するかの判定
+    if talk.confirmed_by_receiving_user == 1 & talk.confirmed_by_sending_user == 1 & CheckExist:  # トークを削除するかの判定
         talk.delete()
 
     return redirect("postapp:talk_all")
@@ -290,9 +290,9 @@ def confirmed_add(request, talk_id):  # すでにお気に入りしているた�
     talk = Talks.objects.get(id=talk_id)
 
     if talk.sending_user == request.user:
-        talk.confirmed_by_to = 1
+        talk.confirmed_by_sending_user = 1
     else:
-        talk.confirmed_by_from = 1
+        talk.confirmed_by_receiving_user = 1
 
     talk.save()
 

@@ -88,7 +88,7 @@ class EmailChangeForm(forms.ModelForm):
 class UserInfoUpdateForm(forms.ModelForm):
     class Meta:
         model = UserInfo
-        fields = ('country', 'age', 'gender', 'gender_of_love',
+        fields = ('nationality', 'age', 'gender', 'gender_of_love',
                   'introduction', 'profile_image')
         widgets = {
             'gender': forms.NumberInput(attrs={'type': 'range', 'min': -1, 'max': 1, 'class': 'custom-range'}),

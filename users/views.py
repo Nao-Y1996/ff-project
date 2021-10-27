@@ -52,7 +52,7 @@ def Top(request):
 def profile(request):
     user_info = request.user.user_info
     # 国が登録されていない時は登録ページに飛ぶ
-    if user_info.country == None:
+    if user_info.nationality == None:
         form = UserInfoUpdateForm(instance=user_info)
         return redirect('users:userinfo_edit', info_id=user_info.id)
     else:
