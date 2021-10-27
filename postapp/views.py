@@ -24,6 +24,7 @@ import json
 from django.http.response import JsonResponse
 from datetime import date
 
+import random
 
 def mypage(request):
     return render(request, "postapp/mypage.html")
@@ -51,7 +52,7 @@ def talk_all(request):
     def is_active(talk):
         now = datetime.datetime.now()
         deadline = talk.created_at.replace(
-            tzinfo=None) + datetime.timedelta(days=0) + datetime.timedelta(hours=9) + datetime.timedelta(minutes=2)
+            tzinfo=None) + datetime.timedelta(days=0) + datetime.timedelta(hours=9) + datetime.timedelta(minutes=1)
         if deadline < now:
             is_talk_active = False
         else:
@@ -64,6 +65,7 @@ def talk_all(request):
     unchecked_dead_talks = []
     unread_talks = []
     read_talks = []
+    favorite_dead_talks = []
     for talk in my_talks:
         if not is_active(talk):# 期限終了の時
             messages = Message.objects.filter(talk_id=talk.id).all()
@@ -79,6 +81,11 @@ def talk_all(request):
                 checked_userinfo = False
             if checked_userinfo:
                 unchecked_dead_talks.append(talk)
+            else:
+                #お気に入りの有無でtalkを分類
+                if favorite_check(request, talk.id):
+                    favorite_dead_talks.append(talk)
+
         else:  # is_active(talk):
             if was_read(talk):
                 read_talks.append(talk)
@@ -95,9 +102,20 @@ def talk_all(request):
               'data_json': json.dumps(create_data),
               'unchecked_dead_talks': unchecked_dead_talks,
               'unread_talks':unread_talks,
-              'read_talks':read_talks
+              'read_talks':read_talks,
+              'favorite_dead_talks':favorite_dead_talks,
               }
     return render(request, "postapp/talk_all.html", params)
+
+
+def decide_sender(request): #送り先を決定するアルゴリズム
+
+    for i in range(100):
+        send_id = random.randrange(1,9)
+        if send_id != request.user:
+            break
+    
+    return send_id
 
 
 def talk_create(request):  # 新規トークフォーム
@@ -105,8 +123,21 @@ def talk_create(request):  # 新規トークフォーム
         form = NewTalkForm(request.POST)
 
         if form.is_valid():
+
+            send_id = decide_sender(request) #送信先決定
+
+            #新規投稿した人にカウント
+            send_count = UserInfo.objects.get(user_id=request.user)
+            send_count.count_send_new_messages += 1
+            send_count.save()
+
+            #新規投稿が送られた人にカウント
+            receive_count = UserInfo.objects.get(user_id=send_id)
+            receive_count.count_receive_new_messages += 1
+            receive_count.save()
+
             new_talk = Talks(sending_user=request.user, receiving_user=CustomUser.objects.get(
-                id=3))  # idにどのようなidを入れるかで送り先が変わる
+                id=send_id))  # idにどのようなidを入れるかで送り先が変わる
             new_talk.save()
 
             post = form.save(commit=False)
@@ -120,20 +151,6 @@ def talk_create(request):  # 新規トークフォーム
         initial_dict = dict(sending_user=request.user,)
         form = NewTalkForm(initial=initial_dict)
         return render(request, 'postapp/talk_create.html', {'form': form})
-
-
-
-
-
-def favorite_check(request, talk_id):
-    talk = Talks.objects.get(id=talk_id)
-    try:
-        Exist_favorites = talk.favorites_set.all().filter(user_id=request.user)[
-            0] in request.user.favorites_set.all()
-    except:
-        Exist_favorites = False
-
-    return Exist_favorites
 
 
 def talk_detail(request, talk_id):  # 既存トークフォーム
@@ -181,7 +198,7 @@ def talk_detail(request, talk_id):  # 既存トークフォーム
             now = datetime.datetime.now()
             talk = Talks.objects.get(id=talk_id)
             created_at = talk.created_at.replace(
-                tzinfo=None) + datetime.timedelta(days=14) + datetime.timedelta(hours=9) + datetime.timedelta(minutes=2)
+                tzinfo=None) + datetime.timedelta(days=0) + datetime.timedelta(hours=9) + datetime.timedelta(minutes=1)
             #left_time = created_at - data
             # print(left_time)
 

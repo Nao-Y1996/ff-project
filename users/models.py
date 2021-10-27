@@ -107,9 +107,9 @@ class UserInfo(models.Model):
         validators.MaxValueValidator(1.0)], blank=True, null=True)
     introduction = models.TextField(blank=True,null=True)
     profile_image = models.ImageField(upload_to=image_directory_path, blank=True, null=True)
-    count_send_new_messages = models.IntegerField(blank=True,null=True)
-    count_receive_new_messages = models.IntegerField(blank=True,null=True)
-    count_bad_messages = models.IntegerField(blank=True,null=True)
+    count_send_new_messages = models.IntegerField(blank=True,null=True,default=0)
+    count_receive_new_messages = models.IntegerField(blank=True,null=True,default=0)
+    count_bad_messages = models.IntegerField(blank=True,null=True,default=0)
     def __str__(self):
         return str(self.user)
 
