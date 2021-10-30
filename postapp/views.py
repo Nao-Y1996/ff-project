@@ -222,6 +222,10 @@ def talk_detail(request, talk_id):  # 既存トークフォーム
                         talk.exist_reply = True
                         talk.save()
 
+                        user_info = UserInfo.objects.get(user_id=receiving_user)
+                        user_info.count_first_reply += 1
+                        user_info.save()
+
         return render(request, 'postapp/talk_detail.html', {'messages': messages, 'form': form, 'talk_id': talk_id, 'Exist_favorites': Exist_favorites})
 
 
