@@ -1,6 +1,32 @@
 {% extends "base.html" %}
 {% block content %}
 
+{% if flag %}
+    事後公開情報掲載
+    <br>
+    <br>
+    {{sending_user}}
+    <br>
+    {{user_info.age}}歳
+    <br>
+    {{user_info.country}}
+    <br>
+    {{user_info.introduction}}
+    <br>
+    <br>
+    {% if Exist_favorites == False %}
+    <a href="{% url 'postapp:final_favorite_add' talk_id=talk_id %}">お気に入りする</a>
+    <br>
+    <a href="{% url 'postapp:final_favorite_delete' talk_id=talk_id %}">お気に入りしない</a>
+    {% else %}
+
+    <a href="{% url 'postapp:confirmed_add' talk_id=talk_id %}">確認を終了してトーク一覧へ戻る</a><br>
+
+    {% endif %}
+    <br>
+    トーク履歴は以下(終了トークのため送信はできません)
+{% endif %}
+
 {% for message in messages %}
 <div>
     {% if message.sending_user_id == user.id %}
@@ -19,15 +45,17 @@
 </div>
 {% endfor %}
 
-<form method="POST">
-    {% csrf_token %}
-    {{ form.id}}
-    {{ form.sending_user}}
-    {{ form.content }}
-    {{ form.talk }}
-    {{ form.created_at }}
-    <button type="submit">送信</button>
-</form>
+{% if not flag %}
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.id}}
+        {{ form.sending_user}}
+        {{ form.content }}
+        {{ form.talk }}
+        {{ form.created_at }}
+        <button type="submit">送信</button>
+    </form>
+{% endif %}
 
 {% if Exist_favorites == False %}
 

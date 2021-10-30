@@ -155,6 +155,53 @@
                     <td> {{talk.created_at|date:"Y-m-d_H:i:s O" }}</td>
                 </tr>
                 {% endfor %}
+
+                <!-- <div>お気に入りした終了トーク</div> -->
+                {% for talk in favorite_dead_talks %}
+                <tr>
+                    <td>終了したお気に入りトーク</td>
+                    <!-- 自分がメッセージを送った時 -->
+                    {% if talk.sending_user == user %}
+
+                        {% if talk.exist_reply == True %}
+                            <!--返信があれば詳細へのリンクといいねボタンを表示-->
+                            <td><!--相手-->
+                                <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">{{talk.receiving_user}}</a>
+                            </td>
+                            <td><!--いいね-->
+                                {% favorite_check user talk as flag %}
+                                {% if flag %}
+                                <a href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}">Delete Favorite</a>
+                                {% else %}
+                                <a href="{% url 'postapp:talk_favorite_add' talk_id=talk.id %}">Add Favorite</a>
+                                {% endif %}
+                            </td>
+                        {% else %}
+                            <!--返信がなければ相手の名前のみ表示-->
+                            <td><!--相手-->
+                                {{talk.receiving_user}}
+                            </td>
+                            <td></td><!--いいね-->
+                    {% endif %}
+
+                    <!-- 相手からメッセージが来た時 -->
+                    {% else %}
+                        <td><!--相手-->
+                            <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">{{talk.sending_user}}</a>
+                        </td>
+                        <td><!--いいね-->
+                            {% favorite_check user talk as flag %}
+                            {% if flag %}
+                            <a href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}">Delete Favorite</a>
+                            {% else %}
+                            <a href="{% url 'postapp:talk_favorite_add' talk_id=talk.id %}">Add Favorite</a>
+                            {% endif %}
+                        </td>
+                    {% endif %}
+                    <td>{% get_newest_message talk.id %}</td>
+                    <td> {{talk.created_at|date:"Y-m-d_H:i:s O" }}</td>
+                </tr>
+                {% endfor %}
             </table>        </div>
         <div class='col-3' id="talks-time_limit">
         </div>

@@ -93,10 +93,9 @@ def talk_all(request):
                 checked_userinfo = False
             if checked_userinfo:
                 unchecked_dead_talks.append(talk)
-
             else:
                 #お気に入りの有無でtalkを分類
-                if favorite_check(request, talk.id):
+                if favorite_check(request, talk):
                     favorite_dead_talks.append(talk)
         else:
             if was_read(talk):
@@ -104,7 +103,7 @@ def talk_all(request):
             else:
                 unread_talks.append(talk)
     print('='*20)
-    print(len(my_talks), len(unchecked_dead_talks)+len(unread_talks)+len(read_talks))
+    print(len(my_talks), len(unchecked_dead_talks)+len(unread_talks)+len(read_talks)+len(favorite_dead_talks))
 
     create_data = {}
     for i, talk in enumerate(my_talks):
@@ -168,33 +167,37 @@ def talk_create(request):  # 新規トークフォーム
 def talk_detail(request, talk_id):  # 既存トークフォーム
     talk = Talks.objects.get(id=talk_id)
     if request.method == 'POST':
-        Exist_favorites = favorite_check(request, talk)
-        form = MessageForm(request.POST)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.save()
-
-            # talk = Talks.objects.get(id=talk_id)
-            talk.detail_opened = False
-            talk.save()
-
-            print("*"*40)
-            print(talk.detail_opened)
-
-            initial_dict = {"sending_user": request.user, "talk": talk_id, }
-            form = MessageForm(initial=initial_dict)
-            messages = Message.objects.filter(talk_id=talk_id).all
-            return redirect(request.META['HTTP_REFERER'])
-            # return render(request, 'postapp/talk_detail.html', {'messages':messages, 'form': form ,'talk_id':talk_id , 'Exist_favorites':Exist_favorites})
-
+        if not is_talk_active(talk):#終了トークなのに誤って送信が行われた場合
+            return redirect(request.META['HTTP_REFERER']) 
         else:
-            messages = Message.objects.filter(talk_id=talk_id).all
-            return render(request, 'postapp/talk_detail.html', {'messages': messages, 'form': form, 'talk_id': talk_id, 'Exist_favorites': Exist_favorites})
+            Exist_favorites = favorite_check(request, talk)
+            form = MessageForm(request.POST)
+            if form.is_valid():
+                post = form.save(commit=False)
+                post.save()
+
+                # talk = Talks.objects.get(id=talk_id)
+                talk.detail_opened = False
+                talk.save()
+
+                print("*"*40)
+                print(talk.detail_opened)
+
+                initial_dict = {"sending_user": request.user, "talk": talk_id, }
+                form = MessageForm(initial=initial_dict)
+                messages = Message.objects.filter(talk_id=talk_id).all
+                return redirect(request.META['HTTP_REFERER'])
+                # return render(request, 'postapp/talk_detail.html', {'messages':messages, 'form': form ,'talk_id':talk_id , 'Exist_favorites':Exist_favorites})
+
+            else:
+                messages = Message.objects.filter(talk_id=talk_id).all
+                return render(request, 'postapp/talk_detail.html', {'messages': messages, 'form': form, 'talk_id': talk_id, 'Exist_favorites': Exist_favorites})
     else:
         # 返信がない かつ 自分がトークの開始者である 時はトーク詳細に入れない(トーク一覧に戻される)
         if (not talk.exist_reply) & (talk.sending_user == request.user):
             return redirect("postapp:talk_all")
         else:
+            flag = False
             newest_message = Message.objects.filter(talk_id=talk_id).latest("created_at")#.order_by('-created_at')[0]
             if newest_message.sending_user != request.user:
                 talk.detail_opened = True
@@ -204,7 +207,9 @@ def talk_detail(request, talk_id):  # 既存トークフォーム
                 Exist_favorites = favorite_check(request, talk)
                 sending_user = talk.sending_user
                 user_info = UserInfo.objects.get(user_id=sending_user)
-                return render(request, 'postapp/post_release.html', {'user_info': user_info, 'sending_user': sending_user, 'Exist_favorites': Exist_favorites, 'talk_id': talk_id})
+                messages = Message.objects.filter(talk_id=talk_id).all
+                flag = True
+                return render(request, 'postapp/talk_detail.html', {'flag':flag,'messages': messages,'user_info': user_info, 'sending_user': sending_user, 'Exist_favorites': Exist_favorites, 'talk_id': talk_id})
             else:
                 initial_dict = {
                     "sending_user": request.user, "talk": talk_id, }
@@ -226,7 +231,7 @@ def talk_detail(request, talk_id):  # 既存トークフォーム
                         user_info.count_first_reply += 1
                         user_info.save()
 
-        return render(request, 'postapp/talk_detail.html', {'messages': messages, 'form': form, 'talk_id': talk_id, 'Exist_favorites': Exist_favorites})
+        return render(request, 'postapp/talk_detail.html', {'flag':flag, 'messages': messages, 'form': form, 'talk_id': talk_id, 'Exist_favorites': Exist_favorites})
 
 
 def talk_favorite_add(request, talk_id):  # お気に入り追加
