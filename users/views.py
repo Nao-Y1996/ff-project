@@ -22,6 +22,8 @@ from django.contrib import messages
 from .forms import LoginForm, UserCreateForm, MyPasswordChangeForm, MyPasswordResetForm, \
     MySetPasswordForm, EmailChangeForm, UserInfoUpdateForm, ReportForm, UserReregistrationForm  # WithdrawalForm
 from .models import UserInfo, Report, ReportReasons, CustomUser
+from datetime import datetime, timezone
+from dateutil import tz
 User = get_user_model()
 
 # ログインユーザー自身以外は遷移できないようにするクラス
@@ -39,7 +41,7 @@ def Top(request):
     if request.user.is_authenticated:
         user_info = request.user.user_info
         # 国情報登録していなかったら
-        if user_info.country == None:
+        if user_info.nationality == None:
             form = UserInfoUpdateForm(instance=user_info)
             return redirect('users:userinfo_edit', info_id=user_info.id)
         else:
@@ -113,6 +115,19 @@ def Login(request):
         # パスワードとメールで認証
         user = authenticate(request, email=email, password=password)
         if user is not None:
+            last_login = user.last_login # UTC
+            now = datetime.now(timezone.utc)
+            # 初回ログインをしたらログインカウントをインクリメント
+            if last_login is None:
+                user.user_info.count_login += 1
+                user.user_info.save()
+            else:
+                # 24時間以上ぶりにログインしたらログインカウントをインクリメント
+                if ((now - last_login).seconds > 24*60*60):
+                    user.user_info.count_login += 1
+                    user.user_info.save()
+                else:
+                    pass
             login(request, user)  # ログイン
             return redirect('users:profile')
         else:
