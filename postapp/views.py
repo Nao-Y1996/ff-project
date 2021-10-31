@@ -25,6 +25,7 @@ from django.http.response import JsonResponse
 from datetime import date
 
 import random
+import numpy as np
 DAYS = 0
 HOURS=9
 MINUTES=2
@@ -129,6 +130,25 @@ def decide_sender(request): #送り先を決定するアルゴリズム
     
     return send_id
 
+def update_seiding_priority():
+    users_info = UserInfo.objects.all()
+    from django_pandas.io import read_frame
+    df = read_frame(users_info, fieldnames=['count_receive_new_messages',
+                                            'count_first_reply',
+                                            'count_send_new_messages',
+                                            'count_login'])
+
+    binary_matrix = np.array(df) < np.mean(np.array(df), axis=0)
+    binary_matrix[:,1] = np.logical_not(binary_matrix[:,1])
+    binary_matrix[:,2] = np.logical_not(binary_matrix[:,2])
+
+    all_user_info = UserInfo.objects.all()
+    upd_user_infos = []
+    for user_info in all_user_info:
+        binary = '0b'+str(int(binary[0]))+str(int(binary[1]))+str(int(binary[2]))+str(int(binary[3]))
+        user_info.priority = 16 - int(binary,2)
+        upd_user_infos.append(user_info)
+    UserInfo.objects.bulk_update(upd_user_infos)
 
 def talk_create(request):  # 新規トークフォーム
     if request.method == 'POST':
