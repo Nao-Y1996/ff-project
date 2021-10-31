@@ -277,8 +277,6 @@
         let limit_date = new Date(days = 14)
 
         const get_date = document.getElementsByClassName('lefttime');
-        console.log("---------");
-        console.log(get_date[1].getAttribute('value'));
 
         for (let d of get_date) {
             let created_at = new Date(d.getAttribute('value').replace("_","T"))

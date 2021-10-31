@@ -113,6 +113,7 @@ class UserInfo(models.Model):
     count_login = models.IntegerField(blank=True,null=True,default=0)
     count_first_reply = models.IntegerField(blank=True,null=True,default=0)
     count_bad_messages = models.IntegerField(blank=True,null=True,default=0)
+    priority = models.IntegerField(default=7)
     def __str__(self):
         return str(self.user)
 
