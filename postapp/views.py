@@ -16,13 +16,12 @@ from django.core import serializers
 from django.http.response import JsonResponse
 
 import uuid
-import datetime
 
 from django.db.models import Q
 
 import json
 from django.http.response import JsonResponse
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timezone,timedelta
 import random
 import numpy as np
 DAYS = 0
@@ -43,9 +42,9 @@ def favorite_check(request, talk):
     return Exist_favorites
 
 def is_talk_active(talk):
-    now = datetime.datetime.now()
+    now = datetime.now()
     deadline = talk.created_at.replace(
-        tzinfo=None) + datetime.timedelta(days=DAYS) + datetime.timedelta(hours=HOURS) + datetime.timedelta(minutes=MINUTES)
+        tzinfo=None) + timedelta(days=DAYS) + timedelta(hours=HOURS) + timedelta(minutes=MINUTES)
     if deadline < now:
         is_talk_active = False
     else:
@@ -61,16 +60,16 @@ def talk_all(request):
             return True
 
     def is_active(talk):
-        now = datetime.datetime.now()
+        now = datetime.now()
         deadline = talk.created_at.replace(
-            tzinfo=None) + datetime.timedelta(days=0) + datetime.timedelta(hours=9) + datetime.timedelta(minutes=1)
+            tzinfo=None) + timedelta(days=0) + timedelta(hours=9) + timedelta(minutes=1)
         if deadline < now:
             is_talk_active = False
         else:
             is_talk_active = True
         return is_talk_active
 
-    data = datetime.datetime.now()
+    data = datetime.now()
     my_talks = Talks.objects.filter((Q(sending_user=request.user) | Q(
         receiving_user=request.user)))  # .order_by('-created_at')  # 自分の関わっているトークを全て取得
 

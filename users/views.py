@@ -134,6 +134,9 @@ def Login(request):
                 if ((now - last_login).seconds > 24*60*60):
                     user.user_info.count_login += 1
                     user.user_info.save()
+                elif user.user_info.count_login == 0:
+                    user.user_info.count_login += 1
+                    user.user_info.save()
                 else:
                     pass
                 # 1週間以上、更新関数が実行されていなかったら実行する
