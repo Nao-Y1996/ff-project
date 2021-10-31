@@ -124,16 +124,16 @@ def Login(request):
                 user.user_info.count_login += 1
                 user.user_info.save()
             else:
-                # 24時間以上ぶりにログインしたらログインカウントをインクリメント
-                if ((now - last_login).seconds > 24*60*60):
-                    user.user_info.count_login += 1
-                    user.user_info.save()
-                else:
-                    pass
                 # 24時間以上、メッセージ送信の優先順位が更新されていなかったら更新
                 priority_updated_at = Executedfunction.objects.get(name='update_seiding_priority').executed_at
                 if ((now - priority_updated_at).seconds > 24*60*60):
                     update_seiding_priority()
+                else:
+                    pass
+                # 24時間以上ぶりにログインしたらログインカウントをインクリメント
+                if ((now - last_login).seconds > 24*60*60):
+                    user.user_info.count_login += 1
+                    user.user_info.save()
                 else:
                     pass
                 # 1週間以上、更新関数が実行されていなかったら実行する
