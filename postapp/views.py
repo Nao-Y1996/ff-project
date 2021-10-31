@@ -133,15 +133,17 @@ def decide_sender(request): #送り先を決定するアルゴリズム
 def update_seiding_priority():
     users_info = UserInfo.objects.all()
     from django_pandas.io import read_frame
-    df = read_frame(users_info, fieldnames=['count_receive_new_messages',
-                                            'count_first_reply',
-                                            'count_send_new_messages',
-                                            'count_login'])
-
+    # メッセージ送信の優先度の判定基準となる各カウント数をDataFrameに格納
+    df = read_frame(users_info, fieldnames=['count_receive_new_messages', # 少ない方が優先
+                                            'count_first_reply', # 多い方が優先
+                                            'count_send_new_messages', # 多い方が優先
+                                            'count_login']) # 少ない方が優先
+    # カウント数と平均値を比較して優先かそうでないかを真偽値で表現し判断基準行列となるbinary_matrixを作成
     binary_matrix = np.array(df) < np.mean(np.array(df), axis=0)
+    # count_first_reply, count_send_new_messagesを「少ない」に合わせるために真偽反転
     binary_matrix[:,1] = np.logical_not(binary_matrix[:,1])
     binary_matrix[:,2] = np.logical_not(binary_matrix[:,2])
-
+    # 各userの真偽値を10真数変換して優先順位とする
     all_user_info = UserInfo.objects.all()
     upd_user_infos = []
     for user_info in all_user_info:
@@ -149,6 +151,18 @@ def update_seiding_priority():
         user_info.priority = 16 - int(binary,2)
         upd_user_infos.append(user_info)
     UserInfo.objects.bulk_update(upd_user_infos)
+
+def update_count_for_priority():
+    all_user_info = UserInfo.objects.all()
+    upd_user_infos = []
+    for user_info in all_user_info:
+        user_info.count_receive_new_messages = 0
+        user_info.count_first_reply = 0
+        user_info.count_send_new_messages = 0
+        user_info.count_login = 0
+        upd_user_infos.append(user_info)
+    UserInfo.objects.bulk_update(upd_user_infos)
+
 
 def talk_create(request):  # 新規トークフォーム
     if request.method == 'POST':
