@@ -24,6 +24,8 @@ from .forms import LoginForm, UserCreateForm, MyPasswordChangeForm, MyPasswordRe
 from .models import UserInfo, Report, ReportReasons, CustomUser
 from datetime import datetime, timezone
 from dateutil import tz
+from postapp.views import update_count_for_priority, update_seiding_priority
+from postapp.models import Executedfunction
 User = get_user_model()
 
 # ログインユーザー自身以外は遷移できないようにするクラス
@@ -122,10 +124,25 @@ def Login(request):
                 user.user_info.count_login += 1
                 user.user_info.save()
             else:
+                # 24時間以上、メッセージ送信の優先順位が更新されていなかったら更新
+                priority_updated_at = Executedfunction.objects.get(name='update_seiding_priority').executed_at
+                if ((now - priority_updated_at).seconds > 24*60*60):
+                    update_seiding_priority()
+                else:
+                    pass
                 # 24時間以上ぶりにログインしたらログインカウントをインクリメント
                 if ((now - last_login).seconds > 24*60*60):
                     user.user_info.count_login += 1
                     user.user_info.save()
+                elif user.user_info.count_login == 0:
+                    user.user_info.count_login += 1
+                    user.user_info.save()
+                else:
+                    pass
+                # 1週間以上、更新関数が実行されていなかったら実行する
+                count_updated_at = Executedfunction.objects.get(name='update_count_for_priority').executed_at
+                if ((now - count_updated_at).seconds > 7*24*60*60):
+                    update_count_for_priority()
                 else:
                     pass
             login(request, user)  # ログイン

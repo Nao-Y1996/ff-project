@@ -9,22 +9,21 @@ from django.contrib.auth.views import (
 )
 from django.views import generic
 from .forms import MessageForm, NewTalkForm
-from .models import Favorites, Message, Talks
+from .models import Favorites, Message, Talks, Executedfunction
 from users.models import CustomUser, UserInfo
 
 from django.core import serializers
 from django.http.response import JsonResponse
 
 import uuid
-import datetime
 
 from django.db.models import Q
 
 import json
 from django.http.response import JsonResponse
-from datetime import date
-
+from datetime import date, datetime, timezone,timedelta
 import random
+import numpy as np
 DAYS = 0
 HOURS=9
 MINUTES=2
@@ -43,9 +42,9 @@ def favorite_check(request, talk):
     return Exist_favorites
 
 def is_talk_active(talk):
-    now = datetime.datetime.now()
+    now = datetime.now()
     deadline = talk.created_at.replace(
-        tzinfo=None) + datetime.timedelta(days=DAYS) + datetime.timedelta(hours=HOURS) + datetime.timedelta(minutes=MINUTES)
+        tzinfo=None) + timedelta(days=DAYS) + timedelta(hours=HOURS) + timedelta(minutes=MINUTES)
     if deadline < now:
         is_talk_active = False
     else:
@@ -61,16 +60,16 @@ def talk_all(request):
             return True
 
     def is_active(talk):
-        now = datetime.datetime.now()
+        now = datetime.now()
         deadline = talk.created_at.replace(
-            tzinfo=None) + datetime.timedelta(days=0) + datetime.timedelta(hours=9) + datetime.timedelta(minutes=1)
+            tzinfo=None) + timedelta(days=0) + timedelta(hours=9) + timedelta(minutes=1)
         if deadline < now:
             is_talk_active = False
         else:
             is_talk_active = True
         return is_talk_active
 
-    data = datetime.datetime.now()
+    data = datetime.now()
     my_talks = Talks.objects.filter((Q(sending_user=request.user) | Q(
         receiving_user=request.user)))  # .order_by('-created_at')  # 自分の関わっているトークを全て取得
 
@@ -120,13 +119,56 @@ def talk_all(request):
 
 
 def decide_sender(request): #送り先を決定するアルゴリズム
-
-    for i in range(100):
+    while True:
         send_id = random.randrange(1,9)
         if send_id != request.user:
             break
-    
     return send_id
+
+def update_seiding_priority():
+    users_info = UserInfo.objects.all()
+    from django_pandas.io import read_frame
+    # メッセージ送信の優先度の判定基準となる各カウント数をDataFrameに格納
+    df = read_frame(users_info, fieldnames=['count_receive_new_messages', # 少ない方が優先
+                                            'count_first_reply', # 多い方が優先
+                                            'count_send_new_messages', # 多い方が優先
+                                            'count_login']) # 少ない方が優先
+    # カウント数と平均値を比較して優先かそうでないかを真偽値で表現し判断基準行列となるbinary_matrixを作成
+    binary_matrix = np.array(df) < np.mean(np.array(df), axis=0)
+    # count_first_reply, count_send_new_messagesを「少ない」に合わせるために真偽反転
+    binary_matrix[:,1] = np.logical_not(binary_matrix[:,1])
+    binary_matrix[:,2] = np.logical_not(binary_matrix[:,2])
+    # 各userの真偽値を10真数変換して優先順位とする
+    all_user_info = UserInfo.objects.all()
+    upd_user_infos = []
+    for user_info in all_user_info:
+        binary = '0b'+str(int(binary[0]))+str(int(binary[1]))+str(int(binary[2]))+str(int(binary[3]))
+        user_info.priority = 16 - int(binary,2)
+        upd_user_infos.append(user_info)
+    UserInfo.objects.bulk_update(upd_user_infos)
+    # 実行時刻を保存
+    self_func_name = sys._getframe().f_code.co_name
+    func = Executedfunction.objects.get(name=self_func_name)
+    func.executed_at = datetime.now(timezone.utc)
+    func.save()
+    print(f'関数を実行しました：{self_func_name}, time --> {func.executed_at}')
+
+def update_count_for_priority():
+    all_user_info = UserInfo.objects.all()
+    upd_user_infos = []
+    for user_info in all_user_info:
+        user_info.count_receive_new_messages = 0
+        user_info.count_first_reply = 0
+        user_info.count_send_new_messages = 0
+        user_info.count_login = 0
+        upd_user_infos.append(user_info)
+    UserInfo.objects.bulk_update(upd_user_infos)
+    # 実行時刻を保存
+    self_func_name = sys._getframe().f_code.co_name
+    func = Executedfunction.objects.get(name=self_func_name)
+    func.executed_at = datetime.now(timezone.utc)
+    func.save()
+    print(f'関数を実行しました：{self_func_name}, time --> {func.executed_at}')
 
 
 def talk_create(request):  # 新規トークフォーム
