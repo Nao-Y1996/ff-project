@@ -9,7 +9,7 @@ from django.contrib.auth.views import (
 )
 from django.views import generic
 from .forms import MessageForm, NewTalkForm
-from .models import Favorites, Message, Talks
+from .models import Favorites, Message, Talks, Executedfunction
 from users.models import CustomUser, UserInfo
 
 from django.core import serializers
@@ -22,8 +22,7 @@ from django.db.models import Q
 
 import json
 from django.http.response import JsonResponse
-from datetime import date
-
+from datetime import date, datetime, timezone
 import random
 import numpy as np
 DAYS = 0
@@ -122,12 +121,10 @@ def talk_all(request):
 
 
 def decide_sender(request): #送り先を決定するアルゴリズム
-
-    for i in range(100):
+    while True:
         send_id = random.randrange(1,9)
         if send_id != request.user:
             break
-    
     return send_id
 
 def update_seiding_priority():
@@ -151,6 +148,12 @@ def update_seiding_priority():
         user_info.priority = 16 - int(binary,2)
         upd_user_infos.append(user_info)
     UserInfo.objects.bulk_update(upd_user_infos)
+    # 実行時刻を保存
+    self_func_name = sys._getframe().f_code.co_name
+    func = Executedfunction.objects.get(name=self_func_name)
+    func.executed_at = datetime.now(timezone.utc)
+    func.save()
+    print(f'関数を実行しました：{self_func_name}, time --> {func.executed_at}')
 
 def update_count_for_priority():
     all_user_info = UserInfo.objects.all()
@@ -162,6 +165,12 @@ def update_count_for_priority():
         user_info.count_login = 0
         upd_user_infos.append(user_info)
     UserInfo.objects.bulk_update(upd_user_infos)
+    # 実行時刻を保存
+    self_func_name = sys._getframe().f_code.co_name
+    func = Executedfunction.objects.get(name=self_func_name)
+    func.executed_at = datetime.now(timezone.utc)
+    func.save()
+    print(f'関数を実行しました：{self_func_name}, time --> {func.executed_at}')
 
 
 def talk_create(request):  # 新規トークフォーム

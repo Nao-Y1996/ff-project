@@ -44,4 +44,10 @@ class Message(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
 
 
+class Executedfunction(models.Model):
+    name = models.TextField(max_length=200)
+    executed_at = models.DateTimeField(default=timezone.now)
+    def __str__(self):
+        return str(self.name)
 # admin ユーザー名:superuser , パスワード:sora0214
+
