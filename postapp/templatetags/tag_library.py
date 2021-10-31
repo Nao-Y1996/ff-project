@@ -20,6 +20,13 @@ def get_newest_message(talk_id):
     newest_message = newest_message.content
 
     return newest_message
+
+@register.simple_tag
+def integer_to_string(integer):
+    
+    string=str(integer)
+    string="A"+string[2:]
+    return string
 # def multiply(value1, value2):
 #     return value1 * value2
 
