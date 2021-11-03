@@ -1,8 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
-<p>マイページです</p>
 {% if user.is_authenticated %}
-
+{% if messages %}
+	<ul class="messages_ul">
+		{% for message in messages %}
+			<p class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</p>
+		{% endfor %}
+	</ul>
+{% endif %}
+<p>マイページです</p>
 <img src="{{profile_image}}" width="100px" height="100px" class="rounded-circle" />
 <p>{{user.email}}でログインしています。</p>
 
@@ -26,6 +32,7 @@
 <li>国は{{user.user_info.nationality}}です。</li>
 <li>is_activeは{{user.is_active}}です。</li>
 <li>ログイン回数：{{user.user_info.count_login}}</li>
+<li>今日の送信回数は：{{user.user_info.count_send_new_messages_in_a_day}}</li>
 
 
 <li>通報された回数は{{user.reported.count}}回です。</li>

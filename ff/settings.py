@@ -33,7 +33,7 @@ except ImportError:
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.179.5:8000','127.0.0.1','localhost']
 
 
 # Application definition

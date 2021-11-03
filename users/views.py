@@ -130,12 +130,14 @@ def Login(request):
                     update_seiding_priority()
                 else:
                     pass
-                # 24時間以上ぶりにログインしたらログインカウントをインクリメント
+                # 24時間以上ぶりにログインしたら
                 if ((now - last_login).seconds > 24*60*60):
-                    user.user_info.count_login += 1
+                    user.user_info.count_login += 1 # ログインカウントをインクリメント
+                    user_info.count_send_new_messages_in_a_day = 0 # 本日の投稿可能数をリセット
                     user.user_info.save()
                 elif user.user_info.count_login == 0:
                     user.user_info.count_login += 1
+                    user_info.count_send_new_messages_in_a_day = 0 # 本日の投稿可能数をリセット
                     user.user_info.save()
                 else:
                     pass

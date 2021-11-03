@@ -11,7 +11,7 @@ from django.views import generic
 from .forms import MessageForm, NewTalkForm
 from .models import Favorites, Message, Talks, Executedfunction
 from users.models import CustomUser, UserInfo
-
+from django.contrib import messages
 from django.core import serializers
 from django.http.response import JsonResponse
 
@@ -27,6 +27,7 @@ import numpy as np
 DAYS = 0
 HOURS=9
 MINUTES=2
+SEND_NUM_LIMIT = 4
 
 def mypage(request):
     return render(request, "postapp/mypage.html")
@@ -123,7 +124,8 @@ def decide_sender(request): #送り先を決定するアルゴリズム
         send_id = random.randrange(1,9)
         if send_id != request.user:
             break
-    return send_id
+    # return send_id
+    return 1
 
 def update_seiding_priority():
     users_info = UserInfo.objects.all()
@@ -180,14 +182,15 @@ def talk_create(request):  # 新規トークフォーム
             send_id = decide_sender(request) #送信先決定
 
             #新規投稿した人にカウント
-            send_count = UserInfo.objects.get(user_id=request.user)
-            send_count.count_send_new_messages += 1
-            send_count.save()
+            sending_user_info = UserInfo.objects.get(user_id=request.user)
+            sending_user_info.count_send_new_messages += 1
+            sending_user_info.count_send_new_messages_in_a_day += 1
+            sending_user_info.save()
 
             #新規投稿が送られた人にカウント
-            receive_count = UserInfo.objects.get(user_id=send_id)
-            receive_count.count_receive_new_messages += 1
-            receive_count.save()
+            recieving_user_info = UserInfo.objects.get(user_id=send_id)
+            recieving_user_info.count_receive_new_messages += 1
+            recieving_user_info.save()
 
             new_talk = Talks(sending_user=request.user, receiving_user=CustomUser.objects.get(
                 id=send_id))  # idにどのようなidを入れるかで送り先が変わる
@@ -201,6 +204,11 @@ def talk_create(request):  # 新規トークフォーム
         else:
             return render(request, 'postapp/talk_create.html', {'form': form})
     else:
+        user_info = UserInfo.objects.get(user_id=request.user)
+        if user_info.count_send_new_messages_in_a_day >= SEND_NUM_LIMIT :
+            messages.warning(
+                    request, f'本日の投稿可能上限に達しました。')
+            return redirect("users:profile")
         initial_dict = dict(sending_user=request.user,)
         form = NewTalkForm(initial=initial_dict)
         return render(request, 'postapp/talk_create.html', {'form': form})
@@ -210,7 +218,7 @@ def talk_detail(request, talk_id):  # 既存トークフォーム
     talk = Talks.objects.get(id=talk_id)
     if request.method == 'POST':
         if not is_talk_active(talk):#終了トークなのに誤って送信が行われた場合
-            return redirect(request.META['HTTP_REFERER']) 
+            return redirect(request.META['HTTP_REFERER'])
         else:
             Exist_favorites = favorite_check(request, talk)
             form = MessageForm(request.POST)
