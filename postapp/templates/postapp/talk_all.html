@@ -180,7 +180,7 @@
                             <div class="list3">
                                 <span class="span_time">
                                     {% integer_to_string talk.id as flag %}
-                                    <p class="time" id={{flag}}>残り時間</p>
+                                    <a>Limit</a><p class="time" id={{flag}}></p>
                                     <input class="lefttime" type="hidden" id={{flag}} value={{talk.created_at|date:"Y-m-d_H:i:sO"}}>
                                 </span>
                                 {% if talk.exist_reply == True %} <!--返信があればいいねボタンを表示-->
@@ -238,7 +238,7 @@
                             <div class="list3">                                
                                 <span class="span_time">
                                     {% integer_to_string talk.id as flag %}
-                                    <p class="time" id={{flag}}>残り時間</p>
+                                    <a>Limit</a><p class="time" id={{flag}}></p>
                                     <input class="lefttime" type="hidden" id={{flag}} value={{talk.created_at|date:"Y-m-d_H:i:sO"}}>
                                 </span>                                
                                 {% if talk.exist_reply == True %} <!--返信があればいいねボタンを表示-->
