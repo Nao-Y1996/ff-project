@@ -172,14 +172,10 @@
                             </div>
                         </div>
                         <div class="list2">
-                            <div class="overflow">
-                                {% if talk.exist_reply == True %} <!--返信があればトーク詳細のリンク表示-->                            
-                                    <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">
-                                        {% get_newest_message talk.id %}
-                                    </a>  
-                                {% else %} <!--返信がなければ相手の名前のみ表示-->                                
+                            <div class="overflow">                          
+                                <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">
                                     {% get_newest_message talk.id %}
-                                {% endif %}
+                                </a>  
                             </div>
                             <div class="list3">
                                 <span class="span_time">
