@@ -403,6 +403,56 @@
                     </div>
 				</div>
 			</main>
+
+            <script>
+
+                /*
+                const data = JSON.parse('{{ data_json|safe }}');
+            
+                function init_display() {
+                    for (let d in data) {
+                        var newElement = document.createElement("p"); // p要素作成
+                        newElement.setAttribute("id", "talk" + d); // p要素にidを設定
+            
+                        var parentDiv = document.getElementById("talks-time_limit");
+                        parentDiv.insertBefore(newElement, parentDiv.lastChild);
+                    }
+                }
+                */
+            
+                function update_time() {
+                    let nowTime = new Date();
+                    let limit_date = new Date(days = 14)
+            
+                    const get_date = document.getElementsByClassName('lefttime');
+            
+                    for (let d of get_date) {
+                        let created_at = new Date(d.getAttribute('value').replace("_","T"))
+                        created_at.setDate(created_at.getDate() + 14);
+                        let left_time = (created_at - nowTime) / 1000
+            
+                        let daysLeft = Math.floor(left_time / (24 * 60 * 60));
+                        let hoursLeft = (Math.floor(left_time / (60 * 60))) % 24;
+                        let minitesLeft = (Math.floor(left_time / 60)) % 60;
+                        let secondsLeft = Math.floor(left_time) % 60;
+                        // 二桁表示
+                        minitesLeft = ("0" + minitesLeft).slice(-2)
+                        secondsLeft = ("0" + secondsLeft).slice(-2)
+                        // 出力
+                        console.log(typeof(d.id))
+            
+                        document.querySelector("#"+d.id).innerHTML = (daysLeft + "d " + hoursLeft + "h " + minitesLeft + "m " + secondsLeft + "s ");
+                    }
+                }
+                /*
+                init_display();
+                */
+                update_time();
+            
+                setInterval(update_time, 1000)
+            
+            </script>
+            
             <!-- Optional JavaScript -->
 			<!-- jQuery first, then Popper.js, then Bootstrap JS -->
 			<script

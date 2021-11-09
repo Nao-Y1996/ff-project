@@ -168,15 +168,26 @@
                             </div>
                         </div>
                         <div class="list2">
+<<<<<<< HEAD
                             <div class="overflow">
                                  <!--返信があればトーク詳細のリンク表示-->                            
                                 <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">
                                     {% get_newest_message talk.id %}
+=======
+                            <div class="overflow">                          
+                                <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">
+                                    {% get_newest_message talk.id %}
+                                </a>  
+>>>>>>> 7365afda6fd93cef20fb35abe4c24c87b2d4d2b2
                             </div>
                             <div class="list3">
                                 <span class="span_time">
                                     {% integer_to_string talk.id as flag %}
+<<<<<<< HEAD
                                     <p class="time" id={{flag}}>Left time</p>
+=======
+                                    <a>Limit</a><p class="time" id={{flag}}></p>
+>>>>>>> 7365afda6fd93cef20fb35abe4c24c87b2d4d2b2
                                     <input class="lefttime" type="hidden" id={{flag}} value={{talk.created_at|date:"Y-m-d_H:i:sO"}}>
                                 </span>
                                 {% if talk.exist_reply == True %} <!--返信があればいいねボタンを表示-->
@@ -234,7 +245,7 @@
                             <div class="list3">                                
                                 <span class="span_time">
                                     {% integer_to_string talk.id as flag %}
-                                    <p class="time" id={{flag}}>残り時間</p>
+                                    <a>Limit</a><p class="time" id={{flag}}></p>
                                     <input class="lefttime" type="hidden" id={{flag}} value={{talk.created_at|date:"Y-m-d_H:i:sO"}}>
                                 </span>                                
                                 {% if talk.exist_reply == True %} <!--返信があればいいねボタンを表示-->
