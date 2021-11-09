@@ -1,0 +1,206 @@
+@media screen and (min-width: 990px) {  
+.menu_button{
+    /* width: 100%;
+    background-color: #fd680d;
+    color: #fff;
+    padding: 15px;
+    border:0;
+    border-radius:20px;
+    box-shadow: 0 0 8px rgba(0,0,30) */
+    display: inline-block;
+    width: 120px;
+    height: 40px;
+    text-align:center;
+    background-color: white;
+    color: black;
+    text-decoration: none;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 50px;
+    /* border-bottom: 4px solid #d37800; */
+    margin:20px auto;
+    border: 0px;
+    outline: none;
+    cursor:pointer;
+    -webkit-tap-highlight-color:none;
+    cursor:pointer;
+}
+.menu_button:hover{
+	font-size: 21px;
+    font-weight: bold;
+    background-color: rgb(232, 232, 232);
+    outline: none;
+    cursor:pointer;
+    -webkit-tap-highlight-color:none;
+    cursor:pointer;
+}
+
+.title{
+    font-size: 35px;
+    font-weight: bold;
+    font-family: Comic Sans MS;
+    color: orange;
+    
+}
+
+#v-pills-user-tab{
+    border-radius: 50px;
+    height: 90px;  
+}
+
+#v-pills-user-tab:hover{
+    background-color: rgb(232, 232, 232);
+}
+
+#v-pills-messages-tab{
+    background-color: orange;
+}
+
+#v-pills-messages-tab:hover{
+    background-color: darkorange;
+}
+
+img.profile_image{
+    text-align:center;
+    width:70px;
+}
+
+#v-pills-signin-tab{
+    background-color: orange;
+}
+
+#v-pills-signin-tab:hover{
+    background-color: darkorange;
+}
+
+#v-pills-login-tab{
+    background-color: lemonchiffon;
+}
+
+#v-pills-login-tab:hover{
+    background-color:yellow;
+}
+
+img.button-image{
+    display: none;
+}
+
+.button-title{
+    font-size: 20px;
+    text-decoration: none;
+}
+
+.fa-key, .fa-home, .fa-cog, .fa-paper-plane, .fa-sign-out-alt{
+    display:none
+}
+
+.fa-plane{
+    align-items: center;
+    justify-content: center;
+}
+.username_button{
+    text-decoration: none;
+}
+
+}
+
+@media screen and (max-width: 990px) {  
+    .menu_button{
+        /* width: 100%;
+        background-color: #fd680d;
+        color: #fff;
+        padding: 15px;
+        border:0;
+        border-radius:20px;
+        box-shadow: 0 0 8px rgba(0,0,30) */
+        display: inline-block;
+        width: 50px;
+        height: 50px;
+        text-align:center;
+        background-color: white;
+        font-size: 20px;
+        color: black;
+        text-decoration: none;
+        font-weight: bold;
+        border-radius: 25px;
+        /* border-bottom: 4px solid #d37800; */
+        margin:20px auto;
+        border: 0px;
+        outline: none;
+        cursor:pointer;
+        -webkit-tap-highlight-color:none;
+        cursor:pointer;
+    }
+    .menu_button:hover{
+        font-size: 21px;
+        font-weight: bold;
+        background-color: rgb(232, 232, 232);
+        outline: none;
+        cursor:pointer;
+        -webkit-tap-highlight-color:none;
+        cursor:pointer;
+    }
+    
+    .title{
+        font-size: 35px;
+        font-weight: bold;
+        font-family: Comic Sans MS;
+        color: orange;
+        
+    }
+    
+    #v-pills-user-tab{
+        border-radius: 25px;
+        height: 50px;  
+    }
+    
+    #v-pills-user-tab:hover{
+        background-color:rgb(232, 232, 232);
+    }
+    
+    #v-pills-messages-tab{
+        background-color: orange;
+    }
+    
+    #v-pills-messages-tab:hover{
+        background-color: darkorange;
+    }
+    
+    img.profile_image{
+        text-align:center;
+        width:40px;
+    }
+    
+    #v-pills-signin-tab{
+        background-color: orange;
+    }
+    
+    #v-pills-signin-tab:hover{
+        background-color: orangered;
+    }
+    
+    #v-pills-login-tab{
+        background-color: lemonchiffon;
+    }
+    
+    #v-pills-login-tab:hover{
+        background-color:yellow;
+    }
+
+     a > .button-title{
+        display:none;
+        text-decoration: none;
+    }
+
+    img.button-image{
+        width: 40px;
+    }
+
+    .title{
+        display: none;
+    }
+
+    .username_button{
+        text-decoration: none;
+    }
+ }

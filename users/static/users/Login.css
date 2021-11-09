@@ -1,0 +1,24 @@
+.all_signin{
+	display:flex;
+	width:100%;
+	height:100vh;
+	align-items: center;
+    justify-content: center;
+	flex-flow: column;
+	margin: auto;
+}
+
+.name_account,.password_account{
+	font-weight: bold;
+}
+
+.input{
+   width: 100%;
+    margin: auto;
+    padding: 0.5rem 1rem;
+    border-radius: 1.0rem;
+    background: darken(#f9f9f96b, 10%);
+    color: darken(#f7f7f738, 50%);
+	border: solid 3px #333;
+	outline:none;
+}

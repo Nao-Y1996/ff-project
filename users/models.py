@@ -107,7 +107,7 @@ class UserInfo(models.Model):
     gender_of_love = models.FloatField(validators=[validators.MinValueValidator(-1.0),
         validators.MaxValueValidator(1.0)], blank=True, null=True)
     introduction = models.TextField(blank=True,null=True)
-    profile_image = models.ImageField(upload_to=image_directory_path, blank=True, null=True)
+    profile_image = models.ImageField(upload_to=image_directory_path, blank=True, null=True, default='no_image.png')
     count_send_new_messages = models.IntegerField(blank=True,null=True,default=0)
     count_receive_new_messages = models.IntegerField(blank=True,null=True,default=0)
     count_login = models.IntegerField(blank=True,null=True,default=0)

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<html lang="en">
+	<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, shrink-to-fit=no"
+		/>
+		<!-- Bootstrap CSS -->
+		<link
+			rel="stylesheet"
+			href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+			integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+			crossorigin="anonymous"
+		/>
+		<link rel="stylesheet" href="{% static 'users/button.css' %}">
+		<link rel="stylesheet" href="{% static 'users/Login.css' %}">
+
+		<title>login</title>
+	</head>
+	<body>
+		<div class="all_signin">
+			<div class="namelist">
+				<div class="name_account">Username / E-mail</div>
+				<input
+					class="input"
+					type="text"
+					placeholder="Username / E-mail"
+					name="name"
+					required
+				/>
+			</div>
+			<div class="passlist">
+				<div class="password_account">Password</div>
+				<input
+					class="input"
+					type="password"
+					placeholder="Password"
+					name="password"
+					required
+				/>
+				<!--<img class="picture" src="OzawaShota.jpg" alt="user's photo" title="user">-->
+			</div>
+			<div class="buttonlist">
+				<button
+					class="button_back"
+					type="submit"
+					onclick="location.href='top.html'"
+				>
+					Back
+				</button>
+				<button
+					class="button_next"
+					type="submit"
+					onclick="location.href='home.html'"
+				>
+					next
+				</button>
+			</div>
+		</div>
+
+		<!-- Optional JavaScript -->
+		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+		<script
+			src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+			integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+			crossorigin="anonymous"
+		></script>
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
+			integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+			crossorigin="anonymous"
+		></script>
+		<script
+			src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
+			integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+			crossorigin="anonymous"
+		></script>
+	</body>
+</html>
+
+{% endblock %}

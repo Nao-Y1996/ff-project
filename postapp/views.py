@@ -24,7 +24,7 @@ from django.http.response import JsonResponse
 from datetime import date, datetime, timezone,timedelta
 import random
 import numpy as np
-DAYS = 0
+DAYS = 20
 HOURS=9
 MINUTES=2
 
@@ -115,6 +115,8 @@ def talk_all(request):
               'read_talks':read_talks,
               'favorite_dead_talks':favorite_dead_talks,
               }
+    print('='*70)
+    print(request.user.user_info.profile_image)
     return render(request, "postapp/talk_all.html", params)
 
 

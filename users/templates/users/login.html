@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block content %}
 
 {% if form.errors %}
@@ -23,8 +23,13 @@
 	</ul>
 {% endif %}
 
+<link rel="stylesheet" href="{% static 'users/button.css' %}">
+<link rel="stylesheet" href="{% static 'users/Login.css' %}">
+
 <form method="post" action="{% url 'users:login' %}">
     {% csrf_token %}
+
+    <!-- 
     <table>
         <tr>
             <td>{{ form.username.label_tag }}</td>
@@ -35,9 +40,38 @@
             <td>{{ form.password }}</td>
         </tr>
     </table>
+    -->
 
-    <input type="submit" value="login">
-    <input type="hidden" name="next" value="{{ next }}">
+    <div class="all_signin">
+        <div class="namelist">
+            <div class="name_account">Username / E-mail</div> 
+                {{ form.username }}
+                
+        </div>
+
+        <div class="passlist">
+            <div class="password_account">Password</div>
+                {{ form.password }} 
+        </div>
+        
+        <div class="buttonlist">
+            <!-- <input type="submit" value="login"> -->
+            <button
+                class="button_back"
+                type="submit"
+                onclick="location.href='top.html'"
+				>
+			Back</button>
+            <!-- Back は　まだloginと同じ挙動なので、要修正-->
+            <button
+                class="button_next"
+                type="submit"
+                value="login"
+            >
+            login</button>
+            <input type="hidden" name="next" value="{{ next }}">
+        </div>
+    </div>
 </form>
 
 <div class="card-body">

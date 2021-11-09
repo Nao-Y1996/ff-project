@@ -1,49 +1,140 @@
-{% extends "base.html" %}
-{% block content %}
-<p>マイページです</p>
-{% if user.is_authenticated %}
+{% load static %}
 
-<img src="{{profile_image}}" width="100px" height="100px" class="rounded-circle" />
-<p>{{user.email}}でログインしています。</p>
+<!doctype html>
+<html lang="en">
 
-<li>
-    <a class="btn btn-info" href="{% url 'users:email_change' %}">メールアドレスの変更</a>
-</li>
-<li>
-    <a class="btn btn-success" href="{% url 'users:password_change'%}">パスワード変更</a>
-</li>
-<li>
-    <a class="btn btn-success" href="{% url 'users:userinfo_edit' user.user_info.id %}">公開情報の編集</a>
-</li>
-<li>
-    <a class="btn btn-success" href="{% url 'users:report' %}">通報</a>
-</li>
-<li>
-    <a class="btn btn-warning" href="{% url 'users:withdrawal' %}">退会</a>
-</li>
+    <head>
 
-<li>ユーザーネームは{{user.username}}です。</li>
-<li>国は{{user.user_info.nationality}}です。</li>
-<li>is_activeは{{user.is_active}}です。</li>
-<li>ログイン回数：{{user.user_info.count_login}}</li>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+            integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    
+        <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet"/>
+    
+        <link rel="stylesheet" href="{% static 'postapp/frame.css' %}">
+        <link rel="stylesheet" href="{% static 'postapp/menu.css' %}">
+        <link rel="stylesheet" href="{% static 'postapp/newpost2.css' %}">
+        <link rel="stylesheet" href="{% static 'postapp/postrelease.css' %}">
+        <link rel="stylesheet" href="{% static 'postapp/Table.css' %}">
+        <link rel="stylesheet" href="{% static 'postapp/account.css' %}">
+        
+        
+    </head>
+    
+    <body>  
+        <!-- <header>FF project<br /></header> -->
+        <div class="container flexbox-container">
+            <aside>
+                <div class="title">FF<br />project</div>
+                <i class="fas fa-key fa-lg"></i>
+                <!-- <div class="col-3"> -->
+                <div
+                    class="nav flex-column nav-pills"
+                    id="v-pills-tab"
+                    role="tablist"
+                    aria-orientation="vertical"
+                >
+                    <nav class="nav flex-column">
+                        <a 
+                            href="{% url 'users:userinfo_edit' user.user_info.id %}"
+                            class="menu_button" 
+                            id="v-pills-user-tab"
+                            role="tab"
+                            aria-controls="v-pills-user"
+                            aria-selected="false">
+                            <img 
+                                src="{{user.user_info.profile_image.url}}"                        
+                                width="65px" 
+                                height="65px"
+                            />
+                            <p class="button-title">Username</p>
+                        </a>                   
+                        <a 
+                            href="{% url 'postapp:talk_all' %}"
+                            class="menu_button" 
+                            id="v-pills-home-tab"
+                            role="tab"
+                            aria-controls="v-pills-home"
+                            aria-selected="false">
+                            <i class="fas fa-home fa-lg"></i>
+                            <p class="button-title">Home</p>
+                        </a>
+                        <a 
+                            href="{% url 'users:profile' %}"
+                            class="menu_button" 
+                            id="v-pills-profile-tab"
+                            role="tab"
+                            aria-controls="v-pills-profile"
+                            aria-selected="false">
+                            <p class="button-title">Account</p>
+                            <i class="fas fa-cog fa-lg"></i>
+                        </a>
+                        <a 
+                            href="{% url 'postapp:talk_create' %}"
+                            class="menu_button" 
+                            class="nav-link"
+                            id="v-pills-messages-tab"
+                            role="tab"
+                            aria-controls="v-pills-messages"
+                            aria-selected="false">
+                            <p class="button-title">New post</p>
+                            <i class="fas fa-paper-plane fa-lg"></i>
+                        </a>
+                        <a 
+                            href="{% url 'users:logout' %}"
+                            class="menu_button" 
+                            class="nav-link"
+                            id="v-pills-settings-tab"
+                            role="tab"
+                            aria-controls="v-pills-settings"
+                            aria-selected="false">
+                            <p class="button-title">Logut</p>
+                            <i class="fas fa-sign-out-alt fa-lg"></i>                   
+                        </a>
+                    </nav>
+                </div>
+                <!-- </div> -->
+            </aside>
+
+            {% if user.is_authenticated %}
+            <main>
+
+                <img src="{{profile_image}}" width="100px" height="100px" class="rounded-circle" />
+                <p>{{user.email}}でログインしています。</p>
+
+                <li>
+                    <a class="btn btn-info" href="{% url 'users:email_change' %}">メールアドレスの変更</a>
+                </li>
+                <li>
+                    <a class="btn btn-success" href="{% url 'users:password_change'%}">パスワード変更</a>
+                </li>
+                <li>
+                    <a class="btn btn-success" href="{% url 'users:userinfo_edit' user.user_info.id %}">公開情報の編集</a>
+                </li>
+                <li>
+                    <a class="btn btn-success" href="{% url 'users:report' %}">通報</a>
+                </li>
+                <li>
+                    <a class="btn btn-warning" href="{% url 'users:withdrawal' %}">退会</a>
+                </li>
+
+                <li>ユーザーネームは{{user.username}}です。</li>
+                <li>国は{{user.user_info.nationality}}です。</li>
+                <li>is_activeは{{user.is_active}}です。</li>
+                <li>ログイン回数：{{user.user_info.count_login}}</li>
 
 
-<li>通報された回数は{{user.reported.count}}回です。</li>
+                <li>通報された回数は{{user.reported.count}}回です。</li>
 
-<li>通報した回数は{{user.reporting.count}}回です。</li>
+                <li>通報した回数は{{user.reporting.count}}回です。</li>
 
-
-
-<div class="card col-md-6">
-    <div class="card-body">
-        <a href="{% url 'postapp:talk_create' %}" class="btn btn-success btn-lg btn-block">新規投稿</a>
-    </div>
-    <div class="card-body">
-        <a href="{% url 'postapp:talk_all' %}" class="btn btn-success btn-lg btn-block">トーク一覧</a>
-    </div>
-</div>
-
-{% else %}
-<p>ログインしていません。</p>
-{% endif %}
-{% endblock %}
+            </main>
+            {% else %}
+            <p>ログインしていません。</p>
+            {% endif %}
+        </div>
+    </body>
