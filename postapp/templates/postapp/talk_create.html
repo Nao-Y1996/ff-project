@@ -9,10 +9,7 @@
 		/>
 		<link rel="stylesheet" href="{% static 'postapp/frame.css'%}" />
 		<link rel="stylesheet" href="{% static 'postapp/menu.css'%}" />
-		<link rel="stylesheet" href="{% static 'postapp/Table.css'%}" />
-		<link rel="stylesheet" href="{% static 'postapp/postrelease.css'%}" />
 		<link rel="stylesheet" href="{% static 'postapp/newpost2.css'%}" />
-		<link rel="stylesheet" href="{% static 'postapp/account.css'%}" />
 		<!-- Required meta tags -->
 		<meta charset="utf-8" />
 		<meta
@@ -51,8 +48,7 @@
                             aria-selected="false">
                             <img 
                                 src="{{user.user_info.profile_image.url}}"                        
-                                width="65px" 
-                                height="65px"
+                                class="prof_image"
                             />
                             <p class="button-title">Username</p>
                         </a>                   

@@ -19,10 +19,7 @@
 
     <link rel="stylesheet" href="{% static 'postapp/frame.css' %}">
     <link rel="stylesheet" href="{% static 'postapp/menu.css' %}">
-    <link rel="stylesheet" href="{% static 'postapp/newpost2.css' %}">
-    <link rel="stylesheet" href="{% static 'postapp/postrelease.css' %}">
     <link rel="stylesheet" href="{% static 'postapp/Table.css' %}">
-    <link rel="stylesheet" href="{% static 'postapp/account.css' %}">
     
     
 </head>
@@ -50,8 +47,7 @@
                         aria-selected="false">
                         <img 
                             src="{{user.user_info.profile_image.url}}"                        
-                            width="65px" 
-                            height="65px"
+                            class="prof_image"
                         />
                         <p class="button-title">Username</p>
                     </a>                   
@@ -173,18 +169,14 @@
                         </div>
                         <div class="list2">
                             <div class="overflow">
-                                {% if talk.exist_reply == True %} <!--返信があればトーク詳細のリンク表示-->                            
-                                    <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">
-                                        {% get_newest_message talk.id %}
-                                    </a>  
-                                {% else %} <!--返信がなければ相手の名前のみ表示-->                                
+                                 <!--返信があればトーク詳細のリンク表示-->                            
+                                <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">
                                     {% get_newest_message talk.id %}
-                                {% endif %}
                             </div>
                             <div class="list3">
                                 <span class="span_time">
                                     {% integer_to_string talk.id as flag %}
-                                    <p class="time" id={{flag}}>残り時間</p>
+                                    <p class="time" id={{flag}}>Left time</p>
                                     <input class="lefttime" type="hidden" id={{flag}} value={{talk.created_at|date:"Y-m-d_H:i:sO"}}>
                                 </span>
                                 {% if talk.exist_reply == True %} <!--返信があればいいねボタンを表示-->
