@@ -21,13 +21,14 @@ from django.db.models import Q
 
 import json
 from django.http.response import JsonResponse
-from datetime import date, datetime, timezone,timedelta
+from datetime import date, datetime, timezone, timedelta
 import random
 import numpy as np
 DAYS = 0
-HOURS=9
-MINUTES=2
+HOURS = 9
+MINUTES = 30
 SEND_NUM_LIMIT = 4
+
 
 def mypage(request):
     return render(request, "postapp/mypage.html")
@@ -42,6 +43,7 @@ def favorite_check(request, talk):
 
     return Exist_favorites
 
+
 def is_talk_active(talk):
     now = datetime.now()
     deadline = talk.created_at.replace(
@@ -52,23 +54,25 @@ def is_talk_active(talk):
         is_talk_active = True
     return is_talk_active
 
+
 def talk_all(request):
     def was_read(talk):
-        newest_message = Message.objects.filter(talk_id=talk.id).latest("created_at")
+        newest_message = Message.objects.filter(
+            talk_id=talk.id).latest("created_at")
         if (talk.detail_opened is False) and (newest_message.sending_user != request.user):
             return False
         else:
             return True
 
-    def is_active(talk):
-        now = datetime.now()
-        deadline = talk.created_at.replace(
-            tzinfo=None) + timedelta(days=0) + timedelta(hours=9) + timedelta(minutes=1)
-        if deadline < now:
-            is_talk_active = False
-        else:
-            is_talk_active = True
-        return is_talk_active
+    # def is_active(talk):
+    #     now = datetime.now()
+    #     deadline = talk.created_at.replace(
+    #         tzinfo=None) + timedelta(days=0) + timedelta(hours=9) + timedelta(minutes=1)
+    #     if deadline < now:
+    #         is_talk_active = False
+    #     else:
+    #         is_talk_active = True
+    #     return is_talk_active
 
     data = datetime.now()
     my_talks = Talks.objects.filter((Q(sending_user=request.user) | Q(
@@ -79,9 +83,9 @@ def talk_all(request):
     read_talks = []
     favorite_dead_talks = []
     for talk in my_talks:
-        if not is_talk_active(talk):# 期限終了の時
+        if not is_talk_active(talk):  # 期限終了の時
             messages = Message.objects.filter(talk_id=talk.id).all()
-            #if not talk.exist_reply:# 返信がない時
+            # if not talk.exist_reply:# 返信がない時
             if messages.count() == 1:
                 talk.delete()
                 continue
@@ -94,7 +98,7 @@ def talk_all(request):
             if checked_userinfo:
                 unchecked_dead_talks.append(talk)
             else:
-                #お気に入りの有無でtalkを分類
+                # お気に入りの有無でtalkを分類
                 if favorite_check(request, talk):
                     favorite_dead_talks.append(talk)
         else:
@@ -103,7 +107,8 @@ def talk_all(request):
             else:
                 unread_talks.append(talk)
     print('='*20)
-    print(len(my_talks), len(unchecked_dead_talks)+len(unread_talks)+len(read_talks)+len(favorite_dead_talks))
+    print(len(my_talks), len(unchecked_dead_talks) +
+          len(unread_talks)+len(read_talks)+len(favorite_dead_talks))
 
     create_data = {}
     for i, talk in enumerate(my_talks):
@@ -112,40 +117,42 @@ def talk_all(request):
     params = {"data": data, "my_talks": my_talks,
               'data_json': json.dumps(create_data),
               'unchecked_dead_talks': unchecked_dead_talks,
-              'unread_talks':unread_talks,
-              'read_talks':read_talks,
-              'favorite_dead_talks':favorite_dead_talks,
+              'unread_talks': unread_talks,
+              'read_talks': read_talks,
+              'favorite_dead_talks': favorite_dead_talks,
               }
     return render(request, "postapp/talk_all.html", params)
 
 
-def decide_sender(request): #送り先を決定するアルゴリズム
+def decide_sender(request):  # 送り先を決定するアルゴリズム
     while True:
-        send_id = random.randrange(1,9)
+        send_id = random.randrange(1, 9)
         if send_id != request.user:
             break
     # return send_id
-    return 1
+    return 2
+
 
 def update_seiding_priority():
     users_info = UserInfo.objects.all()
     from django_pandas.io import read_frame
     # メッセージ送信の優先度の判定基準となる各カウント数をDataFrameに格納
-    df = read_frame(users_info, fieldnames=['count_receive_new_messages', # 少ない方が優先
-                                            'count_first_reply', # 多い方が優先
-                                            'count_send_new_messages', # 多い方が優先
-                                            'count_login']) # 少ない方が優先
+    df = read_frame(users_info, fieldnames=['count_receive_new_messages',  # 少ない方が優先
+                                            'count_first_reply',  # 多い方が優先
+                                            'count_send_new_messages',  # 多い方が優先
+                                            'count_login'])  # 少ない方が優先
     # カウント数と平均値を比較して優先かそうでないかを真偽値で表現し判断基準行列となるbinary_matrixを作成
     binary_matrix = np.array(df) < np.mean(np.array(df), axis=0)
     # count_first_reply, count_send_new_messagesを「少ない」に合わせるために真偽反転
-    binary_matrix[:,1] = np.logical_not(binary_matrix[:,1])
-    binary_matrix[:,2] = np.logical_not(binary_matrix[:,2])
+    binary_matrix[:, 1] = np.logical_not(binary_matrix[:, 1])
+    binary_matrix[:, 2] = np.logical_not(binary_matrix[:, 2])
     # 各userの真偽値を10真数変換して優先順位とする
     all_user_info = UserInfo.objects.all()
     upd_user_infos = []
     for user_info in all_user_info:
-        binary = '0b'+str(int(binary[0]))+str(int(binary[1]))+str(int(binary[2]))+str(int(binary[3]))
-        user_info.priority = 16 - int(binary,2)
+        binary = '0b'+str(int(binary[0]))+str(int(binary[1])) + \
+            str(int(binary[2]))+str(int(binary[3]))
+        user_info.priority = 16 - int(binary, 2)
         upd_user_infos.append(user_info)
     UserInfo.objects.bulk_update(upd_user_infos)
     # 実行時刻を保存
@@ -154,6 +161,7 @@ def update_seiding_priority():
     func.executed_at = datetime.now(timezone.utc)
     func.save()
     print(f'関数を実行しました：{self_func_name}, time --> {func.executed_at}')
+
 
 def update_count_for_priority():
     all_user_info = UserInfo.objects.all()
@@ -179,15 +187,15 @@ def talk_create(request):  # 新規トークフォーム
 
         if form.is_valid():
 
-            send_id = decide_sender(request) #送信先決定
+            send_id = decide_sender(request)  # 送信先決定
 
-            #新規投稿した人にカウント
+            # 新規投稿した人にカウント
             sending_user_info = UserInfo.objects.get(user_id=request.user)
             sending_user_info.count_send_new_messages += 1
             sending_user_info.count_send_new_messages_in_a_day += 1
             sending_user_info.save()
 
-            #新規投稿が送られた人にカウント
+            # 新規投稿が送られた人にカウント
             recieving_user_info = UserInfo.objects.get(user_id=send_id)
             recieving_user_info.count_receive_new_messages += 1
             recieving_user_info.save()
@@ -205,9 +213,9 @@ def talk_create(request):  # 新規トークフォーム
             return render(request, 'postapp/talk_create.html', {'form': form})
     else:
         user_info = UserInfo.objects.get(user_id=request.user)
-        if user_info.count_send_new_messages_in_a_day >= SEND_NUM_LIMIT :
+        if user_info.count_send_new_messages_in_a_day >= SEND_NUM_LIMIT:
             messages.warning(
-                    request, f'本日の投稿可能上限に達しました。')
+                request, f'本日の投稿可能上限に達しました。')
             return redirect("users:profile")
         initial_dict = dict(sending_user=request.user,)
         form = NewTalkForm(initial=initial_dict)
@@ -217,7 +225,7 @@ def talk_create(request):  # 新規トークフォーム
 def talk_detail(request, talk_id):  # 既存トークフォーム
     talk = Talks.objects.get(id=talk_id)
     if request.method == 'POST':
-        if not is_talk_active(talk):#終了トークなのに誤って送信が行われた場合
+        if not is_talk_active(talk):  # 終了トークなのに誤って送信が行われた場合
             return redirect(request.META['HTTP_REFERER'])
         else:
             Exist_favorites = favorite_check(request, talk)
@@ -233,7 +241,8 @@ def talk_detail(request, talk_id):  # 既存トークフォーム
                 print("*"*40)
                 print(talk.detail_opened)
 
-                initial_dict = {"sending_user": request.user, "talk": talk_id, }
+                initial_dict = {
+                    "sending_user": request.user, "talk": talk_id, }
                 form = MessageForm(initial=initial_dict)
                 messages = Message.objects.filter(talk_id=talk_id).all
                 return redirect(request.META['HTTP_REFERER'])
@@ -248,7 +257,8 @@ def talk_detail(request, talk_id):  # 既存トークフォーム
             return redirect("postapp:talk_all")
         else:
             flag = False
-            newest_message = Message.objects.filter(talk_id=talk_id).latest("created_at")#.order_by('-created_at')[0]
+            newest_message = Message.objects.filter(talk_id=talk_id).latest(
+                "created_at")  # .order_by('-created_at')[0]
             if newest_message.sending_user != request.user:
                 talk.detail_opened = True
                 talk.save()
@@ -259,7 +269,7 @@ def talk_detail(request, talk_id):  # 既存トークフォーム
                 user_info = UserInfo.objects.get(user_id=sending_user)
                 messages = Message.objects.filter(talk_id=talk_id).all
                 flag = True
-                return render(request, 'postapp/talk_detail.html', {'flag':flag,'messages': messages,'user_info': user_info, 'sending_user': sending_user, 'Exist_favorites': Exist_favorites, 'talk_id': talk_id})
+                return render(request, 'postapp/talk_detail.html', {'flag': flag, 'messages': messages, 'user_info': user_info, 'sending_user': sending_user, 'Exist_favorites': Exist_favorites, 'talk_id': talk_id})
             else:
                 initial_dict = {
                     "sending_user": request.user, "talk": talk_id, }
@@ -277,11 +287,12 @@ def talk_detail(request, talk_id):  # 既存トークフォーム
                         talk.exist_reply = True
                         talk.save()
 
-                        user_info = UserInfo.objects.get(user_id=receiving_user)
+                        user_info = UserInfo.objects.get(
+                            user_id=receiving_user)
                         user_info.count_first_reply += 1
                         user_info.save()
 
-        return render(request, 'postapp/talk_detail.html', {'flag':flag, 'messages': messages, 'form': form, 'talk_id': talk_id, 'Exist_favorites': Exist_favorites})
+        return render(request, 'postapp/talk_detail.html', {'flag': flag, 'messages': messages, 'form': form, 'talk_id': talk_id, 'Exist_favorites': Exist_favorites})
 
 
 def talk_favorite_add(request, talk_id):  # お気に入り追加

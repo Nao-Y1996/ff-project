@@ -60,7 +60,8 @@
                     <td>{% get_newest_message talk.id %}</td>
                     {% integer_to_string talk.id as flag %}
                     <td><p class="time" id={{flag}}>残り時間</p></td>
-                    <input class="lefttime" type="hidden" id={{flag}} value={{talk.created_at|date:"Y-m-d_H:i:sO"}}>                </tr>
+                    <input class="lefttime" type="hidden" id={{flag}} value={{talk.created_at|date:"Y-m-d_H:i:sO"}}>
+                </tr>
                 {% endfor %}
 
                 <!-- <div>未読トーク</div> -->
@@ -108,7 +109,8 @@
                     <td>{% get_newest_message talk.id %}</td>
                     {% integer_to_string talk.id as flag %}
                     <td><p class="time" id={{flag}}>残り時間</p></td>
-                    <input class="lefttime" type="hidden" id={{flag}} value={{talk.created_at|date:"Y-m-d_H:i:sO"}}>                </tr>
+                    <input class="lefttime" type="hidden" id={{flag}} value={{talk.created_at|date:"Y-m-d_H:i:sO"}}>
+                </tr>
                 {% endfor %}
 
                 <!-- <div>既読トーク</div> -->
@@ -156,7 +158,8 @@
                     <td>{% get_newest_message talk.id %}</td>
                     {% integer_to_string talk.id as flag %}
                     <td><p class="time" id={{flag}}>残り時間</p></td>
-                    <input class="lefttime" type="hidden" id={{flag}} value={{talk.created_at|date:"Y-m-d_H:i:sO"}}>                </tr>
+                    <input class="lefttime" type="hidden" id={{flag}} value={{talk.created_at|date:"Y-m-d_H:i:sO"}}>
+                </tr>
                 {% endfor %}
 
                 <!-- <div>お気に入りした終了トーク</div> -->
