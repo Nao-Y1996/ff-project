@@ -51,7 +51,9 @@ def is_talk_active(talk):
         is_talk_active = True
     return is_talk_active
 
-def talk_all(request):
+#talkを分類する関数
+def my_talks_classification(request):
+
     def was_read(talk):
         newest_message = Message.objects.filter(talk_id=talk.id).latest("created_at")
         if (talk.detail_opened is False) and (newest_message.sending_user != request.user):
@@ -101,22 +103,25 @@ def talk_all(request):
                 read_talks.append(talk)
             else:
                 unread_talks.append(talk)
-    print('='*20)
-    print(len(my_talks), len(unchecked_dead_talks)+len(unread_talks)+len(read_talks)+len(favorite_dead_talks))
 
     create_data = {}
     for i, talk in enumerate(my_talks):
         create_data[i] = str(talk.created_at).replace(' ', 'T')
         print(create_data[i])
     params = {"data": data, "my_talks": my_talks,
-              'data_json': json.dumps(create_data),
-              'unchecked_dead_talks': unchecked_dead_talks,
-              'unread_talks':unread_talks,
-              'read_talks':read_talks,
-              'favorite_dead_talks':favorite_dead_talks,
-              }
-    print('='*70)
-    print(request.user.user_info.profile_image)
+            'data_json': json.dumps(create_data),
+            'unchecked_dead_talks': unchecked_dead_talks,
+            'unread_talks':unread_talks,
+            'read_talks':read_talks,
+            'favorite_dead_talks':favorite_dead_talks,
+            }
+    return params
+
+
+def talk_all(request):
+    
+    params = my_talks_classification(request)
+    
     return render(request, "postapp/talk_all.html", params)
 
 
@@ -235,7 +240,12 @@ def talk_detail(request, talk_id):  # 既存トークフォーム
 
             else:
                 messages = Message.objects.filter(talk_id=talk_id).all
-                return render(request, 'postapp/talk_detail.html', {'messages': messages, 'form': form, 'talk_id': talk_id, 'Exist_favorites': Exist_favorites})
+                params = my_talks_classification(request)
+                params['messages'] = messages
+                params['form'] = form
+                params['talk_id'] = talk_id
+                params['Exist_favorites'] = Exist_favorites
+                return render(request, 'postapp/talk_detail.html',params)
     else:
         # 返信がない かつ 自分がトークの開始者である 時はトーク詳細に入れない(トーク一覧に戻される)
         if (not talk.exist_reply) & (talk.sending_user == request.user):
@@ -253,13 +263,21 @@ def talk_detail(request, talk_id):  # 既存トークフォーム
                 user_info = UserInfo.objects.get(user_id=sending_user)
                 messages = Message.objects.filter(talk_id=talk_id).all
                 flag = True
-                return render(request, 'postapp/talk_detail.html', {'flag':flag,'messages': messages,'user_info': user_info, 'sending_user': sending_user, 'Exist_favorites': Exist_favorites, 'talk_id': talk_id})
+                params = my_talks_classification(request)
+                params['messages'] = messages
+                params['talk_id'] = talk_id
+                params['Exist_favorites'] = Exist_favorites
+                params['flag'] = flag
+                params['user_info'] = user_info
+                params['sending_user'] = sending_user
+                return render(request, 'postapp/talk_detail.html' ,params)
             else:
                 initial_dict = {
                     "sending_user": request.user, "talk": talk_id, }
                 form = MessageForm(initial=initial_dict)
                 messages = Message.objects.filter(talk_id=talk_id).all
                 Exist_favorites = favorite_check(request, talk)
+                params = my_talks_classification(request)
 
                 if not talk.exist_reply:
                     receiving_user = talk.receiving_user
@@ -275,7 +293,14 @@ def talk_detail(request, talk_id):  # 既存トークフォーム
                         user_info.count_first_reply += 1
                         user_info.save()
 
-        return render(request, 'postapp/talk_detail.html', {'flag':flag, 'messages': messages, 'form': form, 'talk_id': talk_id, 'Exist_favorites': Exist_favorites})
+                        params['user_info'] = user_info
+                
+                params['messages'] = messages
+                params['talk_id'] = talk_id
+                params['Exist_favorites'] = Exist_favorites
+                params['flag'] = flag
+                params['form'] = form
+        return render(request, 'postapp/talk_detail.html', params)
 
 
 def talk_favorite_add(request, talk_id):  # お気に入り追加
