@@ -249,14 +249,14 @@
                                     <input class="lefttime" type="hidden" id={{flag}} value={{talk.created_at|date:"Y-m-d_H:i:sO"}}>
                                 </span>                                
                                 {% if talk.exist_reply == True %} <!--返信があればいいねボタンを表示-->
-                                    {% favorite_check user talk as flag %} <!--お気に入り削除ボタンを表示-->
+                                    {% favorite_check user talk as flag %} 
                                     {% if flag %}
                                         <div class="lovebutton_frame">
                                             <button class="button_love">
                                                 <a href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}" class="fas fa-heart"></a>
                                             </button>
                                         </div>
-                                    {% else %}　<!--お気に入り追加ボタンを表示-->
+                                    {% else %}
                                         <div class="lovebutton_frame">
                                             <button class="button_love2">
                                                 <a href="{% url 'postapp:talk_favorite_add' talk_id=talk.id %}" class="fas fa-heart"></a>

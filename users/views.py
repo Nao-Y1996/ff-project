@@ -338,15 +338,13 @@ def EditUserInfo(request, info_id):
         return redirect('users:profile')
     if request.method == 'POST':
         # return reverse('users:profile', kwargs={'pk': request.user.id})
-        messages.success(request, 'Successful Update')
+        
         form = UserInfoUpdateForm(
             request.POST, request.FILES, instance=user_info)
         if form.is_valid():
             form.save()
-            redirect_url = reverse("postapp:talk_all")
-            parameters = urllib.parse.urlencode(dict(messages=messages))
-            url = f'{redirect_url}?{parameters}'
-            return redirect(url)
+            messages.success(request, 'Successful Update')
+            return redirect("postapp:talk_all")
         else:
             # return redirect('users:profile', pk=request.user.id)
             return render(request, 'users/userinfo_update.html', {'form': form})
