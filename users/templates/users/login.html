@@ -1,6 +1,7 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
 {% load static %}
-{% block content %}
+
 
 {% if form.errors %}
 <p>Your username and password didn't match. Please try again.</p>
@@ -57,13 +58,6 @@
         <div class="buttonlist">
             <!-- <input type="submit" value="login"> -->
             <button
-                class="button_back"
-                type="submit"
-                onclick="location.href='top.html'"
-				>
-			Back</button>
-            <!-- Back は　まだloginと同じ挙動なので、要修正-->
-            <button
                 class="button_next"
                 type="submit"
                 value="login"
@@ -75,9 +69,9 @@
 </form>
 
 <div class="card-body">
-    <a href="{% url 'users:user_create' %}" class="btn btn-success btn-lg btn-block">会員登録</a>
-    <a href="{% url 'users:password_reset' %}" class="btn btn-outline-info btn-lg btn-block">パスワードを忘れた方はこちら</a>
-    <a href="{% url 'users:reregistration' %}" class="btn btn-success btn-lg btn-block">再開</a>
+    <a href="{% url 'users:user_create' %}" class="btn btn-success btn-lg btn-block">Signup</a>
+    <a href="{% url 'users:password_reset' %}" class="btn btn-outline-info btn-lg btn-block">PasswordReset</a>
+    <a href="{% url 'users:reregistration' %}" class="btn btn-success btn-lg btn-block">Reregistration</a>
 </div>
 
-{% endblock %}
+</html>

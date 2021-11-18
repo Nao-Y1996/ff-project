@@ -240,6 +240,8 @@ def talk_detail(request, talk_id):  # 既存トークフォーム
 
             else:
                 messages = Message.objects.filter(talk_id=talk_id).all
+
+                #talk_allの内容を取得し、更にデータを格納している
                 params = my_talks_classification(request)
                 params['messages'] = messages
                 params['form'] = form
@@ -263,6 +265,8 @@ def talk_detail(request, talk_id):  # 既存トークフォーム
                 user_info = UserInfo.objects.get(user_id=sending_user)
                 messages = Message.objects.filter(talk_id=talk_id).all
                 flag = True
+
+                #talk_allの内容を取得し、更にデータを格納している
                 params = my_talks_classification(request)
                 params['messages'] = messages
                 params['talk_id'] = talk_id
@@ -295,6 +299,7 @@ def talk_detail(request, talk_id):  # 既存トークフォーム
 
                         params['user_info'] = user_info
                 
+                #talk_allの内容を取得し、更にデータを格納している
                 params['messages'] = messages
                 params['talk_id'] = talk_id
                 params['Exist_favorites'] = Exist_favorites

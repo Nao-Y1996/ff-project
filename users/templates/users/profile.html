@@ -21,6 +21,8 @@
         <link rel="stylesheet" href="{% static 'postapp/postrelease.css' %}">
         <link rel="stylesheet" href="{% static 'postapp/Table.css' %}">
         <link rel="stylesheet" href="{% static 'postapp/account.css' %}">
+		<link rel="stylesheet" href="{% static 'users/button.css' %}" />
+		<link rel="stylesheet" href="{% static 'postapp/Signup.css' %}" />
         
         
     </head>
@@ -101,11 +103,51 @@
             </aside>
 
             {% if user.is_authenticated %}
+            
             <main>
+				<div class="all_sighup">
+					<div class="hello_signup">Account</div>
+					<div class="signup_tab">
 
-                <img src="{{profile_image}}" width="100px" height="100px" class="rounded-circle" />
-                <p>{{user.email}}でログインしています。</p>
-
+						<div class="newemaillist">
+							<div class="email_newform">Email</div>
+							<input
+								class="input_newform"
+								type="email"
+								placeholder="Email"
+								name="email"
+								required
+							/>
+						</div>
+                        <div class="buttonlist">
+							<button class="button_next" type="submit">Change</button>
+						</div>
+						<div class="newpasslist">
+							<div class="password_newform">Password</div>
+							<input
+								class="input_newform"
+								type="password"
+								placeholder="Password"
+								name="password"
+								required
+							/>
+							<input
+								class="input_newform"
+								type="password"
+								placeholder="Password(Check)"
+								name="password"
+								required
+							/>
+							<!--<img class="picture" src="OzawaShota.jpg" alt="user's photo" title="user">-->
+						</div>
+                        <div class="buttonlist">
+							<button class="button_next" type="submit">Change</button>
+						</div>
+                        <div class="buttonlist">
+							<button class="button_next" type="submit">Withdrawal</button>
+						</div>
+					</div>
+				</div>
                 <li>
                     <a class="btn btn-info" href="{% url 'users:email_change' %}">メールアドレスの変更</a>
                 </li>
@@ -113,28 +155,28 @@
                     <a class="btn btn-success" href="{% url 'users:password_change'%}">パスワード変更</a>
                 </li>
                 <li>
-                    <a class="btn btn-success" href="{% url 'users:userinfo_edit' user.user_info.id %}">公開情報の編集</a>
-                </li>
-                <li>
-                    <a class="btn btn-success" href="{% url 'users:report' %}">通報</a>
-                </li>
-                <li>
                     <a class="btn btn-warning" href="{% url 'users:withdrawal' %}">退会</a>
                 </li>
-
-                <li>ユーザーネームは{{user.username}}です。</li>
-                <li>国は{{user.user_info.nationality}}です。</li>
-                <li>is_activeは{{user.is_active}}です。</li>
-                <li>ログイン回数：{{user.user_info.count_login}}</li>
-
-
-                <li>通報された回数は{{user.reported.count}}回です。</li>
-
-                <li>通報した回数は{{user.reporting.count}}回です。</li>
-
-            </main>
+			</main>
             {% else %}
             <p>ログインしていません。</p>
             {% endif %}
+
+            <script
+				src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+				integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+				crossorigin="anonymous"
+			></script>
+			<script
+				src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
+				integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+				crossorigin="anonymous"
+			></script>
+			<script
+				src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
+				integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+				crossorigin="anonymous"
+			></script>
+
         </div>
     </body>

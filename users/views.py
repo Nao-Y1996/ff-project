@@ -26,6 +26,8 @@ from datetime import datetime, timezone
 from dateutil import tz
 from postapp.views import update_count_for_priority, update_seiding_priority
 from postapp.models import Executedfunction
+import urllib
+from urllib.parse import urlparse
 User = get_user_model()
 
 # ログインユーザー自身以外は遷移できないようにするクラス
@@ -146,7 +148,7 @@ def Login(request):
                 else:
                     pass
             login(request, user)  # ログイン
-            return redirect('users:profile')
+            return redirect('postapp:talk_all')
         else:
             # form = LoginForm(initial={"username":email, 'password':password}) # htmlで　form.errosでエラーが出なくなってしまう
             form = LoginForm(request, request.POST)
@@ -336,12 +338,15 @@ def EditUserInfo(request, info_id):
         return redirect('users:profile')
     if request.method == 'POST':
         # return reverse('users:profile', kwargs={'pk': request.user.id})
-        # messages.success(request, 'レコードを新規追加しました。')
+        messages.success(request, 'Successful Update')
         form = UserInfoUpdateForm(
             request.POST, request.FILES, instance=user_info)
         if form.is_valid():
             form.save()
-            return redirect('users:profile')
+            redirect_url = reverse("postapp:talk_all")
+            parameters = urllib.parse.urlencode(dict(messages=messages))
+            url = f'{redirect_url}?{parameters}'
+            return redirect(url)
         else:
             # return redirect('users:profile', pk=request.user.id)
             return render(request, 'users/userinfo_update.html', {'form': form})

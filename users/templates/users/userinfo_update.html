@@ -101,18 +101,58 @@
                 </div>
                 <!-- </div> -->
             </aside>
-
             <main>
-    
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="all_profile">
+                        <div class="profile_tab">
+                            <div class="Nationally_profile">
+                                <div class="Nationally_profile">Nationally:</div>
+                                {{ form.nationality }}
+                            </div>
+                            <div class="Nationally_profile">
+                                <div class="Nationally_profile">Age:</div>
+                                {{ form.age }}
+                            </div>
+                            <div class="Gender_profile">
+                                <div class="Gender_profile">Gender:</div>
+                                <div class="slider_profile">
+                                    <div class="Gender_profile">F</div>
+                                    {{ form.gender }}
+                                    <div class="Gender_profile">M</div>
+                                </div>
+                            </div>
+                            <div class="Gender_profile">
+                                <div class="Gender_profile">Gender of love:</div>
+                                <div class="slider_profile">
+                                    <div class="Gender_profile">F</div>
+                                    {{ form.gender_of_love }}
+                                    <div class="Gender_profile">M</div>
+                                </div>
+                            </div>
+                            <div class="Profile">
+                                <div class="Profile">Introduction:</div>
+                                {{ form.introduction }}
+                            </div>
+                            <div class="Profile">
+                                {{ form.profile_image }}
+                            </div>
+                            <div class="buttonlist">
+                                <button class="button_next" type="submit">Change</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+			</main>
 
+            <!-- <div>
                 <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                     {{ form.as_p }}
                     <button type="submit">送信</button>
                 </form>
+            </div> -->
 
-
-            </main>
             <!-- Optional JavaScript -->
 			<!-- jQuery first, then Popper.js, then Bootstrap JS -->
 			<script
@@ -132,3 +172,4 @@
             ></script>
         </div>
     </body>
+</html>
