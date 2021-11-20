@@ -1,12 +1,5 @@
 @media screen and (min-width: 990px) {  
 .menu_button{
-    /* width: 100%;
-    background-color: #fd680d;
-    color: #fff;
-    padding: 15px;
-    border:0;
-    border-radius:20px;
-    box-shadow: 0 0 8px rgba(0,0,30) */
     display: inline-block;
     width: 120px;
     height: 40px;
@@ -16,7 +9,6 @@
     font-weight: bold;
     border-radius: 50px;
     padding-top: 5px;
-    /* border-bottom: 4px solid #d37800; */
     margin:20px auto;
 }
 
@@ -37,7 +29,6 @@
     font-weight: bold;
     font-family: Comic Sans MS;
     color: orange;
-    
 }
 
 #v-pills-user-tab{
@@ -45,9 +36,6 @@
     height: 100px;  
 }
 
-#v-pills-user-tab:hover{
-    background-color: rgb(232, 232, 232);
-}
 
 #v-pills-messages-tab{
     background-color: orange;
@@ -55,11 +43,6 @@
 
 #v-pills-messages-tab:hover{
     background-color: darkorange;
-}
-
-img.profile_image{
-    text-align:center;
-    width:70px;
 }
 
 #v-pills-signin-tab{
@@ -78,10 +61,6 @@ img.profile_image{
     background-color:yellow;
 }
 
-img.button-image{
-    display: none;
-}
-
 .button-title{
     font-size: 20px;
     text-decoration: none;
@@ -95,26 +74,17 @@ img.button-image{
     align-items: center;
     justify-content: center;
 }
-.username_button{
-    text-decoration: none;
-}
-
-.prof_image{
-    width:  65px;  
-    height:  65px;
+img.prof_picture{
+    width: 65px;
+    height: 65px;
+    object-fit: cover;
+    border-radius: 50%;
 }
 
 }
 
 @media screen and (max-width: 990px) {  
     .menu_button{
-        /* width: 100%;
-        background-color: #fd680d;
-        color: #fff;
-        padding: 15px;
-        border:0;
-        border-radius:20px;
-        box-shadow: 0 0 8px rgba(0,0,30) */
         display: inline-block;
         width: 50px;
         height: 50px;
@@ -123,7 +93,6 @@ img.button-image{
         color: black;
         font-weight: bold;
         border-radius: 25px;
-        /* border-bottom: 4px solid #d37800; */
         margin:20px auto;
         border: 0px;
         padding-top: 10px;
@@ -150,24 +119,16 @@ img.button-image{
     
     #v-pills-user-tab{
         border-radius: 25px;
-        height: 50px;  
+        height: 50px; 
+        padding-top: 5px;
     }
-    
-    #v-pills-user-tab:hover{
-        background-color:rgb(232, 232, 232);
-    }
-    
+   
     #v-pills-messages-tab{
         background-color: orange;
     }
     
     #v-pills-messages-tab:hover{
         background-color: darkorange;
-    }
-    
-    img.profile_image{
-        text-align:center;
-        width:40px;
     }
     
     #v-pills-signin-tab{
@@ -191,20 +152,14 @@ img.button-image{
         text-decoration: none;
     }
 
-    img.button-image{
-        width: 40px;
-    }
-
     .title{
         display: none;
     }
 
-    .username_button{
-        text-decoration: none;
-    }
-
-    .prof_image{
-        width:  30px;  
-        height:  30px;
+    img.prof_picture{
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
     }
  }

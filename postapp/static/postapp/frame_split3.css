@@ -12,10 +12,7 @@
         margin: 0 auto;
         background-color:white;
         height: 100%;
-        border-left: solid 1px lightgray;
-        border-right: solid 1px lightgray;
         padding-top: 30px;
-
     }
 
     .main2 {
@@ -42,6 +39,7 @@
         position: sticky;
         top: 0px;
         padding-top: 30px;
+        border-right: solid 1px lightgray;
     }
 }
 
@@ -49,16 +47,10 @@
 @media screen and (max-width: 990px) {
     .flexbox-container {
         display: flex;
-        /* flex-flow: column; */
     }
     
     .main1 {
         display:none;
-        margin: 0 auto;
-        background-color:white;
-        height: 700px;
-        border-left: solid 1px lightgray;
-        border-right: solid 1px lightgray;
     }
 
     .main2 {
