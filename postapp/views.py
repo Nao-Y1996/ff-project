@@ -115,13 +115,14 @@ def my_talks_classification(request):
             'read_talks':read_talks,
             'favorite_dead_talks':favorite_dead_talks,
             }
+        
     return params
 
 
 def talk_all(request):
     
     params = my_talks_classification(request)
-    
+
     return render(request, "postapp/talk_all.html", params)
 
 

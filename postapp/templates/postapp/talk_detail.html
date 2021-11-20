@@ -38,67 +38,32 @@
                 <div class="title">FF<br />project</div>
                 <i class="fas fa-key fa-lg"></i>
                 <!-- <div class="col-3"> -->
-                <div
-                    class="nav flex-column nav-pills"
-                    id="v-pills-tab"
-                    role="tablist"
-                    aria-orientation="vertical"
-                >
+                <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                     <nav class="nav flex-column">
-                        <a 
-                            href="{% url 'users:userinfo_edit' user.user_info.id %}"
-                            class="menu_button" 
-                            id="v-pills-user-tab"
-                            role="tab"
-                            aria-controls="v-pills-user"
-                            aria-selected="false">
-                            <img 
-                                src="{{user.user_info.profile_image.url}}"                        
-                                class="prof_image"
-                            />
-                            <p class="button-title">Username</p>
-                        </a>                   
-                        <a 
-                            href="{% url 'postapp:talk_all' %}"
-                            class="menu_button" 
-                            id="v-pills-home-tab"
-                            role="tab"
-                            aria-controls="v-pills-home"
-                            aria-selected="false">
+                        <a href="{% url 'users:userinfo_edit' user.user_info.id %}" class="menu_button"
+                            id="v-pills-user-tab" role="tab" aria-controls="v-pills-user" aria-selected="false">
+                            <img class="prof_picture" src="{{user.user_info.profile_image.url}}" />
+                            <p class="button-title">{{user.username}}</p>
+                        </a>
+                        <a href="{% url 'postapp:talk_all' %}" class="menu_button" id="v-pills-home-tab" role="tab"
+                            aria-controls="v-pills-home" aria-selected="false">
                             <i class="fas fa-home fa-lg"></i>
                             <p class="button-title">Home</p>
                         </a>
-                        <a 
-                            href="{% url 'users:profile' %}"
-                            class="menu_button" 
-                            id="v-pills-profile-tab"
-                            role="tab"
-                            aria-controls="v-pills-profile"
-                            aria-selected="false">
+                        <a href="{% url 'users:profile' %}" class="menu_button" id="v-pills-profile-tab" role="tab"
+                            aria-controls="v-pills-profile" aria-selected="false">
                             <p class="button-title">Account</p>
                             <i class="fas fa-cog fa-lg"></i>
                         </a>
-                        <a 
-                            href="{% url 'postapp:talk_create' %}"
-                            class="menu_button" 
-                            class="nav-link"
-                            id="v-pills-messages-tab"
-                            role="tab"
-                            aria-controls="v-pills-messages"
-                            aria-selected="false">
+                        <a href="{% url 'postapp:talk_create' %}" class="menu_button" class="nav-link"
+                            id="v-pills-messages-tab" role="tab" aria-controls="v-pills-messages" aria-selected="false">
                             <p class="button-title">New post</p>
                             <i class="fas fa-paper-plane fa-lg"></i>
                         </a>
-                        <a 
-                            href="{% url 'users:logout' %}"
-                            class="menu_button" 
-                            class="nav-link"
-                            id="v-pills-settings-tab"
-                            role="tab"
-                            aria-controls="v-pills-settings"
-                            aria-selected="false">
+                        <a href="{% url 'users:logout' %}" class="menu_button" class="nav-link" id="v-pills-settings-tab"
+                            role="tab" aria-controls="v-pills-settings" aria-selected="false">
                             <p class="button-title">Logut</p>
-                            <i class="fas fa-sign-out-alt fa-lg"></i>                   
+                            <i class="fas fa-sign-out-alt fa-lg"></i>
                         </a>
                     </nav>
                 </div>
@@ -110,7 +75,8 @@
                 {% for talk in unchecked_dead_talks %}
                     <div class="list0">
                         <div class="list1">
-                            <img src="{{user.user_info.profile_image.url}}" width="60px" height="60px"　class="rounded-circle" />
+                            {% get_user talk.receiving_user_id as talk_partner %}
+                            <img src="{{talk_partner.user_info.profile_image.url}}" width="60px" height="60px"　class="rounded-circle" />
                             <div class="list_name">    
                                 {% if talk.sending_user == user %} <!-- 自分がメッセージを送った時 -->                     
                                     {{talk.receiving_user}}
@@ -166,7 +132,8 @@
                 {% for talk in unread_talks %} 
                     <div class="list0">
                         <div class="list1">
-                            <img src="{{user.user_info.profile_image.url}}" width="60px" height="60px"　class="rounded-circle" />
+                            {% get_user talk.receiving_user_id as talk_partner %}
+                            <img src="{{talk_partner.user_info.profile_image.url}}" width="60px" height="60px"　class="rounded-circle" />
                             <div class="list_name">    
                                 {% if talk.sending_user == user %} <!-- 自分がメッセージを送った時 -->                     
                                     {{talk.receiving_user}}
@@ -226,7 +193,8 @@
                 {% for talk in read_talks %}
                     <div class="list0">
                         <div class="list1">
-                            <img src="{{user.user_info.profile_image.url}}" width="60px" height="60px"　class="rounded-circle" />
+                            {% get_user talk.receiving_user_id as talk_partner %}
+                            <img src="{{talk_partner.user_info.profile_image.url}}" width="60px" height="60px"　class="rounded-circle" />
                             <div class="list_name">    
                                 {% if talk.sending_user == user %} <!-- 自分がメッセージを送った時 -->                     
                                     {{talk.receiving_user}}
@@ -286,7 +254,8 @@
                 {% for talk in favorite_dead_talks %}
                     <div class="list0">
                         <div class="list1">
-                            <img src="{{user.user_info.profile_image.url}}" width="60px" height="60px"　class="rounded-circle" />
+                            {% get_user talk.receiving_user_id as talk_partner %}
+                            <img src="{{talk_partner.user_info.profile_image.url}}" width="60px" height="60px"　class="rounded-circle" />
                             <div class="list_name">    
                                 {% if talk.sending_user == user %} <!-- 自分がメッセージを送った時 -->                     
                                     {{talk.receiving_user}}
@@ -386,9 +355,9 @@
                                     </div>
                                 </div>
                             {% endif %}
-						{% endfor %}
+                        {% endfor %}
                         {% if not flag %}
-                            <form method="POST" class="list2_detail">
+                            <form method="POST" class="list2_detail" id="scroll">
                                 {% csrf_token %}
                                 {{ form.id.as_hidden }}
                                 {{ form.sending_user.as_hidden }}
@@ -470,12 +439,10 @@
             integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
             crossorigin="anonymous"></script>
 
+            
             <script>
-                var element = document.getElementsByClassName('all_detail');
-                element.scrollIntoView(false);
-                var element = document.documentElement;
-                var bottom = element.scrollHeight - element.clientHeight;
-                window.scroll(0, bottom);
+                let target = document.getElementById('scroll');
+                target.scrollIntoView(false);
             </script>
         </div>
 
