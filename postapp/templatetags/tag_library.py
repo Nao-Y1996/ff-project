@@ -1,6 +1,7 @@
 from django import template
 from math import modf
 from postapp.models import Favorites,Message,Talks
+from users.models import CustomUser
 register = template.Library()
 
 #@register.filter(name="change_Range")
@@ -27,6 +28,12 @@ def integer_to_string(integer):
     string=str(integer)
     string="A"+string[2:]
     return string
+
+@register.simple_tag
+def get_user(talk):
+    
+    username = CustomUser.objects.get(id=talk)#.order_by('-created_at')[0]
+    return username
 # def multiply(value1, value2):
 #     return value1 * value2
 
