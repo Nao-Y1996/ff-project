@@ -59,7 +59,10 @@
 .list1_detail .I_message_detail {
 	float:right; /* 右のふきだしは全体的に右寄せ */
 	margin-top:1em;
-	max-width: 85%;
+	max-width: 75%;
+	display:flex;
+    align-items: center;
+    justify-content: right;
 }
 .list1_detail .I_message_detail p:after { /* 右ふきだしの右三角を描画 */
 	content: '';
