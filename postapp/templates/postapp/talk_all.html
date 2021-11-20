@@ -113,7 +113,6 @@
                                     </td>
                                     <td class="td2">
                                         {% if talk.exist_reply == True %}
-                                        <!--返信があればいいねボタンを表示-->
                                             {% favorite_check user talk as flag %}
                                             {% if flag %}
                                             <button class="button_love">
@@ -251,7 +250,6 @@
                                     </td>
                                     <td class="td2">
                                         {% if talk.exist_reply == True %}
-                                        <!--返信があればいいねボタンを表示-->
                                             {% favorite_check user talk as flag %}
                                             {% if flag %}
                                             <button class="button_love">
@@ -321,7 +319,6 @@
                                                     class="fas fa-heart"></a>
                                             </button>
                                             {% else %}　
-                                            <!--お気に入り追加ボタンを表示-->
                                             <button class="button_love2">
                                                 <a href="{% url 'postapp:talk_favorite_add' talk_id=talk.id %}"
                                                     class="fas fa-heart"></a>

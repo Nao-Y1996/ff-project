@@ -125,7 +125,7 @@
 }
 
 .td2,.td3{
-    width: 40px;
+    width: 45px;
 }
 
 .td1{
@@ -133,5 +133,9 @@
 }
 
 .time{
+    margin: 0;
+}
+
+p{
     margin: 0;
 }
