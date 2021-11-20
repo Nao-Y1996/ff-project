@@ -25,9 +25,9 @@ from datetime import date, datetime, timezone, timedelta
 import random
 import numpy as np
 DAYS = 0
-HOURS = 9
+HOURS = 0
 MINUTES = 30
-SEND_NUM_LIMIT = 4
+SEND_NUM_LIMIT = 400
 
 
 def mypage(request):
@@ -45,9 +45,9 @@ def favorite_check(request, talk):
 
 
 def is_talk_active(talk):
-    now = datetime.now()
+    now = datetime.now(timezone.utc)
     deadline = talk.created_at.replace(
-        tzinfo=None) + timedelta(days=DAYS) + timedelta(hours=HOURS) + timedelta(minutes=MINUTES)
+        tzinfo=timezone.utc) + timedelta(days=DAYS) + timedelta(hours=HOURS) + timedelta(minutes=MINUTES)
     if deadline < now:
         is_talk_active = False
     else:
@@ -63,16 +63,6 @@ def talk_all(request):
             return False
         else:
             return True
-
-    # def is_active(talk):
-    #     now = datetime.now()
-    #     deadline = talk.created_at.replace(
-    #         tzinfo=None) + timedelta(days=0) + timedelta(hours=9) + timedelta(minutes=1)
-    #     if deadline < now:
-    #         is_talk_active = False
-    #     else:
-    #         is_talk_active = True
-    #     return is_talk_active
 
     data = datetime.now()
     my_talks = Talks.objects.filter((Q(sending_user=request.user) | Q(
@@ -124,13 +114,34 @@ def talk_all(request):
     return render(request, "postapp/talk_all.html", params)
 
 
-def decide_sender(request):  # 送り先を決定するアルゴリズム
-    while True:
-        send_id = random.randrange(1, 9)
-        if send_id != request.user:
+def decide_reciever(request):  # 送り先を決定するアルゴリズム
+    found_send_user = False
+    for i in range(16):
+        print(i+1)
+        candidates_info = UserInfo.objects.filter(priority=i+1)
+        send_id = None
+        print('candidates_info num : ',len(candidates_info))
+        if len(candidates_info)!=0:
+            while True:
+                info_id = random.randint(0, len(candidates_info)-1)# 同じ優先順位の中からランダムに送信先の候補者ユーザーを選択
+                candidate_user_info = candidates_info[info_id]
+                candidate = candidate_user_info.user
+                # すでに送信先の候補者とのトークが存在していないかを確認
+                talk = Talks.objects.filter( (Q(sending_user=request.user) & Q(receiving_user=candidate)) | (Q(sending_user=candidate) & Q(receiving_user=request.user)) )
+                if len(talk) == 0:
+                    send_id = candidate.id
+                else:
+                    print('すでに送信先の候補者とのトークが存在しています')
+                    continue
+                if (send_id is not None) and (send_id != request.user.id):
+                    found_send_user = True
+                    break
+                else:
+                    send_id = None
+        if found_send_user:
             break
-    # return send_id
-    return 2
+    print(f'send_id found! Priority={i+1}：send_id={send_id} : user_name={candidate_user_info.user}')
+    return send_id
 
 
 def update_seiding_priority():
@@ -187,28 +198,33 @@ def talk_create(request):  # 新規トークフォーム
 
         if form.is_valid():
 
-            send_id = decide_sender(request)  # 送信先決定
+            send_id = decide_reciever(request)  # 送信先決定
+            if send_id is None:
+                messages.warning(
+                request, f'すみません、送信相手が見つかりませんでした。時間を置いてから投稿してください')
+                print('送信相手が見つかりません。予期せぬエラーが発生しました')
+                return redirect("users:profile")
+            else:
+                # 新規投稿した人にカウント
+                sending_user_info = UserInfo.objects.get(user_id=request.user)
+                sending_user_info.count_send_new_messages += 1
+                sending_user_info.count_send_new_messages_in_a_day += 1
+                sending_user_info.save()
 
-            # 新規投稿した人にカウント
-            sending_user_info = UserInfo.objects.get(user_id=request.user)
-            sending_user_info.count_send_new_messages += 1
-            sending_user_info.count_send_new_messages_in_a_day += 1
-            sending_user_info.save()
+                # 新規投稿が送られた人にカウント
+                recieving_user_info = UserInfo.objects.get(user_id=send_id)
+                recieving_user_info.count_receive_new_messages += 1
+                recieving_user_info.save()
 
-            # 新規投稿が送られた人にカウント
-            recieving_user_info = UserInfo.objects.get(user_id=send_id)
-            recieving_user_info.count_receive_new_messages += 1
-            recieving_user_info.save()
+                new_talk = Talks(sending_user=request.user, receiving_user=CustomUser.objects.get(
+                    id=send_id))  # idにどのようなidを入れるかで送り先が変わる
+                new_talk.save()
 
-            new_talk = Talks(sending_user=request.user, receiving_user=CustomUser.objects.get(
-                id=send_id))  # idにどのようなidを入れるかで送り先が変わる
-            new_talk.save()
+                post = form.save(commit=False)
 
-            post = form.save(commit=False)
-
-            post.talk = new_talk
-            post.save()
-            return redirect('postapp:talk_all')
+                post.talk = new_talk
+                post.save()
+                return redirect('postapp:talk_all')
         else:
             return render(request, 'postapp/talk_create.html', {'form': form})
     else:

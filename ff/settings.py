@@ -144,5 +144,5 @@ MEDIA＿ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 
-TIME_ZONE = 'Asia/Tokyo'
-USE_TZ = True
+# TIME_ZONE = 'Asia/Tokyo'
+# USE_TZ = True
