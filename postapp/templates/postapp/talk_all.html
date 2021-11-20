@@ -223,7 +223,8 @@
                 {% for talk in read_talks %}
                     <div class="list0">
                         <div class="list1">
-                            <img src="{{user.user_info.profile_image.url}}" width="60px" height="60px"　class="rounded-circle" />
+                            {% get_user talk.receiving_user_id as name%}
+                            <img src="{{name.user_info.profile_image.url}}" width="60px" height="60px"　class="rounded-circle" />
                             <div class="list_name">    
                                 {% if talk.sending_user == user %} <!-- 自分がメッセージを送った時 -->                     
                                     {{talk.receiving_user}}
