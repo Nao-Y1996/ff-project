@@ -3,109 +3,79 @@
 <!doctype html>
 <html lang="en">
 
-    <head>
+<head>
 
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    
-        <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
-            integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    
-        <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet"/>
-    
-        <link rel="stylesheet" href="{% static 'postapp/frame.css' %}">
-        <link rel="stylesheet" href="{% static 'postapp/menu.css' %}">
-        <link rel="stylesheet" href="{% static 'postapp/newpost2.css' %}">
-        <link rel="stylesheet" href="{% static 'postapp/postrelease.css' %}">
-        <link rel="stylesheet" href="{% static 'postapp/Table.css' %}">
-        <link rel="stylesheet" href="{% static 'postapp/account.css' %}">
-        <link rel="stylesheet" href="{% static 'users/top.css' %}" />
-		<link rel="stylesheet" href="{% static 'users/button.css' %}" />
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-		<title>ff_project</title>
-    </head>
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+		integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 
-	<body>
+	<link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet" />
 
-		{% if messages %}
-		<ul class="messages_ul">
+	<link rel="stylesheet" href="{% static 'postapp/frame.css' %}">
+	<link rel="stylesheet" href="{% static 'postapp/menu.css' %}">
+	<link rel="stylesheet" href="{% static 'users/top.css' %}" />
+	<link rel="stylesheet" href="{% static 'users/button.css' %}" />
+
+	<title>ff_project</title>
+</head>
+
+<body>
+
+	{% if messages %}
+	<ul class="messages_ul">
 		{% for message in messages %}
-			<p class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</p>
+		<p class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</p>
 		{% endfor %}
 		{% endif %}
-		</ul>
+	</ul>
 
-		<!-- <header>FF project<br /></header> -->
-		<div class="container flexbox-container">
-			<aside>
-				<div class="title">FF<br />project</div>
-				<br />
-				<!-- <div class="col-3"> -->
-				<div
-					class="nav flex-column nav-pills"
-					id="v-pills-tab"
-					role="tablist"
-					aria-orientation="vertical"
-				>
-					<nav class="nav flex-column">
-						<a
-							href="{% url 'users:user_create' %}"
-							type="button"
-							class="menu_button"
-							id="v-pills-signin-tab"
-							role="tab"
-							aria-controls="v-pills-user"
-							aria-selected="false"
-						>
-							signup
-						</a>
-						<a
-							href="{% url 'users:login' %}"
-							type="button"
-							class="menu_button"
-							id="v-pills-login-tab"
-							role="tab"
-							aria-controls="v-pills-home"
-							aria-selected="false"
-						>
-							login
-						</a>
-					</nav>
-				</div>
-				<!-- </div> -->
-			</aside>
+	<!-- <header>FF project<br /></header> -->
+	<div class="container flexbox-container">
+		<aside>
+			<div class="title">FF<br />project</div>
+			<br />
+			<!-- <div class="col-3"> -->
+			<div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+				<nav class="nav flex-column">
+					<a href="{% url 'users:user_create' %}" type="button" class="menu_button" id="v-pills-signin-tab"
+						role="tab" aria-controls="v-pills-user" aria-selected="false">
+						signup
+					</a>
+					<a href="{% url 'users:login' %}" type="button" class="menu_button" id="v-pills-login-tab"
+						role="tab" aria-controls="v-pills-home" aria-selected="false">
+						login
+					</a>
+				</nav>
+			</div>
+			<!-- </div> -->
+		</aside>
 
-			<main>
-				<p class="top_title">Welcome to FFproject!!</p>
+		<main>
+			<p class="top_title">Welcome to FFproject!!</p>
 
-				<h1>What's FFproject?</h1>
+			<h1>What's FFproject?</h1>
 
-				<h2>
-					FFproject is a social media to talk with people around the world!!
-				</h2>
-			</main>
+			<h2>
+				FFproject is a social media to talk with people around the world!!
+			</h2>
+		</main>
 
-			<!-- Optional JavaScript -->
-			<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-			<script
-				src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-				integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-				crossorigin="anonymous"
-			></script>
-			<script
-				src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
-				integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
-				crossorigin="anonymous"
-			></script>
-			<script
-				src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
-				integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
-				crossorigin="anonymous"
-			></script>
-		</div>
-	</body>
+		<!-- Optional JavaScript -->
+		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+			integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+			crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
+			integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+			crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
+			integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+			crossorigin="anonymous"></script>
+	</div>
+</body>
+
 </html>
-
-

@@ -1,17 +1,18 @@
 .all{
     width:100%;
-    height:100%;
+    height:100vh;
     display:flex;
     justify-content: flex-start;
     flex-flow: column;
     margin:10px;
+    border-top: solid 1px lightgray;
 }
+
 .list0{
     background-color: #FFF;
     display: flex;
     width: 100%;
     height: 90px;
-    border-top: solid 1px lightgray;
     border-bottom: solid 1px lightgray;
     padding:10px;
 }
@@ -22,7 +23,6 @@
     justify-content: center;
     width:20%;
     height:100%;
-    /* border: solid 1px #333; */
 }
 .list2{
     display:flex;
@@ -31,7 +31,6 @@
     align-items: left;
     justify-content: left;
     height:100%;
-    /* border: solid 1px #333; */
 }
 .list3{
     display:flex;
@@ -39,38 +38,14 @@
     justify-content: right;
     width:100%;
     height:30%;
-    /* border: solid 1px #333; */
     
 }
 
-/* .picture{
-    width: 15vw;
-    height:15vw;
-    border-radius: 10px;
-} */
 .list_name{
     font-size:15px;
     font-weight: bold;
 }
-.button_message{
-    background-color: #FFF;
-    font-size:20px;
-    /* width:100%; */
-    height:100%;
-    font-weight: bold;
-    border:none;
-    box-shadow: none;
-    padding:10px;
-    color:black;
-    text-overflow: ellipsis;   
-}
-.button_message:hover{
-    /* background-color:rgb(232, 232, 232); */
-    border:none;
-    box-shadow: none;
-    color:orange;
-    text-decoration: none;
-}
+
 .span_time{
     font-size:15px;
     color: red;
@@ -78,6 +53,7 @@
     margin-top: 10px;
     margin-right:10px;
 }
+
 .button_love{
     background-color: #FFF;
     font-size: 20px;
@@ -138,25 +114,6 @@
     text-decoration: none;
 }
 
-.spantime_frame{
-    width: 110px;
-    display: flex;
-}
-
-.lovebutton_frame{
-    width: 30px;
-    vertical-align: middle;
-    text-align: center;
-    
-}
-
-.byebutton_frame{
-    width: 30px;
-    vertical-align: middle;
-    text-align: center;
-    margin-right: 10%;
-}
-
 .button_love > .fas.fa-heart{
     text-decoration: none;
     color: red;
@@ -165,4 +122,16 @@
 .button_love2 > .fas.fa-heart{
     text-decoration: none;
     color: black;
+}
+
+.td2,.td3{
+    width: 40px;
+}
+
+.td1{
+    width: 150px;
+}
+
+.time{
+    margin: 0;
 }
