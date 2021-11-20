@@ -82,12 +82,12 @@
                     <div class="list1">
                         {% get_user talk.receiving_user_id as talk_partner %}
                         <img src="{{talk_partner.user_info.profile_image.url}}" width="60px" height="60px"
-                            　class="rounded-circle" />
+                            class="rounded-circle" />
                         <div class="list_name">
                             <!-- 自分がメセージを送った時 -->
                             {% if talk.sending_user == user %}
                                 {{talk.receiving_user}}
-                            {% else %}　
+                            {% else %}
                                 <!-- 相手からメッセージが来た時 -->
                                 {{talk.sending_user}}
                             {% endif %}
@@ -144,12 +144,12 @@
                     <div class="list1">
                         {% get_user talk.receiving_user_id as talk_partner %}
                         <img src="{{talk_partner.user_info.profile_image.url}}" width="60px" height="60px"
-                            　class="rounded-circle" />
+                            class="rounded-circle" />
                         <div class="list_name">
                             {% if talk.sending_user == user %}
                             <!-- 自分がメッセージを送った時 -->
                             {{talk.receiving_user}}
-                            {% else %}　
+                            {% else %}
                             <!-- 相手からメッセージが来た時 -->
                             {{talk.sending_user}}
                             {% endif %}
@@ -183,7 +183,7 @@
                                                 <a href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}"
                                                     class="fas fa-heart"></a>
                                             </button>
-                                            {% else %}　
+                                            {% else %}
                                             <button class="button_love2">
                                                 <a href="{% url 'postapp:talk_favorite_add' talk_id=talk.id %}"
                                                     class="fas fa-heart"></a>
@@ -207,12 +207,12 @@
                 <div class="list0">
                     <div class="list1">
                         {% get_user talk.receiving_user_id as talk_partner %}
-                        <img src="{{talk_partner.user_info.profile_image.url}}" width="60px" height="60px"　class="rounded-circle" />
+                        <img src="{{talk_partner.user_info.profile_image.url}}" width="60px" height="60px"class="rounded-circle" />
                         <div class="list_name">
                             {% if talk.sending_user == user %}
                                 <!-- 自分がメッセージを送った時 -->
                                 {{talk.receiving_user}}
-                            {% else %}　
+                            {% else %}
                                 <!-- 相手からメッセージが来た時 -->
                                 {{talk.sending_user}}
                             {% endif %}
@@ -281,12 +281,12 @@
                     <div class="list1">
                         {% get_user talk.receiving_user_id as talk_partner %}
                         <img src="{{talk_partner.user_info.profile_image.url}}" width="60px" height="60px"
-                            　class="rounded-circle" />
+                            class="rounded-circle" />
                         <div class="list_name">
                             {% if talk.sending_user == user %}
                             <!-- 自分がメッセージを送った時 -->
                             {{talk.receiving_user}}
-                            {% else %}　
+                            {% else %}
                             <!-- 相手からメッセージが来た時 -->
                             {{talk.sending_user}}
                             {% endif %}
@@ -318,7 +318,7 @@
                                                 <a href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}"
                                                     class="fas fa-heart"></a>
                                             </button>
-                                            {% else %}　
+                                            {% else %}
                                             <button class="button_love2">
                                                 <a href="{% url 'postapp:talk_favorite_add' talk_id=talk.id %}"
                                                     class="fas fa-heart"></a>
