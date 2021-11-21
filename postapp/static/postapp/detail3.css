@@ -93,7 +93,7 @@
 }
 
 .text1_detail {
-	width: 80%;
+	width: calc(100% - 50px);
 	height: 45px;
     border: none;
 	margin: 0.5rem 0;
@@ -128,6 +128,14 @@
 	white-space:pre-wrap;
 	overflow-wrap: break-word;
 }
+
+img.you_image{
+	width: 50px;
+	height: 50px;
+	object-fit: cover;
+	border-radius: 50%;
+}
+
 .talktime{
 	display:flex;
 	justify-content:center;

@@ -4,7 +4,6 @@
     display:flex;
     justify-content: flex-start;
     flex-flow: column;
-    margin:10px;
     border-top: solid 1px lightgray;
 }
 
@@ -21,16 +20,17 @@
     flex-flow: column;
     align-items: center;
     justify-content: center;
-    width:20%;
+    width:100px;
     height:100%;
 }
 .list2{
     display:flex;
     flex-flow: column;
-    width:80%;
+    width: calc(100% - 100px);
     align-items: left;
     justify-content: left;
     height:100%;
+    padding-right: 10px;
 }
 .list3{
     display:flex;
@@ -129,7 +129,7 @@
 }
 
 .td1{
-    width: 150px;
+    width: 130px;
 }
 
 .time{

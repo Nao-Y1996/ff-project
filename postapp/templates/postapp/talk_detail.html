@@ -75,8 +75,7 @@
                             {% else %}
                                 {% get_user talk.sending_user_id as talk_partner %}
                             {% endif %}
-                            <img src="{{talk_partner.user_info.profile_image.url}}" width="60px" height="60px"
-                                class="rounded-circle" />
+                            <img src="{{talk_partner.user_info.profile_image.url}}" class="you_image" />
                             <div class="list_name">
                                 <!-- 自分がメセージを送った時 -->
                                 {% if talk.sending_user == user %}
@@ -142,8 +141,7 @@
                             {% else %}
                                 {% get_user talk.sending_user_id as talk_partner %}
                             {% endif %}
-                            <img src="{{talk_partner.user_info.profile_image.url}}" width="60px" height="60px"
-                                class="rounded-circle" />
+                            <img src="{{talk_partner.user_info.profile_image.url}}" class="you_image" />
                             <div class="list_name">
                                 {% if talk.sending_user == user %}
                                 {{talk.receiving_user}}
@@ -206,7 +204,7 @@
                             {% else %}
                                 {% get_user talk.sending_user_id as talk_partner %}
                             {% endif %}
-                            <img src="{{talk_partner.user_info.profile_image.url}}" width="60px" height="60px"class="rounded-circle" />
+                            <img src="{{talk_partner.user_info.profile_image.url}}" class="you_image" />
                             <div class="list_name">    
                                 {% if talk.sending_user == user %}                   
                                     {{talk.receiving_user}}
@@ -279,7 +277,7 @@
                             {% else %}
                                 {% get_user talk.sending_user_id as talk_partner %}
                             {% endif %}
-                            <img src="{{talk_partner.user_info.profile_image.url}}" width="60px" height="60px"class="rounded-circle" />
+                            <img src="{{talk_partner.user_info.profile_image.url}}" class="you_image" />
                             <div class="list_name">    
                                 {% if talk.sending_user == user %}                   
                                     {{talk.receiving_user}}

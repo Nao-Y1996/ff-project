@@ -64,6 +64,7 @@
 .button-title{
     font-size: 20px;
     text-decoration: none;
+    font-family: Arial Black;
 }
 
 .fa-key, .fa-home, .fa-cog, .fa-paper-plane, .fa-sign-out-alt{
@@ -151,6 +152,7 @@ img.prof_picture{
         display:none;
         text-decoration: none;
     }
+
 
     .title{
         display: none;
