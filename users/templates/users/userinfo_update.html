@@ -65,41 +65,48 @@
             <form method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="all_profile">
-                    <div class="profile_tab">
-                        <div class="Nationally_profile">
-                            <div class="Nationally_profile">Nationally:</div>
-                            {{ form.nationality }}
+                    <div class="Nationally_profile">
+                        <div class="label">image</div>
+                        <div class="input">
+                            {{ form.profile_image }}
                         </div>
-                        <div class="Nationally_profile">
-                            <div class="Nationally_profile">Age:</div>
-                            {{ form.age }}
-                        </div>
-                        <div class="Gender_profile">
-                            <div class="Gender_profile">Gender:</div>
+                    </div>
+                    <div class="Nationally_profile">
+                        <div class="label">Nationally</div>
+                        <div class="input">{{ form.nationality }}</div>
+                    </div>
+                    <div class="Nationally_profile">
+                        <div class="label">Age</div>
+                        <div class="input">{{ form.age }}</div>
+                    </div>
+                    <div class="Nationally_profile">
+                        <div class="label">Gender</div>
+                        <div class="input">
                             <div class="slider_profile">
                                 <div class="Gender_profile">F</div>
                                 {{ form.gender }}
                                 <div class="Gender_profile">M</div>
                             </div>
                         </div>
-                        <div class="Gender_profile">
-                            <div class="Gender_profile">Gender of love:</div>
+                    </div>
+                    <div class="Nationally_profile">
+                        <div class="label">Gender of love</div>
+                        <div class="input">
                             <div class="slider_profile">
                                 <div class="Gender_profile">F</div>
                                 {{ form.gender_of_love }}
                                 <div class="Gender_profile">M</div>
                             </div>
                         </div>
-                        <div class="Profile">
-                            <div class="Profile">Introduction:</div>
+                    </div>
+                    <div class="Nationally_profile">
+                        <div class="label">Introduction</div>
+                        <div class="input">
                             {{ form.introduction }}
                         </div>
-                        <div class="Profile">
-                            {{ form.profile_image }}
-                        </div>
-                        <div class="buttonlist">
-                            <button class="button_next" type="submit">Change</button>
-                        </div>
+                    </div>
+                    <div class="buttonlist">
+                        <button class="button_next" type="submit">Change</button>
                     </div>
                 </div>
             </form>
