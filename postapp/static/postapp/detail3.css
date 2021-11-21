@@ -15,6 +15,7 @@
     display:flex;
 	flex-flow: column;
 	width: 100%;
+	height:85vh;
     /* border: solid 5px #333; */
 }
 /* 左のトークボックス */
@@ -86,14 +87,14 @@
 .list2_detail{
     display:flex;
     align-items: center;
-    justify-content: left;
+	vertical-align: middle;
     /* background-color:rgb(248, 165, 97); */
     margin-top: auto;
-    /* position: absolute;←絶対位置 */
-    bottom: 0; /*下に固定*/
+    position: absolute;/*←絶対位置*/
+    bottom: 0;/* 下に固定*/ 
     /* border: solid 5px #333; */
     width:100%;
-    height:20%;
+    height:15vh;
 	padding:10px
 
 }
