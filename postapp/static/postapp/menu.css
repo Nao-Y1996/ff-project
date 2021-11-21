@@ -17,7 +17,6 @@
     font-weight: bold;
     background-color: rgb(232, 232, 232);
     outline: none;
-    cursor:pointer;
     -webkit-tap-highlight-color:none;
     cursor:pointer;
     text-decoration: none;
@@ -67,14 +66,15 @@
     font-family: Arial Black;
 }
 
-.fa-key, .fa-home, .fa-cog, .fa-paper-plane, .fa-sign-out-alt{
+.fa-key, .fa-home, .fa-cog, .fa-plus, .fa-sign-out-alt{
     display:none
 }
 
-.fa-plane{
+.fa-paper-plane{
     align-items: center;
     justify-content: center;
 }
+
 img.prof_picture{
     width: 65px;
     height: 65px;
@@ -104,7 +104,6 @@ img.prof_picture{
         font-weight: bold;
         background-color: rgb(232, 232, 232);
         outline: none;
-        cursor:pointer;
         -webkit-tap-highlight-color:none;
         cursor:pointer;
         color: #000000;
@@ -148,7 +147,7 @@ img.prof_picture{
         background-color:yellow;
     }
 
-     a > .button-title{
+    a > .button-title{
         display:none;
         text-decoration: none;
     }
@@ -164,4 +163,6 @@ img.prof_picture{
         height: 40px;
         object-fit: cover;
     }
+
+    
  }

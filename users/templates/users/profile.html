@@ -42,7 +42,7 @@
                         <i class="fas fa-home fa-lg"></i>
                         <p class="button-title">Home</p>
                     </a>
-                    <a href="{% url 'users:EmailPasswordView' %}" class="menu_button" id="v-pills-profile-tab" role="tab"
+                    <a href="{% url 'users:profile' %}" class="menu_button" id="v-pills-profile-tab" role="tab"
                         aria-controls="v-pills-profile" aria-selected="false">
                         <p class="button-title">Account</p>
                         <i class="fas fa-cog fa-lg"></i>
@@ -50,7 +50,7 @@
                     <a href="{% url 'postapp:talk_create' %}" class="menu_button" class="nav-link"
                         id="v-pills-messages-tab" role="tab" aria-controls="v-pills-messages" aria-selected="false">
                         <p class="button-title">New post</p>
-                        <i class="fas fa-paper-plane fa-lg"></i>
+                        <i class="fas fa-plus fa-lg"></i>
                     </a>
                     <a href="{% url 'users:logout' %}" class="menu_button" class="nav-link" id="v-pills-settings-tab"
                         role="tab" aria-controls="v-pills-settings" aria-selected="false">
