@@ -364,6 +364,10 @@
                         {% for message in messages %}
                             {% if message.sending_user_id != user.id %}
                                 <div class="list0_detail">
+                                    <div class='image_detail'>
+                                        <img src="/media/no_image.png" width="60px" height="60px" class="rounded-circle">
+                                        <div class="talktime">15:55</div>   
+                                    </div>
                                     <div class="you_message_detail">
                                         <p class="talks_message">{{message.content}}</p>
                                     </div>
@@ -371,7 +375,11 @@
                             {% else %}
                                 <div class="list1_detail">
                                     <div class="I_message_detail">
-                                        <p class="talks_message">{{message.content}}</p>
+                                        <p class="talks_message">{{message.content}}</p>    
+                                    </div>
+                                    <div class='image_detail'>
+                                        <img src="/media/no_image.png" width="60px" height="60px" class="rounded-circle">
+                                        <div class="talktime">15:55</div>   
                                     </div>
                                 </div>
                             {% endif %}
