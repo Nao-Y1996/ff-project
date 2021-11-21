@@ -491,12 +491,12 @@ def EmailPasswordView(request):
     MyFormSet_2= modelformset_factory(
         model=CustomUser,
         form=MyPasswordChangeForm,
-        extra=1, # セットの表示数 defaultは1
-        max_num=1 # 最大表示数 defaultは1
+        extra=2, # セットの表示数 defaultは1
+        max_num=2 # 最大表示数 defaultは1
     )
  
     if request.method == 'GET' :
-        print("*"*40)
+
         # フォームの初期値を指定する場合
         """ form_1_initial = [{
             'field_1' : 'initial_value_1',
@@ -508,13 +508,13 @@ def EmailPasswordView(request):
         }] """
         # フォームセットのオブジェクト生成
         form_set_1 = MyFormSet_1(
-            initial=form_1_initial,
+            #initial=form_1_initial,
             # 新規作成フォームのみ表示(既存レコードは表示しない)
-            queryset=MyModel_1.objects.none()
+            queryset=CustomUser.objects.none()
         )
         form_set_2 = MyFormSet_2(
-            initial=form_2_initial,
-            queryset=MyModel_2.objects.none()
+            #initial=form_2_initial,
+            queryset=CustomUser.objects.none()
         )
 
     else : # POST
@@ -533,16 +533,39 @@ def EmailPasswordView(request):
  
         if form_set_1.is_valid():
             post_form_set_1 = form_set_1.save(commit=False)
+
+            user = request.user
+            new_email = form_set_1.save(commit=False)
+            print("*"*40)
+            print(new_email)
+
+            # URLの送付
+            current_site = get_current_site(request)
+            domain = current_site.domain
+            context = {
+                'protocol': 'https' if request.is_secure() else 'http',
+                'domain': domain,
+                'token': dumps(new_email),
+                'user': user,
+            }
+
+            subject = render_to_string(
+                'users/mail_template/email_change/subject.txt', context)
+            message = render_to_string(
+                'users/mail_template/email_change/message.txt', context)
+            send_mail(subject, message, None, [new_email])
+
+            return redirect('users:email_change_done')
             
-            # 保存処理
+            
+            
+            """ # 保存処理
             with transaction.atomic() :
                 # 各々save
                 for p in post_form_set_1 :
                     # さらに他のフォームを併設している場合、そこでsaveしたレコードのPKを使う場合はobject.pkでとれる
                     #p.parent_pk = other_post.pk
-                    p.save()
-                for p in post_form_set_2 :
-                    p.save()
+                    p.save() """
             messages.info(request, f'保存しました。')
             return redirect('postapp:talk_all')
         
@@ -552,10 +575,6 @@ def EmailPasswordView(request):
             # 保存処理
             with transaction.atomic() :
                 # 各々save
-                for p in post_form_set_1 :
-                    # さらに他のフォームを併設している場合、そこでsaveしたレコードのPKを使う場合はobject.pkでとれる
-                    #p.parent_pk = other_post.pk
-                    p.save()
                 for p in post_form_set_2 :
                     p.save()
             messages.info(request, f'保存しました。')
