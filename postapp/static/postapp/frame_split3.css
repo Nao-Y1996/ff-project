@@ -25,7 +25,6 @@
         margin: 0 auto;
         background-color:white;
         height: 100vh;
-        border-left: solid 1px lightgray;
         border-right: solid 1px lightgray;
         padding-top: 30px;
         overflow-y: scroll;
@@ -44,7 +43,6 @@
         position: sticky;
         top: 0px;
         padding-top: 30px;
-        border-right: solid 1px lightgray;
     }
 }
 
@@ -62,9 +60,12 @@
         width: 90%;
         margin: 0 auto;
         background-color:white;
-        height: 700px;
+        height: 100vh;
         border-left: solid 1px lightgray;
         border-right: solid 1px lightgray;
+        overflow-y: scroll;
+        position: sticky;
+        top: 0px;
     }
     
     aside {
