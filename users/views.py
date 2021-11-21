@@ -28,6 +28,9 @@ from postapp.views import update_count_for_priority, update_seiding_priority
 from postapp.models import Executedfunction
 import urllib
 from urllib.parse import urlparse
+
+from django.forms.models import modelformset_factory
+from django.db import transaction
 User = get_user_model()
 
 # ログインユーザー自身以外は遷移できないようにするクラス
@@ -471,3 +474,96 @@ def withdrawal(request):
     else:
         # form = WithdrawalForm
         return render(request, 'users/withdrawal.html')
+
+
+
+def EmailPasswordView(request):
+     
+    template_name = 'users/profile.html'
+ 
+    # フォームセット定義
+    MyFormSet_1= modelformset_factory(
+        model=CustomUser,
+        form=EmailChangeForm,
+        extra=1, # セットの表示数 defaultは1
+        max_num=1 # 最大表示数 defaultは1
+    )
+    MyFormSet_2= modelformset_factory(
+        model=CustomUser,
+        form=MyPasswordChangeForm,
+        extra=1, # セットの表示数 defaultは1
+        max_num=1 # 最大表示数 defaultは1
+    )
+ 
+    if request.method == 'GET' :
+        print("*"*40)
+        # フォームの初期値を指定する場合
+        """ form_1_initial = [{
+            'field_1' : 'initial_value_1',
+            'field_2' : 'initial_value_2',
+        }]
+        form_2_initial = [{
+            'field_1' : 'initial_value_1',
+            'field_2' : 'initial_value_2',
+        }] """
+        # フォームセットのオブジェクト生成
+        form_set_1 = MyFormSet_1(
+            initial=form_1_initial,
+            # 新規作成フォームのみ表示(既存レコードは表示しない)
+            queryset=MyModel_1.objects.none()
+        )
+        form_set_2 = MyFormSet_2(
+            initial=form_2_initial,
+            queryset=MyModel_2.objects.none()
+        )
+
+    else : # POST
+        
+        # POSTされたデータをコピー（直接編集しようとすると怒られる）
+        post_form_set_1 = request.POST.copy()
+        post_form_set_2 = request.POST.copy()
+ 
+        # 'form-TOTAL_FORMS'をもともとのextraの値に上書き
+        post_form_set_1['form-TOTAL_FORMS'] = 1
+        post_form_set_2['form-TOTAL_FORMS'] = 1
+ 
+        # 改めてオブジェクト生成
+        form_set_1 = MyFormSet_1(post_form_set_1 )
+        form_set_2 = MyFormSet_2(post_form_set_2 )
+ 
+        if form_set_1.is_valid():
+            post_form_set_1 = form_set_1.save(commit=False)
+            
+            # 保存処理
+            with transaction.atomic() :
+                # 各々save
+                for p in post_form_set_1 :
+                    # さらに他のフォームを併設している場合、そこでsaveしたレコードのPKを使う場合はobject.pkでとれる
+                    #p.parent_pk = other_post.pk
+                    p.save()
+                for p in post_form_set_2 :
+                    p.save()
+            messages.info(request, f'保存しました。')
+            return redirect('postapp:talk_all')
+        
+        if  form_set_2.is_valid():
+            
+            post_form_set_2 = form_set_2.save(commit=False)
+            # 保存処理
+            with transaction.atomic() :
+                # 各々save
+                for p in post_form_set_1 :
+                    # さらに他のフォームを併設している場合、そこでsaveしたレコードのPKを使う場合はobject.pkでとれる
+                    #p.parent_pk = other_post.pk
+                    p.save()
+                for p in post_form_set_2 :
+                    p.save()
+            messages.info(request, f'保存しました。')
+            return redirect('postapp:talk_all')
+ 
+    # レンダリング
+    context = {
+        'form_set_1': form_set_1,
+        'form_set_2': form_set_2,
+    }
+    return render(request, 'users/profile.html', context)

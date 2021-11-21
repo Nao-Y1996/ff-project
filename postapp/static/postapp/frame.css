@@ -11,9 +11,13 @@
         width: 80%;
         margin: 0 auto;
         background-color:white;
+        height: 100vh;
         border-left: solid 1px lightgray;
-        border-right: solid 0px lightgray;
+        border-right: solid 1px lightgray;
         padding-top: 30px;
+        overflow-y: scroll;
+        position: sticky;
+        top: 0px;
     }
 
     aside {
@@ -36,11 +40,15 @@
     
     main {
         width: 90%;
-        padding-top: 30px;
-        margin: auto;
+        margin: 0 auto;
         background-color:white;
+        height: 100vh;
         border-left: solid 1px lightgray;
-        border-right: solid 0px lightgray;
+        border-right: solid 1px lightgray;
+        padding-top: 30px;
+        overflow-y: scroll;
+        position: sticky;
+        top: 0px;
     }
     
     

@@ -11,8 +11,13 @@
         width: 40%;
         margin: 0 auto;
         background-color:white;
-        height: 100%;
+        height: 100vh;
+        border-left: solid 1px lightgray;
+        border-right: solid 1px lightgray;
         padding-top: 30px;
+        overflow-y: scroll;
+        position: sticky;
+        top: 0px;
     }
 
     .main2 {

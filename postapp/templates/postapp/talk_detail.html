@@ -70,7 +70,11 @@
                     {% for talk in unchecked_dead_talks %}
                     <div class="list0">
                         <div class="list1">
-                            {% get_user talk.receiving_user_id as talk_partner %}
+                            {% if talk.sending_user == user %}
+                                {% get_user talk.receiving_user_id as talk_partner %}
+                            {% else %}
+                                {% get_user talk.sending_user_id as talk_partner %}
+                            {% endif %}
                             <img src="{{talk_partner.user_info.profile_image.url}}" width="60px" height="60px"
                                 class="rounded-circle" />
                             <div class="list_name">
@@ -133,7 +137,11 @@
                     {% for talk in unread_talks %}
                     <div class="list0">
                         <div class="list1">
-                            {% get_user talk.receiving_user_id as talk_partner %}
+                            {% if talk.sending_user == user %}
+                                {% get_user talk.receiving_user_id as talk_partner %}
+                            {% else %}
+                                {% get_user talk.sending_user_id as talk_partner %}
+                            {% endif %}
                             <img src="{{talk_partner.user_info.profile_image.url}}" width="60px" height="60px"
                                 class="rounded-circle" />
                             <div class="list_name">
@@ -193,7 +201,11 @@
                     {% for talk in read_talks %}
                     <div class="list0">
                         <div class="list1">
-                            {% get_user talk.receiving_user_id as talk_partner %}
+                            {% if talk.sending_user == user %}
+                                {% get_user talk.receiving_user_id as talk_partner %}
+                            {% else %}
+                                {% get_user talk.sending_user_id as talk_partner %}
+                            {% endif %}
                             <img src="{{talk_partner.user_info.profile_image.url}}" width="60px" height="60px"class="rounded-circle" />
                             <div class="list_name">    
                                 {% if talk.sending_user == user %}                   
@@ -262,7 +274,11 @@
                     {% for talk in favorite_dead_talks %}
                     <div class="list0">
                         <div class="list1">
-                            {% get_user talk.receiving_user_id as talk_partner %}
+                            {% if talk.sending_user == user %}
+                                {% get_user talk.receiving_user_id as talk_partner %}
+                            {% else %}
+                                {% get_user talk.sending_user_id as talk_partner %}
+                            {% endif %}
                             <img src="{{talk_partner.user_info.profile_image.url}}" width="60px" height="60px"class="rounded-circle" />
                             <div class="list_name">    
                                 {% if talk.sending_user == user %}                   
