@@ -19,16 +19,7 @@
     /* border: solid 5px #333; */
 }
 /* 左のトークボックス */
-.list0_detail .you_message_detail:before { /* 左の丸アイコン */
-	content:'';
-	display:inline-block;
-	width:50px;
-	height:50px;
-	vertical-align:top;
-	border-radius:50%;
-	background-size:cover;
-	background-image:url(OzawaShota.jpg); /* ←アイコンはここを変更 */
-}
+
 .list0_detail .you_message_detail p:before {  /* 左ふきだしの左三角を描画 */
 	content: '';
 	position:absolute;
@@ -47,16 +38,7 @@
 	max-width: 85%;
 }
 /* 右のトークボックス */
-.list1_detail .I_message_detail:after { /* 右の丸アイコン */
-	content:'';
-	display:inline-block;
-	width:50px;
-	height:50px;
-	vertical-align:top;
-	border-radius:50%;
-	background-size:cover;
-	background-image:url(Shota_Ozawa.jpg);  /* ←アイコンはここを変更 */
-}
+
 .list1_detail .I_message_detail {
 	float:right; /* 右のふきだしは全体的に右寄せ */
 	margin-top:1em;
@@ -98,6 +80,17 @@
 	padding:10px
 
 }
+.list0_detail{
+	display:flex;
+	align-items:center;
+	justify-content: left;
+}
+
+.list1_detail{
+	display:flex;
+	align-items:center;
+	justify-content: right;
+}
 
 .text1_detail {
 	width: 80%;
@@ -134,4 +127,8 @@
 	max-width: 50%;
 	white-space:pre-wrap;
 	overflow-wrap: break-word;
+}
+.talktime{
+	display:flex;
+	justify-content:center;
 }
