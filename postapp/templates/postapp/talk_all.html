@@ -63,7 +63,7 @@
                     <a href="{% url 'postapp:talk_create' %}" class="menu_button" class="nav-link"
                         id="v-pills-messages-tab" role="tab" aria-controls="v-pills-messages" aria-selected="false">
                         <p class="button-title">New post</p>
-                        <i class="fas fa-paper-plane fa-lg"></i>
+                        <i class="fas fa-plus fa-lg"></i>
                     </a>
                     <a href="{% url 'users:logout' %}" class="menu_button" class="nav-link" id="v-pills-settings-tab"
                         role="tab" aria-controls="v-pills-settings" aria-selected="false">
@@ -85,8 +85,7 @@
                         {% else %}
                             {% get_user talk.sending_user_id as talk_partner %}
                         {% endif %}
-                        <img src="{{talk_partner.user_info.profile_image.url}}" width="60px" height="60px"
-                            class="rounded-circle" />
+                        <img src="{{talk_partner.user_info.profile_image.url}}" class="you_image" />
                         <div class="list_name">
                             <!-- 自分がメセージを送った時 -->
                             {% if talk.sending_user == user %}
@@ -117,6 +116,7 @@
                                     </td>
                                     <td class="td2">
                                         {% if talk.exist_reply == True %}
+                                        <!--返信があればいいねボタンを表示-->
                                             {% favorite_check user talk as flag %}
                                             {% if flag %}
                                             <button class="button_love">
@@ -151,21 +151,17 @@
                         {% else %}
                             {% get_user talk.sending_user_id as talk_partner %}
                         {% endif %}
-                        <img src="{{talk_partner.user_info.profile_image.url}}" width="60px" height="60px"
-                            class="rounded-circle" />
+                        <img src="{{talk_partner.user_info.profile_image.url}}" class="you_image" />
                         <div class="list_name">
                             {% if talk.sending_user == user %}
-                            <!-- 自分がメッセージを送った時 -->
                             {{talk.receiving_user}}
                             {% else %}
-                            <!-- 相手からメッセージが来た時 -->
                             {{talk.sending_user}}
                             {% endif %}
                         </div>
                     </div>
                     <div class="list2">
                         <div class="overflow">
-                            <!--返信があればトーク詳細のリンク表示-->
                             <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">
                                 {% get_newest_message talk.id %}
                             </a>
@@ -177,7 +173,7 @@
                                         <span class="span_time">
                                             {% integer_to_string talk.id as flag %}
                                             <p class="time" id={{flag}}>Left time</p>
-                                            <a>Limit</a>
+                                            <p>Limit</p>
                                             <p class="time" id={{flag}}></p>
                                             <input class="lefttime" type="hidden" id={{flag}}
                                                 value={{talk.created_at|date:"Y-m-d_H:i:sO"}}>
@@ -219,13 +215,11 @@
                         {% else %}
                             {% get_user talk.sending_user_id as talk_partner %}
                         {% endif %}
-                        <img src="{{talk_partner.user_info.profile_image.url}}" width="60px" height="60px"class="rounded-circle" />
-                        <div class="list_name">
-                            {% if talk.sending_user == user %}
-                                <!-- 自分がメッセージを送った時 -->
+                        <img src="{{talk_partner.user_info.profile_image.url}}" class="you_image" />
+                        <div class="list_name">    
+                            {% if talk.sending_user == user %}                   
                                 {{talk.receiving_user}}
                             {% else %}
-                                <!-- 相手からメッセージが来た時 -->
                                 {{talk.sending_user}}
                             {% endif %}
                         </div>
@@ -234,12 +228,10 @@
                         <div class="overflow">
                             {% if talk.sending_user == user %}
                                 {% if talk.exist_reply == True %}
-                                <!--返信があればトーク詳細のリンク表示-->
                                 <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">
                                     {% get_newest_message talk.id %}
                                 </a>
                                 {% else %}
-                                    <!--返信がなければ相手の名前のみ表示-->
                                     {% get_newest_message talk.id %}
                                 {% endif %}
                             {% else %}
@@ -254,7 +246,7 @@
                                     <td class="td1">
                                         <span class="span_time">
                                             {% integer_to_string talk.id as flag %}
-                                            <a>Limit</a>
+                                            <p>Limit</p>
                                             <p class="time" id={{flag}}></p>
                                             <input class="lefttime" type="hidden" id={{flag}}
                                                 value={{talk.created_at|date:"Y-m-d_H:i:sO"}}>
@@ -296,27 +288,21 @@
                         {% else %}
                             {% get_user talk.sending_user_id as talk_partner %}
                         {% endif %}
-                        <img src="{{talk_partner.user_info.profile_image.url}}" width="60px" height="60px"
-                            class="rounded-circle" />
-                        <div class="list_name">
-                            {% if talk.sending_user == user %}
-                            <!-- 自分がメッセージを送った時 -->
-                            {{talk.receiving_user}}
-                            {% else %}
-                            <!-- 相手からメッセージが来た時 -->
-                            {{talk.sending_user}}
+                        <img src="{{talk_partner.user_info.profile_image.url}}" class="you_image" />
+                        <div class="list_name">    
+                            {% if talk.sending_user == user %}                   
+                                {{talk.receiving_user}}
+                                {{talk.sending_user}}
                             {% endif %}
                         </div>
                     </div>
                     <div class="list2">
                         <div class="overflow">
                             {% if talk.exist_reply == True %}
-                            <!--返信があればトーク詳細のリンク表示-->
                             <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">
                                 {% get_newest_message talk.id %}
                             </a>
                             {% else %}
-                            <!--返信がなければ相手の名前のみ表示-->
                             {% get_newest_message talk.id %}
                             {% endif %}
                         </div>

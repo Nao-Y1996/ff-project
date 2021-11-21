@@ -129,7 +129,7 @@
 }
 
 .td1{
-    width: 130px;
+    width: 140px;
 }
 
 .time{
@@ -138,4 +138,11 @@
 
 p{
     margin: 0;
+}
+
+img.you_image{
+	width: 45px;
+	height: 45px;
+	object-fit: cover;
+	border-radius: 50%;
 }
