@@ -376,20 +376,21 @@
                                 </div>
                             {% endif %}
                         {% endfor %}
-                        {% if not flag %}
-                            <form method="POST" class="list2_detail" id="scroll">
-                                {% csrf_token %}
-                                {{ form.id.as_hidden }}
-                                {{ form.sending_user.as_hidden }}
-                                {{ form.content }}
-                                {{ form.talk.as_hidden}}
-                                {{ form.created_at.as_hidden }}
-                                <button type="submit" class="button_go_detail">
-                                    <i class="fas fa-plane fa-lg"></i>
-                                </button>
-                            </form>
-                        {% endif %}
+                        <div id="endtalk"></div>
                     </div>
+                    {% if not flag %}
+                        <form method="POST" class="list2_detail" id="scroll">
+                            {% csrf_token %}
+                            {{ form.id.as_hidden }}
+                            {{ form.sending_user.as_hidden }}
+                            {{ form.content }}
+                            {{ form.talk.as_hidden}}
+                            {{ form.created_at.as_hidden }}
+                            <button type="submit" class="button_go_detail">
+                                <i class="fas fa-plane fa-lg"></i>
+                            </button>
+                        </form>
+                    {% endif %}
 				</div>
 			</main>
 
@@ -461,7 +462,7 @@
 
             
             <script>
-                let target = document.getElementById('scroll');
+                let target = document.getElementById('endtalk');
                 target.scrollIntoView(false);
             </script>
         </div>
