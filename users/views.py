@@ -490,6 +490,7 @@ def EmailPasswordView(request):
     )
     MyFormSet_2= modelformset_factory(
         model=CustomUser,
+        # fields='__all__',
         form=MyPasswordChangeForm,
         extra=2, # セットの表示数 defaultは1
         max_num=2 # 最大表示数 defaultは1
@@ -531,13 +532,10 @@ def EmailPasswordView(request):
         form_set_1 = MyFormSet_1(post_form_set_1 )
         form_set_2 = MyFormSet_2(post_form_set_2 )
  
-        if form_set_1.is_valid():
-            post_form_set_1 = form_set_1.save(commit=False)
+        """ if form_set_1.is_valid():
 
             user = request.user
-            new_email = form_set_1.save(commit=False)
-            print("*"*40)
-            print(new_email)
+            new_email = request.POST["form-0-email"]
 
             # URLの送付
             current_site = get_current_site(request)
@@ -555,30 +553,18 @@ def EmailPasswordView(request):
                 'users/mail_template/email_change/message.txt', context)
             send_mail(subject, message, None, [new_email])
 
-            return redirect('users:email_change_done')
+            #return redirect('users:email_change_done')
             
-            
-            
-            """ # 保存処理
-            with transaction.atomic() :
-                # 各々save
-                for p in post_form_set_1 :
-                    # さらに他のフォームを併設している場合、そこでsaveしたレコードのPKを使う場合はobject.pkでとれる
-                    #p.parent_pk = other_post.pk
-                    p.save() """
-            messages.info(request, f'保存しました。')
-            return redirect('postapp:talk_all')
+            messages.info(request, f'確認メールを送信しました。確認してください')
+            return redirect('postapp:talk_all') """
         
         if  form_set_2.is_valid():
-            
-            post_form_set_2 = form_set_2.save(commit=False)
-            # 保存処理
-            with transaction.atomic() :
-                # 各々save
-                for p in post_form_set_2 :
-                    p.save()
-            messages.info(request, f'保存しました。')
-            return redirect('postapp:talk_all')
+
+            request.user.set_password(request.POST["form-0-password"])
+            request.user.save()
+
+            messages.info(request, f'パスワードを変更しました。')
+            return redirect('users:login')
  
     # レンダリング
     context = {
