@@ -79,6 +79,7 @@
             <div class="all">
                 {% for talk in unchecked_dead_talks %}
                 <div class="list0">
+                    <div class="unread_lamp"></div>
                     <div class="list1">
                         {% if talk.sending_user == user %}
                             {% get_user talk.receiving_user_id as talk_partner %}
@@ -144,7 +145,8 @@
                 {% endfor %}
 
                 {% for talk in unread_talks %}
-                <div class="list0">
+                <div class="list0" id="unread_talks">
+                    <div class="unread_lamp"></div>
                     <div class="list1">
                         {% if talk.sending_user == user %}
                             {% get_user talk.receiving_user_id as talk_partner %}
@@ -172,7 +174,6 @@
                                     <td class="td1">
                                         <span class="span_time">
                                             {% integer_to_string talk.id as flag %}
-                                            <p class="time" id={{flag}}>Left time</p>
                                             <p>Limit</p>
                                             <p class="time" id={{flag}}></p>
                                             <input class="lefttime" type="hidden" id={{flag}}
@@ -209,6 +210,7 @@
 
                 {% for talk in read_talks %}
                 <div class="list0">
+                    <div class="read_lamp"></div>
                     <div class="list1">
                         {% if talk.sending_user == user %}
                             {% get_user talk.receiving_user_id as talk_partner %}
@@ -282,6 +284,7 @@
 
                 {% for talk in favorite_dead_talks %}
                 <div class="list0">
+                    <div class="read_lamp"></div>
                     <div class="list1">
                         {% if talk.sending_user == user %}
                             {% get_user talk.receiving_user_id as talk_partner %}
