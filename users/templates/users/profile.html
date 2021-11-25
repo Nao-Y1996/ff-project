@@ -68,53 +68,38 @@
             <div class="all_sighup">
                 <div class="hello_signup">Account</div>
                 <div class="signup_tab">
-
-                    <div class="newemaillist">
+                    <form action="" method="POST" name="form_change_question_text" id="form_change_question_text" class="newemaillist">
                         <div class="email_newform">Email</div>
-                        <input class="input_newform" type="email" placeholder="Email" name="email" required />
-                    </div>
-                    <div class="buttonlist">
-                        <button class="button_next" type="submit">Change</button>
-                    </div>
-                    <div class="newpasslist">
-                        <div class="password_newform">Password</div>
-                        <input class="input_newform" type="password" placeholder="Password" name="password" required />
-                        <input class="input_newform" type="password" placeholder="Password(Check)" name="password"
-                            required />
-                        <!--<img class="picture" src="OzawaShota.jpg" alt="user's photo" title="user">-->
-                    </div>
-                    <div class="buttonlist">
-                        <button class="button_next" type="submit">Change</button>
-                    </div>
-                    <div class="buttonlist">
-                        <button class="button_next" type="submit">Withdrawal</button>
-                    </div>
-                </div>
-            </div>
-            <li>
-                <a class="btn btn-info" href="{% url 'users:email_change' %}">メールアドレスの変更</a>
-            </li>
-            <li>
-                <a class="btn btn-success" href="{% url 'users:password_change'%}">パスワード変更</a>
-            </li>
-            <li>
-                <a class="btn btn-warning" href="{% url 'users:withdrawal' %}">退会</a>
-            </li>
-            {{ form.certifications.errors }}
-            <div class="container">
-                <div class="row">
-                    <form method="post">
                         {% csrf_token %}
-                        <div class="clearfix">
-                            {{ form_set_1 }}
-                        </div>
-                        <div class="clearfix">
-                            {{ form_set_2 }}
-                        </div>            
-                        <div> 
-                            <input type="submit" class="btn" value="登録" />
+                        {{form_set_1.management_form}}
+                        {{ form_set_1.non_field_errors }}
+                        {% for form in form_set_1 %}
+                        {% for field in form %}
+                        {{ field }}
+                        {% endfor %}
+                        {% endfor %}
+                        <div class="buttonlist">
+                            <button type="submit" class="button_next" name="button_change_email"> Change </button>
                         </div>
                     </form>
+            
+                    <form action="" method="POST" name="form_change_choice_text" id="form_change_choice_text" class="newpasslist">
+                        <div class="password_newform">Password</div>
+                        {% csrf_token %}
+                        {{form_set_2.management_form}}
+                        {{ form_set_2.non_field_errors }}
+                        {% for form in form_set_2 %}
+                        {% for field in form %}
+                        {{ field }}
+                        {% endfor %}
+                        {% endfor %}
+                        <div class="buttonlist">
+                            <button type="submit" class="button_next" name="button_change_password"> Change </button>
+                        </div>
+                    </form>
+                    <div class="buttonlist">
+                        <a class="button_next" href="{% url 'users:withdrawal' %}" type="submit">Withdrawal</a>
+                    </div>
                 </div>
             </div>
         </main>

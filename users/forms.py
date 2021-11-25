@@ -50,7 +50,7 @@ class MyPasswordChangeForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
-            field.widget.attrs['class'] = 'form-control'
+            field.widget.attrs['class'] = 'input_newform'
 
 
 class MyPasswordResetForm(PasswordResetForm):
@@ -81,7 +81,7 @@ class EmailChangeForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
-            field.widget.attrs['class'] = 'form-control'
+            field.widget.attrs['class'] = 'input_newform'
 
     def clean_email(self):
         email = self.cleaned_data['email']

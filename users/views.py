@@ -520,6 +520,7 @@ def EmailPasswordView(request):
 
     else : # POST
         
+        print("POSTに入ったああああああああ")
         # POSTされたデータをコピー（直接編集しようとすると怒られる）
         post_form_set_1 = request.POST.copy()
         post_form_set_2 = request.POST.copy()
@@ -531,40 +532,44 @@ def EmailPasswordView(request):
         # 改めてオブジェクト生成
         form_set_1 = MyFormSet_1(post_form_set_1 )
         form_set_2 = MyFormSet_2(post_form_set_2 )
+
+        if 'button_change_email' in request.POST:
  
-        """ if form_set_1.is_valid():
+            if form_set_1.is_valid():
 
-            user = request.user
-            new_email = request.POST["form-0-email"]
+                user = request.user
+                new_email = request.POST["form-0-email"]
 
-            # URLの送付
-            current_site = get_current_site(request)
-            domain = current_site.domain
-            context = {
-                'protocol': 'https' if request.is_secure() else 'http',
-                'domain': domain,
-                'token': dumps(new_email),
-                'user': user,
-            }
+                # URLの送付
+                current_site = get_current_site(request)
+                domain = current_site.domain
+                context = {
+                    'protocol': 'https' if request.is_secure() else 'http',
+                    'domain': domain,
+                    'token': dumps(new_email),
+                    'user': user,
+                }
 
-            subject = render_to_string(
-                'users/mail_template/email_change/subject.txt', context)
-            message = render_to_string(
-                'users/mail_template/email_change/message.txt', context)
-            send_mail(subject, message, None, [new_email])
+                subject = render_to_string(
+                    'users/mail_template/email_change/subject.txt', context)
+                message = render_to_string(
+                    'users/mail_template/email_change/message.txt', context)
+                send_mail(subject, message, None, [new_email])
 
-            #return redirect('users:email_change_done')
+                #return redirect('users:email_change_done')
+                
+                messages.info(request, f'確認メールを送信しました。確認してください')
+                return redirect('postapp:talk_all')
+
+        if 'button_change_password' in request.POST:        
             
-            messages.info(request, f'確認メールを送信しました。確認してください')
-            return redirect('postapp:talk_all') """
-        
-        if  form_set_2.is_valid():
+            if  form_set_2.is_valid():
 
-            request.user.set_password(request.POST["form-0-password"])
-            request.user.save()
+                request.user.set_password(request.POST["form-0-password"])
+                request.user.save()
 
-            messages.info(request, f'パスワードを変更しました。')
-            return redirect('users:login')
+                messages.info(request, f'パスワードを変更しました。')
+                return redirect('users:login')
  
     # レンダリング
     context = {
