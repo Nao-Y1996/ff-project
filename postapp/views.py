@@ -29,6 +29,8 @@ HOURS = 0
 MINUTES = 30
 SEND_NUM_LIMIT = 400
 
+import algorithm_checker_utils
+csv_controller2 = algorithm_checker_utils.csv_controller4user()
 
 def mypage(request):
     return render(request, "postapp/mypage.html")
@@ -224,11 +226,16 @@ def talk_create(request):  # 新規トークフォーム
 
                 post.talk = new_talk
                 post.save()
+                
+                # （アルゴリズム検証）メッセージの受信回数をインクリメント
+                recieving_user = CustomUser.objects.get(id=send_id)
+                day_num = csv_controller2.get_day()
+                csv_controller2.incriment_receive_num(file_name=recieving_user.username, idx_name='day'+day_num)
                 return redirect('postapp:talk_all')
         else:
             return render(request, 'postapp/talk_create.html', {'form': form})
     else:
-        user_info = UserInfo.objects.get(user_id=request.user)
+        user_info = UserInfo.objects.get(user=request.user)
         if user_info.count_send_new_messages_in_a_day >= SEND_NUM_LIMIT:
             messages.warning(
                 request, f'本日の投稿可能上限に達しました。')
