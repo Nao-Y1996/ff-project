@@ -277,6 +277,8 @@
 
     function update_time() {
         DAY = 14
+        HOURS = 0
+        MINUTES = 0
         let nowTime = new Date();
 
         const get_date = document.getElementsByClassName('lefttime');
@@ -284,6 +286,8 @@
         for (let d of get_date) {
             let created_at = new Date(d.getAttribute('value').replace("_","T"))
             created_at.setDate(created_at.getDate() + DAY);
+            created_at.setHours(created_at.getHours() + HOURS);
+            created_at.setMinutes(created_at.getMinutes() + MINUTES);
             let left_time = (created_at - nowTime) / 1000
 
             let daysLeft = Math.floor(left_time / (24 * 60 * 60));

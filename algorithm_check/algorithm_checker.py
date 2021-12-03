@@ -1,4 +1,5 @@
 import time
+from selenium.common.exceptions import NoSuchElementException
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -11,7 +12,7 @@ import os
 import bs4
 import numpy as np
 import algorithm_checker_utils
-
+import sys
 
 # from webdriver_manager.chrome import ChromeDriverManager
 
@@ -46,7 +47,7 @@ class ffChecker():
     def login(self,username):
         # ログイン情報
         email = username + '@django.com'
-        login_pw = username + '1111'
+        login_pw = username
         # 最大待機時間（秒）
         # wait_time = 30
 
@@ -61,6 +62,12 @@ class ffChecker():
         # ログイン
         login_button_xpath = '/html/body/div/form/input[2]'
         self.click_with_xpath(login_button_xpath)
+        if self.driver.current_url == 'http://http://localhost:8000/profile':
+            is_success = False
+        else:
+            is_success = True
+        return is_success
+        
 
 
     def create_users(self,username,phnenumber):
@@ -72,8 +79,8 @@ class ffChecker():
         self.write_with_xpath('//*[@id="id_email"]',username+'@django.com') # email
         self.write_with_xpath('//*[@id="id_username"]',username) # username
         self.write_with_xpath('//*[@id="id_phone_number"]',phnenumber) # phnenumber
-        self.write_with_xpath('//*[@id="id_password1"]',username+'1111') # pass
-        self.write_with_xpath('//*[@id="id_password2"]',username+'1111') # pass confirmation
+        self.write_with_xpath('//*[@id="id_password1"]',username) # pass
+        self.write_with_xpath('//*[@id="id_password2"]',username) # pass confirmation
         self.click_with_xpath('//*[@id="customuser_form"]/div/div/input[1]')
         if self.driver.current_url == 'http://localhost:8000/admin/users/customuser/add/':
             is_success = False
@@ -105,11 +112,12 @@ class ffChecker():
     
 
 if __name__ == '__main__':
-    import sys
     args = sys.argv
     checker = ffChecker()
     csv_controller = algorithm_checker_utils.csv_controller4user()
-    user_num = 100
+    user_num = 10
+    sim_days =100
+    
     if args[1] is not None and args[1]=='init':
         
         checker.driver.get('http://localhost:8000/admin/')
@@ -118,15 +126,52 @@ if __name__ == '__main__':
         checker.write_with_xpath('//*[@id="id_password"]',"admin")
         checker.click_with_xpath('//*[@id="login-form"]/div[3]/input')
         
+        # 既存userの削除
+        checker.driver.get('http://localhost:8000/admin/users/customuser/')
+        count = 1
+        while True:
+            try:
+                if count == 1:
+                    count += 1
+                    continue # adminは削除しない
+                check_box = checker.driver.find_element_by_xpath('//*[@id="result_list"]/tbody/tr['+str(count)+']/td[1]/input')
+                print(count)
+                check_box.click()
+                count += 1
+            except NoSuchElementException:
+                if count==2:
+                    print('削除するユーザーはいません')
+                    break
+                else:
+                    delete_user_num = count-2
+                    print(f'{delete_user_num}人のユーザーを削除します')
+                    # print(asdf)
+                    # 削除を選択
+                    dropdown = checker.driver.find_element_by_xpath('//*[@id="changelist-form"]/div[1]/label/select')
+                    select = Select(dropdown)
+                    select.select_by_visible_text('Delete selected custom users')
+                    # goボタンを押す
+                    checker.click_with_xpath('//*[@id="changelist-form"]/div[1]/button')
+                    time.sleep((0.2))
+                    # 確認ボタンを押す
+                    checker.click_with_xpath('//*[@id="content"]/form/div/input['+str(delete_user_num+3)+']')
+                    time.sleep(2)
+                    break
+            except:
+                import traceback
+                traceback.print_exc()
+                sys.exit()
+
         # adminのuser_info作成
         _ = checker.create_userinfo(username='admin')
         
         # Executedfunctionの登録
-        checker.driver.get('http://localhost:8000/admin/postapp/executedfunction/add/')
         # update_seiding_priorityを追加
+        checker.driver.get('http://localhost:8000/admin/postapp/executedfunction/add/')
         checker.write_with_xpath('//*[@id="id_name"]', 'update_seiding_priority')
-        checker.click_with_xpath('//*[@id="executedfunction_form"]/div/div/input[2]') # save and add another
+        checker.click_with_xpath('//*[@id="executedfunction_form"]/div/div/input[1]') # save
         # update_count_for_priorityを追加
+        checker.driver.get('http://localhost:8000/admin/postapp/executedfunction/add/')
         checker.write_with_xpath('//*[@id="id_name"]', 'update_count_for_priority')
         checker.click_with_xpath('//*[@id="executedfunction_form"]/div/div/input[1]') # save
         
@@ -174,21 +219,13 @@ if __name__ == '__main__':
         # 投稿率
         user_newpost_rate = np.random.rand(user_num)
         
-        users_name = ["user_0","user_1","user_2","user_3","user_4","user_5","user_6","user_7","user_8","user_9",
-                        "user_10","user_11","user_12","user_13","user_14","user_15","user_16","user_17","user_18",
-                        "user_19","user_20","user_21","user_22","user_23","user_24","user_25","user_26","user_27",
-                        "user_28","user_29","user_30","user_31","user_32","user_33","user_34","user_35","user_36",
-                        "user_37","user_38","user_39","user_40","user_41","user_42","user_43","user_44","user_45",
-                        "user_46","user_47","user_48","user_49","user_50","user_51","user_52","user_53","user_54",
-                        "user_55","user_56","user_57","user_58","user_59","user_60","user_61","user_62","user_63",
-                        "user_64","user_65","user_66","user_67","user_68","user_69","user_70","user_71","user_72",
-                        "user_73","user_74","user_75","user_76","user_77","user_78","user_79","user_80","user_81",
-                        "user_82","user_83","user_84","user_85","user_86","user_87","user_88","user_89","user_90",
-                        "user_91","user_92","user_93","user_94","user_95","user_96","user_97","user_98","user_99"]
+        users_name = []
+        for i in range(user_num):
+            users_name.append('user_'+str(i))
 
-        days = list(range(1,101))
+        days = list(range(1, sim_days+1))
         for day in days:
-            
+
             # ファイルの書き込み
             with open(BASE_PATH + '/day.txt', mode='w') as f:
                 f.write(str(day))
@@ -208,11 +245,16 @@ if __name__ == '__main__':
                     continue
 
                 username = users_name[user_idx]
-                print(f'----------------------------{username}でログイン！')
+                print(f'----------------------------{username}でログインします')
                 # ログイン画面へ
                 checker.driver.get('http://localhost:8000/login')
-                checker.login(username)
-                time.sleep(5)
+                login_success = checker.login(username)
+                if login_success:
+                    print(f'ログイン成功')
+                else:
+                    print(f'ログイン失敗：終了')
+                    sys.exit()
+                time.sleep(1)
                 
                 # 新規投稿
                 max_post_num = 5
@@ -233,7 +275,7 @@ if __name__ == '__main__':
                 checker.driver.get('http://localhost:8000/post/talk_all/')
                 print('=====================================================')
                 talk_detail_urls = []
-                for i in range(100):
+                for i in range(20):
                     #未読の時にトーク詳細へのリンクを取得する
                     try:
                         status = checker.driver.find_element(by=By.XPATH, value='//*[@id="talks"]/table/tbody/tr['+str(i+2)+']/td[1]').text

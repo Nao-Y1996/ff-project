@@ -175,6 +175,9 @@ def Login(request):
                 is_end_day = l[0]
             # 1日分のシミュレーションが終わっていたら　送信優先度のrankを記録
             if is_end_day == 'True':
+                print("="*30)
+                print('-------------1日経過-------------')
+                print('-------Priorityを記録します-------')
                 update_seiding_priority()
                 day_num = csv_controller.get_day()
                 user_num = User.objects.all().count()
@@ -189,25 +192,26 @@ def Login(request):
                     f.write(str(False))
             else:
                 pass
-
             # 毎回（1日1回のログインでシミュレーションするので）
             user.user_info.count_login += 1 # ログインカウントをインクリメント
             user.user_info.count_send_new_messages_in_a_day = 0 # 本日の投稿可能数をリセット
             user.user_info.save()
-
             # 1週間以上、更新関数が実行されていなかったら（イテレーションが7で割れたら）更新関数を実行する
             day_num = int(csv_controller.get_day())
             if day_num % 7 == 0:
+                print("="*30)
+                print('-------------7日経過-------------')
+                print('-------Priorityを更新します-------')
                 update_count_for_priority()
             else:
                 pass
-            
             # （アルゴリズム検証）ログインしたかどうかを記録
             day_num = csv_controller.get_day()
             csv_controller.record_logedin(file_name=user.username,idx_name='day'+day_num)
             print('--------------------------------')
             login(request, user)  # ログイン
             # -----------------------（アルゴリズム検証）---------------------------
+
             return redirect('users:profile')
         else:
             # form = LoginForm(initial={"username":email, 'password':password}) # htmlで　form.errosでエラーが出なくなってしまう

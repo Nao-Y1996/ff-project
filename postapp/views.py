@@ -24,6 +24,7 @@ from django.http.response import JsonResponse
 from datetime import date, datetime, timezone, timedelta
 import random
 import numpy as np
+import sys
 DAYS = 0
 HOURS = 0
 MINUTES = 30
@@ -98,14 +99,13 @@ def talk_all(request):
                 read_talks.append(talk)
             else:
                 unread_talks.append(talk)
-    print('='*20)
-    print(len(my_talks), len(unchecked_dead_talks) +
-          len(unread_talks)+len(read_talks)+len(favorite_dead_talks))
+    # print('='*20)
+    # print(len(my_talks), len(unchecked_dead_talks) +
+    #       len(unread_talks)+len(read_talks)+len(favorite_dead_talks))
 
     create_data = {}
     for i, talk in enumerate(my_talks):
         create_data[i] = str(talk.created_at).replace(' ', 'T')
-        print(create_data[i])
     params = {"data": data, "my_talks": my_talks,
               'data_json': json.dumps(create_data),
               'unchecked_dead_talks': unchecked_dead_talks,
@@ -119,7 +119,6 @@ def talk_all(request):
 def decide_reciever(request):  # 送り先を決定するアルゴリズム
     found_send_user = False
     for i in range(16):
-        print(i+1)
         candidates_info = UserInfo.objects.filter(priority=i+1)
         send_id = None
         print('candidates_info num : ',len(candidates_info))
@@ -167,7 +166,8 @@ def update_seiding_priority():
             str(int(binary[2]))+str(int(binary[3]))
         user_info.priority = 16 - int(binary, 2)
         upd_user_infos.append(user_info)
-    UserInfo.objects.bulk_update(upd_user_infos)
+    update_columns = ['priority']
+    UserInfo.objects.bulk_update(upd_user_infos, fields=update_columns)
     # 実行時刻を保存
     self_func_name = sys._getframe().f_code.co_name
     func = Executedfunction.objects.get(name=self_func_name)
@@ -185,7 +185,8 @@ def update_count_for_priority():
         user_info.count_send_new_messages = 0
         user_info.count_login = 0
         upd_user_infos.append(user_info)
-    UserInfo.objects.bulk_update(upd_user_infos)
+    update_columns = ['count_receive_new_messages', 'count_first_reply', 'count_send_new_messages','count_login']
+    UserInfo.objects.bulk_update(upd_user_infos, fields=update_columns)
     # 実行時刻を保存
     self_func_name = sys._getframe().f_code.co_name
     func = Executedfunction.objects.get(name=self_func_name)

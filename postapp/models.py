@@ -45,7 +45,7 @@ class Message(models.Model):
 
 
 class Executedfunction(models.Model):
-    name = models.TextField(max_length=200)
+    name = models.TextField(primary_key=True, max_length=200)
     executed_at = models.DateTimeField(default=timezone.now)
     def __str__(self):
         return str(self.name)
