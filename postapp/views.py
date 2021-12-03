@@ -29,7 +29,7 @@ HOURS = 0
 MINUTES = 30
 SEND_NUM_LIMIT = 400
 
-import algorithm_checker_utils
+from algorithm_check import algorithm_checker_utils
 csv_controller2 = algorithm_checker_utils.csv_controller4user()
 
 def mypage(request):

@@ -10,7 +10,7 @@ import csv
 import os
 import bs4
 import numpy as np
-from algorithm_checker_utils import csv_controller4user
+import algorithm_checker_utils
 
 
 # from webdriver_manager.chrome import ChromeDriverManager
@@ -21,41 +21,12 @@ from algorithm_checker_utils import csv_controller4user
 #     '--user-agent= Mozilla/5.0 (Linux; U; Android 2.3.5; ja-jp; T-01D Build/F0001) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1')
 # .find_element(by=By.XPATH, value="//input[@type='text']")
 
-class csv_controller4rank():
-    def init_csv(self, fale_name, columns):
-        # CSV ファイルの初期化
-        df = pd.DataFrame(columns=columns,)
-        df.to_csv(file_name+".csv", index=False, header=True)
-
-    def add_one_line(self, file_name, idx_name, receive_num, is_logedin):
-        df = pd.read_csv(file_name+".csv", index_col=0)
-        df.loc[idx_name] = [receive_num, is_logedin]
-        df.to_csv(file_name+".csv", index=True, header=True)
-
-    def incriment_receive_num(self, file_name, idx_name):
-        df = pd.read_csv(file_name+".csv", index_col=0)
-        recieve_num = df.loc[idx_name].recieve_num + 1
-        is_logedin = df.loc[idx_name].is_logedin
-        df.loc[idx_name] = [recieve_num, is_logedin]
-        df.to_csv(file_name+".csv", index=True, header=True)
-        
-    def record_logedin(self, file_name, idx_name):
-        df = pd.read_csv(file_name+".csv", index_col=0)
-        recieve_num = df.loc[idx_name].recieve_num
-        is_logedin = True
-        df.loc[idx_name] = [recieve_num, is_logedin]
-        df.to_csv(file_name+".csv", index=True, header=True)
-        
-    def get_day(self):
-        with open('day.txt') as f:
-            l = f.readlines()
-            day = l[0]
-        return day
+BASE_PATH = algorithm_checker_utils.BASE_PATH
 
 class ffChecker():
     def __init__(self):
         # self.driver = webdriver.Firefox(executable_path=os.path.abspath('')+'/chromedriver')
-        self.driver = webdriver.Chrome(executable_path=os.path.abspath('')+'/chromedriver')
+        self.driver = webdriver.Chrome(executable_path=BASE_PATH +'/chromedriver')
         url = 'http://127.0.0.1:8000/'
         self.driver.get(url)
 
@@ -137,7 +108,7 @@ if __name__ == '__main__':
     import sys
     args = sys.argv
     checker = ffChecker()
-    csv_controller = csv_controller4user()
+    csv_controller = algorithm_checker_utils.csv_controller4user()
     user_num = 100
     if args[1] is not None and args[1]=='init':
         
@@ -219,16 +190,16 @@ if __name__ == '__main__':
         for day in days:
             
             # ファイルの書き込み
-            with open('day.txt', mode='w') as f:
+            with open(BASE_PATH + '/day.txt', mode='w') as f:
                 f.write(str(day))
-            with open('day_end.txt', mode='w') as f:
+            with open(BASE_PATH + '/day_end.txt', mode='w') as f:
                 f.write(str(False))
             for name in users_name:
                 csv_controller.init_csv(file_name=name)
                 csv_controller.add_one_line(file_name=name, idx_name='day'+str(day), receive_num=0, is_logedin=False)
 
             df = pd.DataFrame(columns=['day']+users_name)
-            df.to_csv("rank.csv", index=False, header=True)
+            df.to_csv(BASE_PATH + "/rank.csv", index=False, header=True)
             
             # 1日分のシミュレーション
             for user_idx, login_rate in enumerate(user_login_rate):
@@ -262,7 +233,7 @@ if __name__ == '__main__':
                 checker.driver.get('http://localhost:8000/post/talk_all/')
                 print('=====================================================')
                 talk_detail_urls = []
-                for i in range(1000):
+                for i in range(100):
                     #未読の時にトーク詳細へのリンクを取得する
                     try:
                         status = checker.driver.find_element(by=By.XPATH, value='//*[@id="talks"]/table/tbody/tr['+str(i+2)+']/td[1]').text
@@ -286,14 +257,12 @@ if __name__ == '__main__':
                 # logout
                 checker.click_with_xpath('//*[@id="navbarNavAltMarkup"]/div/a[2]')
 
-                
+
 
             # 1日分のシミュレーションが終わったかどうかを記録
-            with open('day_end.txt', mode='w') as f:
+            with open(BASE_PATH + '/day_end.txt', mode='w') as f:
                 f.write(str(True))
-            
-            
-            
+
 
 
 

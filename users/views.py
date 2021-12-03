@@ -28,7 +28,7 @@ from postapp.views import update_count_for_priority, update_seiding_priority
 from postapp.models import Executedfunction
 User = get_user_model()
 
-import algorithm_checker_utils
+from algorithm_check import algorithm_checker_utils
 import pandas as pd
 csv_controller = algorithm_checker_utils.csv_controller4user()
 
@@ -170,7 +170,7 @@ def Login(request):
             login(request, user)  # ログイン
             """
             # -----------------------（アルゴリズム検証）---------------------------
-            with open('day_end.txt') as f:
+            with open(algorithm_checker_utils.BASE_PATH +'/day_end.txt') as f:
                 l = f.readlines()
                 is_end_day = l[0]
             # 1日分のシミュレーションが終わっていたら　送信優先度のrankを記録
@@ -182,10 +182,10 @@ def Login(request):
                 for name in users_name:
                     _user = User.objects.filter(username=name)
                     all_user_rank.append(_user.user_info.priority)
-                df = pd.read_csv("../rank.csv", index_col=0)
+                df = pd.read_csv(algorithm_checker_utils.BASE_PATH + "/rank.csv", index_col=0)
                 df.loc[str(day_num)] = all_user_rank
-                df.to_csv("../rank.csv", index=True, header=True)
-                with open('../day_end.txt', mode='w') as f:
+                df.to_csv(algorithm_checker_utils.BASE_PATH + "/rank.csv", index=True, header=True)
+                with open(algorithm_checker_utils.BASE_PATH + '/day_end.txt', mode='w') as f:
                     f.write(str(False))
             else:
                 pass

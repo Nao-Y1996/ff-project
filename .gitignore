@@ -9,5 +9,5 @@ __pycache__/
 .DS_Store
 */.DS_Store
 chromedriver
-/algorithm_check
+/algorithm_check/user_data/user_*.csv
 test.ipynb
