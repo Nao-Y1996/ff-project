@@ -1,15 +1,24 @@
-{% extends "base.html" %}
-{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<link rel="stylesheet" href="{% static 'users/button.css' %}">
+<link rel="stylesheet" href="{% static 'users/user_create.css' %}">
+
 <form action="" method="POST">
-    {{ form.non_field_errors }}
-    {% for field in form %}
-    <div class="form-group">
-        <label for="{{ field.id_for_label }}">{{ field.label_tag }}</label>
-        {{ field }}
-        {{ field.errors }}
+    <div class="all_user_create">
+        {{ form.non_field_errors }}
+        {% for field in form %}
+        <div class="form-group">
+            <div class="label_user_create" for="{{ field.id_for_label }}">{{ field.label_tag }}</div>
+            {{ field }}
+            {{ field.errors }}
+        </div>
+        {% endfor %}
+        {% csrf_token %}
+        <div class="buttonlist">
+            <button type="submit" class="button_next">Next</button>
+            <!-- <input type="submit" value="login"> -->
+        </div>
     </div>
-    {% endfor %}
-    {% csrf_token %}
-    <button type="submit" class="btn btn-primary btn-lg">送信</button>
 </form>
-{% endblock %}
+</html>
