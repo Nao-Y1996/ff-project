@@ -1,0 +1,32 @@
+<div class="title">FF<br />project</div>
+<i class="fas fa-key fa-lg"></i>
+<!-- <div class="col-3"> -->
+<div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+    <nav class="nav flex-column">
+        <a href="{% url 'users:userinfo_edit' user.user_info.id %}" class="menu_button"
+            id="v-pills-user-tab" role="tab" aria-controls="v-pills-user" aria-selected="false">
+            <img class="prof_picture" src="{{user.user_info.profile_image.url}}" />
+            <p class="button-title">{{user.username}}</p>
+        </a>
+        <a href="{% url 'postapp:talk_all' %}" class="menu_button" id="v-pills-home-tab" role="tab"
+            aria-controls="v-pills-home" aria-selected="false">
+            <i class="fas fa-home fa-lg"></i>
+            <p class="button-title">Home</p>
+        </a>
+        <a href="{% url 'users:profile' %}" class="menu_button" id="v-pills-profile-tab" role="tab"
+            aria-controls="v-pills-profile" aria-selected="false">
+            <p class="button-title">Account</p>
+            <i class="fas fa-cog fa-lg"></i>
+        </a>
+        <a href="{% url 'postapp:talk_create' %}" class="menu_button" class="nav-link"
+            id="v-pills-messages-tab" role="tab" aria-controls="v-pills-messages" aria-selected="false">
+            <p class="button-title">New post</p>
+            <i class="fas fa-plus fa-lg"></i>
+        </a>
+        <a href="{% url 'users:logout' %}" class="menu_button" class="nav-link" id="v-pills-settings-tab"
+            role="tab" aria-controls="v-pills-settings" aria-selected="false">
+            <p class="button-title">Logut</p>
+            <i class="fas fa-sign-out-alt fa-lg"></i>
+        </a>
+    </nav>
+</div>

@@ -35,7 +35,7 @@
                     <a href="{% url 'users:userinfo_edit' user.user_info.id %}" class="menu_button"
                         id="v-pills-user-tab" role="tab" aria-controls="v-pills-user" aria-selected="false">
                         <img class="prof_picture" src="{{user.user_info.profile_image.url}}" />
-                        <p class="button-title">{{user.username}}</p>
+                        <p class="button-title" id="username">{{user.username}}</p>
                     </a>
                     <a href="{% url 'postapp:talk_all' %}" class="menu_button" id="v-pills-home-tab" role="tab"
                         aria-controls="v-pills-home" aria-selected="false">
@@ -67,38 +67,57 @@
         <main>
             <div class="all_sighup">
                 <div class="hello_signup">Account</div>
+                
+
+                
                 <div class="signup_tab">
                     <form action="" method="POST" name="form_change_question_text" id="form_change_question_text" class="newemaillist">
                         <div class="email_newform">Email</div>
-                        {% csrf_token %}
-                        {{form_set_1.management_form}}
-                        {{ form_set_1.non_field_errors }}
-                        {% for form in form_set_1 %}
-                        {% for field in form %}
-                        {{ field }}
-                        {% endfor %}
-                        {% endfor %}
-                        <div class="buttonlist">
-                            <button type="submit" class="button_next" name="button_change_email"> Change </button>
-                        </div>
+                        <table>
+                            <tr>
+                                <td class="td_form"
+                                    {% csrf_token %}
+                                    {{form_set_1.management_form}}
+                                    {{ form_set_1.non_field_errors }}
+                                    {% for form in form_set_1 %}
+                                    {% for field in form %}
+                                    {{ field }}
+                                    {% endfor %}
+                                    {% endfor %}
+                                </td>
+                                <td class="td_button">
+                                    <div class="buttonlist">
+                                        <button type="submit" class="button_next" name="button_change_email"> Change </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
                     </form>
             
                     <form action="" method="POST" name="form_change_choice_text" id="form_change_choice_text" class="newpasslist">
                         <div class="password_newform">Password</div>
-                        {% csrf_token %}
-                        {{form_set_2.management_form}}
-                        {{ form_set_2.non_field_errors }}
-                        {% for form in form_set_2 %}
-                        {% for field in form %}
-                        {{ field }}
-                        {% endfor %}
-                        {% endfor %}
-                        <div class="buttonlist">
-                            <button type="submit" class="button_next" name="button_change_password"> Change </button>
-                        </div>
+                        <table>
+                            <tr>
+                                <td class="td_form">
+                                    {% csrf_token %}
+                                    {{form_set_2.management_form}}
+                                    {{ form_set_2.non_field_errors }}
+                                    {% for form in form_set_2 %}
+                                    {% for field in form %}
+                                    {{ field }}
+                                    {% endfor %}
+                                    {% endfor %}
+                                </td>
+                                <td class="td_button">
+                                    <div class="buttonlist">
+                                        <button type="submit" class="button_next" name="button_change_password"> Change </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
                     </form>
                     <div class="buttonlist">
-                        <a class="button_next" href="{% url 'users:withdrawal' %}" type="submit">Withdrawal</a>
+                        <button class="button_next" id="withdrawal_button" onclick="location.href='{% url 'users:withdrawal' %}'"> Withdrawal </button>
                     </div>
                 </div>
             </div>

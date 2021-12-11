@@ -1,7 +1,7 @@
-@media screen and (min-width: 990px) {  
+@media screen and (min-width: 999px) {  
 .menu_button{
     display: inline-block;
-    width: 120px;
+    width: 150px;
     height: 40px;
     background-color: white;
     color: black;
@@ -24,6 +24,7 @@
 }
 
 .title{
+    height: 150px;
     font-size: 35px;
     font-weight: bold;
     font-family: Comic Sans MS;
@@ -64,6 +65,11 @@
     font-size: 20px;
     text-decoration: none;
     font-family: Arial Black;
+    margin: 0;
+}
+
+#username{
+    font-size: 15px;
 }
 
 .fa-key, .fa-home, .fa-cog, .fa-plus, .fa-sign-out-alt, .fa-user-plus, .fa-sign-in-alt{
@@ -84,7 +90,7 @@ img.prof_picture{
 
 }
 
-@media screen and (max-width: 990px) {  
+@media screen and (max-width: 999px) {  
     .menu_button{
         display: inline-block;
         width: 50px;
@@ -156,5 +162,4 @@ img.prof_picture{
         object-fit: cover;
     }
 
-    
  }

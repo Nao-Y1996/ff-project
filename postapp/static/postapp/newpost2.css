@@ -32,7 +32,7 @@ h1{
     width: 100%;
     margin: 10px auto;
     border: 0px solid #d1d1d1;
-    padding: 50px     
+    padding: 50px; 
 }
 
 .form-control-text{
@@ -41,7 +41,7 @@ h1{
     height: 100px;
     background-color: white;
     padding: 3px;
-    border: 1.5px solid black;
+    border: 1.5px solid lightgray;
     resize: none;
 }
 
@@ -59,12 +59,12 @@ h1{
     font-weight: bold;
     padding: 10px 24px;
     border-radius: 50px;
-    border: 1px solid black;
+    border: 1px solid lightgray;
     margin: 100px auto;
 }
 
 .newpost_button:hover{
-    background-color: rgb(232, 232, 232);
+    background-color: rgb(242, 242, 242);
 }
 
 .newpost_button:active{
