@@ -91,10 +91,13 @@ class ffChecker():
         
         dropdown = self.driver.find_element_by_id('id_user')
         select = Select(dropdown)
+        time.sleep(1)
         select.select_by_visible_text(username)
-        
+        time.sleep(1)
+
         dropdown = self.driver.find_element_by_id('id_nationality')
         select = Select(dropdown)
+        time.sleep(1)
         select.select_by_visible_text('Japan')
         
         self.click_with_xpath('//*[@id="userinfo_form"]/div/div/input[1]')
@@ -108,7 +111,7 @@ class ffChecker():
 
 if __name__ == '__main__':
     checker = ffChecker()
-    user_num = 100
+    user_num = 50
 
     checker.driver.get('http://localhost:8000/admin/')
     # admin ログイン
@@ -117,7 +120,7 @@ if __name__ == '__main__':
     checker.click_with_xpath('//*[@id="login-form"]/div[3]/input')
     
     # adminのuser_info作成
-    _ = checker.create_userinfo(username='admin')
+    # _ = checker.create_userinfo(username='admin')
     
     # Executedfunctionの登録
     checker.driver.get('http://localhost:8000/admin/postapp/executedfunction/add/')

@@ -42,6 +42,7 @@ class Message(models.Model):
     sending_user = models.ForeignKey(CustomUser, related_name="sending_user" ,on_delete=models.CASCADE)
     content = models.TextField(max_length=500)
     created_at = models.DateTimeField(default=timezone.now)
+    is_date = models.BooleanField(default=False,null=False,blank=True)
 
 
 class Executedfunction(models.Model):
