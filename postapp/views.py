@@ -24,6 +24,7 @@ from django.http.response import JsonResponse
 from datetime import date, datetime, timezone,timedelta
 import random
 import numpy as np
+import time
 DAYS =14
 HOURS=9
 MINUTES=0
@@ -128,7 +129,7 @@ def talk_all(request):
 
 def decide_sender(request): #送り先を決定するアルゴリズム
     while True:
-        send_id = random.randrange(1,9)
+        send_id = random.randrange(11,20)
         if send_id != request.user:
             break
     return send_id
@@ -181,6 +182,10 @@ def update_count_for_priority():
 
 def talk_create(request):  # 新規トークフォーム
     if request.method == 'POST':
+
+        #Messageにトークを開始した日付を追加
+        message = Message(content="date_data",is_date=1,sending_user=request.user)
+
         form = NewTalkForm(request.POST)
 
         if form.is_valid():
@@ -201,6 +206,10 @@ def talk_create(request):  # 新規トークフォーム
                 id=send_id))  # idにどのようなidを入れるかで送り先が変わる
             new_talk.save()
 
+            #Messageにトークを開始した日付を追加
+            message.talk = new_talk
+            message.save()
+
             post = form.save(commit=False)
 
             post.talk = new_talk
@@ -220,9 +229,31 @@ def talk_detail(request, talk_id):  # 既存トークフォーム
         if not is_talk_active(talk):#終了トークなのに誤って送信が行われた場合
             return redirect(request.META['HTTP_REFERER']) 
         else:
+
+            #最新メッセージの作成日時を取得し、その日の最終時刻に修正
+            latest_message = Message.objects.filter(talk_id=talk.id).latest("created_at")
+            latest_message = latest_message.created_at
+            latest_message_date = datetime(latest_message.year,latest_message.month,latest_message.day,23,59,59,999999)
+            
+            #現在時刻の取得
+            now_date = datetime.now()
+
+            flag = False
+            if latest_message_date < now_date: #日付を跨いだ更新なので日付フラグをメッセージに追加
+                #Messageにトークを開始した日付を追加
+                message = Message(content="date_data",is_date=1,sending_user=request.user)
+                flag = True
+            else:
+                print("同じ日の更新")
+            
             Exist_favorites = favorite_check(request, talk)
             form = MessageForm(request.POST)
             if form.is_valid():
+
+                if flag == True: #Messageにトークを開始した日付を追加
+                    message.talk = talk
+                    message.save()
+
                 post = form.save(commit=False)
                 post.save()
 
