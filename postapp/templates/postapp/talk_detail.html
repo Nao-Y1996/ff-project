@@ -46,7 +46,7 @@
                             <i class="fas fa-home fa-lg"></i>
                             <p class="button-title">Home</p>
                         </a>
-                        <a href="{% url 'users:profile' %}" class="menu_button" id="v-pills-profile-tab" role="tab"
+                        <a href="{% url 'users:EmailPasswordView' %}" class="menu_button" id="v-pills-profile-tab" role="tab"
                             aria-controls="v-pills-profile" aria-selected="false">
                             <p class="button-title">Account</p>
                             <i class="fas fa-cog fa-lg"></i>
@@ -375,8 +375,9 @@
                             {% if message.sending_user_id != user.id %}
                                 <div class="list0_detail">
                                     <div class='image_detail'>
-                                        <img src="/media/no_image.png"  class="rounded-circle_detail">
-                                        <div class="talktime">15:55</div>   
+                                        {% get_user message.sending_user_id as talk_partner %}
+                                        <img src="{{talk_partner.user_info.profile_image.url}}"  class="rounded-circle_detail">
+                                        <div class="talktime">{{message.created_at|date:"H:i"}}</div>   
                                     </div>
                                     <div class="you_message_detail">
                                         <p class="talks_message">{{message.content}}</p>
@@ -388,8 +389,9 @@
                                         <p class="talks_message">{{message.content}}</p>    
                                     </div>
                                     <div class='image_detail'>
-                                        <img src="/media/no_image.png" class="rounded-circle_detail">
-                                        <div class="talktime">15:55</div>   
+                                        {% get_user message.sending_user_id as talk_partner %}
+                                        <img src="{{talk_partner.user_info.profile_image.url}}" class="rounded-circle_detail">
+                                        <div class="talktime">{{message.created_at|date:"H:i"}}</div>   
                                     </div>
                                 </div>
                             {% endif %}
