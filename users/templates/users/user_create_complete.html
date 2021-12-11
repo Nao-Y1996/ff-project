@@ -1,8 +1,15 @@
-{% extends "base.html" %}
-{% block content %}
-<p>
-    本登録が完了しました。<br>
-    登録されたメールアドレスとパスワードでログインしてください。<br>
-    <a class="btn btn-primary btn-lg" href="{% url 'users:login' %}">ログイン</a>
-</p>
-{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<link rel="stylesheet" href="{% static 'users/user_create.css' %}">
+<div class="all_user_create">
+    <p>
+        本登録が完了しました。<br>
+        登録されたメールアドレスとパスワードでログインしてください。<br>
+    </p>
+    <div class="buttonlist">
+        <a type="submit" class="button_complete" href="{% url 'users:login' %}">Signin</a>
+    </div> 
+    <!--<a class="btn btn-primary btn-lg" href="{% url 'users:login' %}">ログイン</a>-->
+</div>
+</html>

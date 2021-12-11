@@ -75,14 +75,13 @@
 }
 .list0_detail{
 	display:flex;
-	vertical-align:top;
+	align-items:flex-start;
 	justify-content: left;
 }
 
 .list1_detail{
 	display:flex;
-	vertical-align:top;
-	/* align-items:center; */
+	align-items:flex-start;
 	justify-content: right;
 }
 
