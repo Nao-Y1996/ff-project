@@ -82,12 +82,7 @@
         <main>
             <div class="all">
                 {% for talk in unchecked_dead_talks %}
-
                 <div class="frame_table">
-
-                未確認終了トーク
-                <div class="list0">
-
                     <div class="unread_lamp"></div>
                     <div class="list0">
                         <div class="list1">
@@ -160,86 +155,76 @@
                 {% endfor %}
 
                 {% for talk in unread_talks %}
-
                 <div class="frame_table">
-
-                未読
-                <div class="list0" id="unread_talks">
-
-                    <div class="unread_lamp"></div>
-                    <div class="list0" id="unread_talks">
-                        <div class="list1">
-                            {% if talk.sending_user == user %}
-                                {% get_user talk.receiving_user_id as talk_partner %}
-                            {% else %}
-                                {% get_user talk.sending_user_id as talk_partner %}
-                            {% endif %}
-                            <img src="{{talk_partner.user_info.profile_image.url}}" class="you_image" />
-                            <div class="list_name">
+                        <div class="unread_lamp"></div>
+                        <div class="list0">
+                            <div class="list1">
                                 {% if talk.sending_user == user %}
-                                {{talk.receiving_user}}
+                                    {% get_user talk.receiving_user_id as talk_partner %}
                                 {% else %}
-                                {{talk.sending_user}}
+                                    {% get_user talk.sending_user_id as talk_partner %}
                                 {% endif %}
+                                <img src="{{talk_partner.user_info.profile_image.url}}" class="you_image" />
+                                <div class="list_name">
+                                    {% if talk.sending_user == user %}
+                                    {{talk.receiving_user}}
+                                    {% else %}
+                                    {{talk.sending_user}}
+                                    {% endif %}
+                                </div>
                             </div>
-                        </div>
-                        <div class="list2">
-                            <div class="overflow">
-                                <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">
-                                    {% get_newest_message talk.id %}
-                                </a>
+                            <div class="list2">
+                                <div class="overflow">
+                                    <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">
+                                        {% get_newest_message talk.id %}
+                                    </a>
+                                </div>
                             </div>
-                        </div>
-                        <div class="list3">
-                            <table>
-                                <tr>
+                            <div class="list3">
+                                <table>
                                     <tr>
+                                        <tr>
+                                            <td class="td1">
+                                            </td>
+                                            <td class="td2">
+                                                <button class="button_bye" onclick="location.href='report.html'">
+                                                    <i class="fas fa-ellipsis-v"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
                                         <td class="td1">
+                                            <div class="span_time">
+                                                {% integer_to_string talk.id as flag %}
+                                                <p class="time" id={{flag}}></p>
+                                                <input class="lefttime" type="hidden" id={{flag}}
+                                                    value={{talk.created_at|date:"Y-m-d_H:i:sO"}}>
+                                            </div>
                                         </td>
                                         <td class="td2">
-                                            <button class="button_bye" onclick="location.href='report.html'">
-                                                <i class="fas fa-ellipsis-v"></i>
-                                            </button>
+                                            {% if talk.exist_reply == True %}
+                                                {% favorite_check user talk as flag %}
+                                                {% if flag %}
+                                                <button class="button_love">
+                                                    <a href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}"
+                                                        class="fas fa-heart"></a>
+                                                </button>
+                                                {% else %}
+                                                <button class="button_love2">
+                                                    <a href="{% url 'postapp:talk_favorite_add' talk_id=talk.id %}"
+                                                        class="fas fa-heart"></a>
+                                                </button>
+                                                {% endif %}
+                                            {% endif %}
                                         </td>
                                     </tr>
-                                    <td class="td1">
-                                        <div class="span_time">
-                                            {% integer_to_string talk.id as flag %}
-                                            <p class="time" id={{flag}}></p>
-                                            <input class="lefttime" type="hidden" id={{flag}}
-                                                value={{talk.created_at|date:"Y-m-d_H:i:sO"}}>
-                                        </div>
-                                    </td>
-                                    <td class="td2">
-                                        {% if talk.exist_reply == True %}
-                                            {% favorite_check user talk as flag %}
-                                            {% if flag %}
-                                            <button class="button_love">
-                                                <a href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}"
-                                                    class="fas fa-heart"></a>
-                                            </button>
-                                            {% else %}
-                                            <button class="button_love2">
-                                                <a href="{% url 'postapp:talk_favorite_add' talk_id=talk.id %}"
-                                                    class="fas fa-heart"></a>
-                                            </button>
-                                            {% endif %}
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                            </table>
+                                </table>
+                            </div>
                         </div>
-                    </div>
                 </div>
                 {% endfor %}
 
                 {% for talk in read_talks %}
-
                 <div class="frame_table">
-
-                既読
-                <div class="list0">
-
                     <div class="read_lamp"></div>
                     <div class="list0">
                         <div class="list1">
@@ -318,12 +303,7 @@
                 {% endfor %}
 
                 {% for talk in favorite_dead_talks %}
-
                 <div class="frame_table">
-
-                お気に入り終了
-                <div class="list0">
-
                     <div class="read_lamp"></div>
                     <div class="list0">
                         <div class="list1">
