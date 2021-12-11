@@ -45,7 +45,7 @@
 .list2{
     display:flex;
     flex-flow: column;
-    width: calc(100% - 250px);
+    width: calc(100% - 145px);
     align-items: left;
     justify-content: left;
     height: 100%;
@@ -54,7 +54,7 @@
     display:flex;
     align-items: right;
     justify-content: right;
-    width: 150px;
+    width: 45px;
     height: 100%;
     
 }
@@ -119,15 +119,26 @@
 
 .overflow{
     width:100%;
-    height: 100%;
+    height: 50%;
+    vertical-align: middle;
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
+    padding-top: 20px;
+}
+
+.table_lefttime{
+    width:100%;
+    height: 50%;
+    vertical-align: bottom;
+    padding-left: 40%;
+    padding-top: 20px;
 }
 
 .overflow > a{
     text-decoration: none;
 }
+
 
 .button_love > .fas.fa-heart{
     text-decoration: none;
@@ -166,4 +177,17 @@ img.you_image{
 	height: 45px;
 	object-fit: cover;
 	border-radius: 50%;
+}
+
+.table_menu{
+    background-color: transparent;
+    font-size: 20px;
+    font-weight: bold;
+    border:none;
+    align-items: center;
+    padding-left: 12px;
+}
+
+.table_menu:focus{
+    outline: 0;
 }
