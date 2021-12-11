@@ -146,3 +146,5 @@ MEDIA_URL = '/media/'
 
 TIME_ZONE = 'Asia/Tokyo'
 USE_TZ = True
+
+X_FRAME_OPTIONS = 'ALLOW'

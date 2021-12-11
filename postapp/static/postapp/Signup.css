@@ -1,22 +1,20 @@
 
 
 .all_sighup{
-	width:50%;
-	height:100vh;
+	widows: 50%;
 	display:flex;
 	align-items: center;
-    justify-content: center;
 	flex-flow: column;
 	padding:20px;
 	margin: auto;
 	/* border: solid 3px #333; */
 }
 
-
 .hello_signup{
 	font-weight: bold;
 	font-size:40px;
-	padding:10px
+	padding:10px;
+	color: orange;
 }
 .signup_tab{
 	width:100%;
@@ -28,6 +26,8 @@
 .Name_newform,.email_newform,.password_newform{
 	font-weight: bold;
 	font-size:20px;
+	padding: 0 20px;
+	color: orange;
 }
 
 .input_newform{
@@ -36,90 +36,24 @@
     max-width: 100%;
     margin: 0.5rem 0;
     padding: 0.5rem 1rem;
-    border-radius: 1.0rem;
     background: darken(#f9f9f96b, 10%);
     color: darken(#f7f7f738, 50%);
-	border: solid 3px #333;
+	border: solid 1px lightgray;
 	outline:none;
 }
 
-
-
-/* label{
-	position: relative;
-	cursor: pointer;
-	padding-left: 30px;
-}
-label::before,
-label::after {
-	content: "";
-	display: block; 
-	border-radius: 50%;
-	position: absolute;
-	transform: translateY(-50%);
-	top: 50%;
-}
-
-label::before {
-	background-color: #FFF;
-	border: 1px solid #0c02026b;
-	border-radius: 50%;
-	width: 20px;
-	height: 20px;
-	left: 5px;
-}
-
-label::after {
-	background-color: rgb(248, 165, 97);
-	border-radius: 50%;
-	opacity: 0;
-	width: 16px;
-	height: 16px;
-	left: 7px;
-} */
-
-/* input:checked + label::after {
-  	opacity: 1;
-}
-.input_radio_newform{
-	position: absolute;
-	white-space: nowrap;
-	border: 0;
-	clip: rect(0 0 0 0);
-	clip-path: inset(50%);
-	overflow: hidden;
-	height: 1px;
-	width: 1px;
-	margin: -1px;
-	padding: 0;
-} */
-/* 
-.buttonlist_newform{
-	display:flex;
-	border:solid #FFF;
+table,tr{
+	width:100%;
 	
 }
-.submit_newform{
-	width: 50%;
-	height: 50px;
-	background-color: white;
-	font-size: 20px;
-	color: black;
-	text-decoration: none;
-	font-weight: bold;
-	border-radius: 50px;
-	margin:20px auto;
-	border: 0px;
-	outline: none;
-	-webkit-tap-highlight-color:none;
-	cursor:pointer;
+
+.td_form{
+	padding: 0 20px; 
+	
+
 }
-.submit_newform:hover{
-	font-size: 21px;
-	font-weight: bold;
-	background-color: darkgray;
-	outline: none;
-	cursor:pointer;
-	-webkit-tap-highlight-color:none;
-	cursor:pointer;
-} */
+
+.td_button{
+	width:200px;
+}
+

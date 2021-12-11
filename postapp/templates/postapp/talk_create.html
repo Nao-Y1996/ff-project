@@ -29,7 +29,7 @@
                     <a href="{% url 'users:userinfo_edit' user.user_info.id %}" class="menu_button"
                         id="v-pills-user-tab" role="tab" aria-controls="v-pills-user" aria-selected="false">
                         <img class="prof_picture" src="{{user.user_info.profile_image.url}}" />
-                        <p class="button-title">{{user.username}}</p>
+                        <p class="button-title" id="username">{{user.username}}</p>
                     </a>
                     <a href="{% url 'postapp:talk_all' %}" class="menu_button" id="v-pills-home-tab" role="tab"
                         aria-controls="v-pills-home" aria-selected="false">

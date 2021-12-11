@@ -7,13 +7,19 @@
     border-top: solid 1px lightgray;
 }
 
-.list0{
-    background-color: #FFF;
+.frame_table{
     display: flex;
     width: 100%;
     height: 90px;
     border-bottom: solid 1px lightgray;
-    padding:10px;
+}
+
+.list0{
+    background-color: #FFF;
+    display: flex;
+    width: calc(100% - 20px);
+    height: 100%;
+    
 }
 
 .unread_lamp{
@@ -39,32 +45,31 @@
 .list2{
     display:flex;
     flex-flow: column;
-    width: calc(100% - 120px);
+    width: calc(100% - 250px);
     align-items: left;
     justify-content: left;
-    height:100%;
-    padding-right: 10px;
+    height: 100%;
 }
 .list3{
     display:flex;
     align-items: right;
     justify-content: right;
-    width:100%;
-    height:30%;
+    width: 150px;
+    height: 100%;
     
 }
 
 .list_name{
     font-size:15px;
     font-weight: bold;
+    text-align: center;
+    line-height: 100%;
 }
 
 .span_time{
-    font-size:15px;
-    color: red;
-    font-weight: bold;
-    margin-top: 10px;
-    margin-right:10px;
+    font-size:12px;
+    color: gray;
+    line-height: 100%;
 }
 
 .button_love{
@@ -72,8 +77,6 @@
     font-size: 20px;
     font-weight: bold;
     border:none;
-    margin: 10px 0px 10px 10px;
-    vertical-align: middle;
     text-align: center;
 }
 .button_love:hover{
@@ -88,8 +91,6 @@
     font-size: 20px;
     font-weight: bold;
     border:none;
-    margin: 10px 0px 10px 10px;
-    vertical-align: middle;
     text-align: center;
 }
 .button_love2:hover{
@@ -104,8 +105,8 @@
     font-size: 20px;
     font-weight: bold;
     border:none;
-    margin: 10px 0px 10px 10px;
     align-items: center;
+    padding-left: 12px;
     /* border-color: black; */
 }
 .button_bye:hover{
@@ -117,7 +118,8 @@
 }
 
 .overflow{
-    width:80%;
+    width:100%;
+    height: 100%;
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
@@ -137,12 +139,18 @@
     color: black;
 }
 
-.td2,.td3{
+.td2{
     width: 45px;
+    height: 45px;
+    display: table-cell;
+    vertical-align: bottom;
 }
 
 .td1{
-    width: 140px;
+    width: 100px;
+    height: 45px;
+    display: table-cell;
+    vertical-align: middle;
 }
 
 .time{

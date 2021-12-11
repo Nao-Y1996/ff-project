@@ -28,9 +28,13 @@
 <ul class="messages_ul">
     {% for message in messages %}
     {% if forloop.first %}
-    <li class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %} alert-dismissible" role="alert"><button
+    <li class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %} alert-dismissible" role="alert">
+            <button>
             type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-                aria-hidden="true">&times;</span></button>{{ message }}</li>
+                aria-hidden="true">&times;</span>
+            </button>
+            {{ message }}
+    </li>
     {% endif %}
     {% endfor %}
 </ul>
@@ -48,7 +52,7 @@
                     <a href="{% url 'users:userinfo_edit' user.user_info.id %}" class="menu_button"
                         id="v-pills-user-tab" role="tab" aria-controls="v-pills-user" aria-selected="false">
                         <img class="prof_picture" src="{{user.user_info.profile_image.url}}" />
-                        <p class="button-title">{{user.username}}</p>
+                        <p class="button-title" id="username">{{user.username}}</p>
                     </a>
                     <a href="{% url 'postapp:talk_all' %}" class="menu_button" id="v-pills-home-tab" role="tab"
                         aria-controls="v-pills-home" aria-selected="false">
@@ -78,39 +82,50 @@
         <main>
             <div class="all">
                 {% for talk in unchecked_dead_talks %}
-                <div class="list0">
+                <div class="frame_table">
                     <div class="unread_lamp"></div>
-                    <div class="list1">
-                        {% if talk.sending_user == user %}
-                            {% get_user talk.receiving_user_id as talk_partner %}
-                        {% else %}
-                            {% get_user talk.sending_user_id as talk_partner %}
-                        {% endif %}
-                        <img src="{{talk_partner.user_info.profile_image.url}}" class="you_image" />
-                        <div class="list_name">
-                            <!-- 自分がメセージを送った時 -->
+                    <div class="list0">
+                        <div class="list1">
                             {% if talk.sending_user == user %}
-                                {{talk.receiving_user}}
+                                {% get_user talk.receiving_user_id as talk_partner %}
                             {% else %}
-                                <!-- 相手からメッセージが来た時 -->
-                                {{talk.sending_user}}
+                                {% get_user talk.sending_user_id as talk_partner %}
                             {% endif %}
+                            <img src="{{talk_partner.user_info.profile_image.url}}" class="you_image" />
+                            <div class="list_name">
+                                <!-- 自分がメセージを送った時 -->
+                                {% if talk.sending_user == user %}
+                                    {{talk.receiving_user}}
+                                {% else %}
+                                    <!-- 相手からメッセージが来た時 -->
+                                    {{talk.sending_user}}
+                                {% endif %}
+                            </div>
                         </div>
-                    </div>
-                    <div class="list2">
-                        <div class="overflow">
-                            {% if talk.exist_reply == True %}
-                            <!--返信があればトーク詳細のリンク表示-->
-                            <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">
+                        <div class="list2">
+                            <div class="overflow">
+                                {% if talk.exist_reply == True %}
+                                <!--返信があればトーク詳細のリンク表示-->
+                                <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">
+                                    {% get_newest_message talk.id %}
+                                </a>
+                                {% else %}
+                                <!--返信がなければ相手の名前のみ表示-->
                                 {% get_newest_message talk.id %}
-                            </a>
-                            {% else %}
-                            <!--返信がなければ相手の名前のみ表示-->
-                            {% get_newest_message talk.id %}
-                            {% endif %}
+                                {% endif %}
+                            </div>
                         </div>
                         <div class="list3">
                             <table>
+                                <tr>
+                                    <td class="td1">
+                                    </td>
+                                    <td class="td2">
+                                        <button class="button_bye" onclick="location.href='report.html'">
+                                            <i class="fas fa-ellipsis-v"></i>
+                                        </button>
+                                    </td>
+                                </tr>
                                 <tr>
                                     <td class="td1">
                                         <span class="span_time">End and Unconfirmed</span>
@@ -132,11 +147,6 @@
                                             {% endif %}
                                         {% endif %}
                                     </td>
-                                    <td class="td3">
-                                        <button class="button_bye" onclick="location.href='report.html'">
-                                            <i class="fas fa-exclamation-triangle"></i>
-                                        </button>
-                                    </td>
                                 </tr>
                             </table>
                         </div>
@@ -145,40 +155,50 @@
                 {% endfor %}
 
                 {% for talk in unread_talks %}
-                <div class="list0" id="unread_talks">
+                <div class="frame_table">
                     <div class="unread_lamp"></div>
-                    <div class="list1">
-                        {% if talk.sending_user == user %}
-                            {% get_user talk.receiving_user_id as talk_partner %}
-                        {% else %}
-                            {% get_user talk.sending_user_id as talk_partner %}
-                        {% endif %}
-                        <img src="{{talk_partner.user_info.profile_image.url}}" class="you_image" />
-                        <div class="list_name">
+                    <div class="list0" id="unread_talks">
+                        <div class="list1">
                             {% if talk.sending_user == user %}
-                            {{talk.receiving_user}}
+                                {% get_user talk.receiving_user_id as talk_partner %}
                             {% else %}
-                            {{talk.sending_user}}
+                                {% get_user talk.sending_user_id as talk_partner %}
                             {% endif %}
+                            <img src="{{talk_partner.user_info.profile_image.url}}" class="you_image" />
+                            <div class="list_name">
+                                {% if talk.sending_user == user %}
+                                {{talk.receiving_user}}
+                                {% else %}
+                                {{talk.sending_user}}
+                                {% endif %}
+                            </div>
                         </div>
-                    </div>
-                    <div class="list2">
-                        <div class="overflow">
-                            <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">
-                                {% get_newest_message talk.id %}
-                            </a>
+                        <div class="list2">
+                            <div class="overflow">
+                                <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">
+                                    {% get_newest_message talk.id %}
+                                </a>
+                            </div>
                         </div>
                         <div class="list3">
                             <table>
                                 <tr>
+                                    <tr>
+                                        <td class="td1">
+                                        </td>
+                                        <td class="td2">
+                                            <button class="button_bye" onclick="location.href='report.html'">
+                                                <i class="fas fa-ellipsis-v"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
                                     <td class="td1">
-                                        <span class="span_time">
+                                        <div class="span_time">
                                             {% integer_to_string talk.id as flag %}
-                                            <p>Limit</p>
                                             <p class="time" id={{flag}}></p>
                                             <input class="lefttime" type="hidden" id={{flag}}
                                                 value={{talk.created_at|date:"Y-m-d_H:i:sO"}}>
-                                        </span>
+                                        </div>
                                     </td>
                                     <td class="td2">
                                         {% if talk.exist_reply == True %}
@@ -195,11 +215,6 @@
                                             </button>
                                             {% endif %}
                                         {% endif %}
-                                    </td>
-                                    <td class="td3">
-                                        <button class="button_bye" onclick="location.href='report.html'">
-                                            <i class="fas fa-exclamation-triangle"></i>
-                                        </button>
                                     </td>
                                 </tr>
                             </table>
@@ -209,50 +224,60 @@
                 {% endfor %}
 
                 {% for talk in read_talks %}
-                <div class="list0">
+                <div class="frame_table">
                     <div class="read_lamp"></div>
-                    <div class="list1">
-                        {% if talk.sending_user == user %}
-                            {% get_user talk.receiving_user_id as talk_partner %}
-                        {% else %}
-                            {% get_user talk.sending_user_id as talk_partner %}
-                        {% endif %}
-                        <img src="{{talk_partner.user_info.profile_image.url}}" class="you_image" />
-                        <div class="list_name">    
-                            {% if talk.sending_user == user %}                   
-                                {{talk.receiving_user}}
-                            {% else %}
-                                {{talk.sending_user}}
-                            {% endif %}
-                        </div>
-                    </div>
-                    <div class="list2">
-                        <div class="overflow">
+                    <div class="list0">
+                        <div class="list1">
                             {% if talk.sending_user == user %}
-                                {% if talk.exist_reply == True %}
-                                <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">
-                                    {% get_newest_message talk.id %}
-                                </a>
-                                {% else %}
-                                    {% get_newest_message talk.id %}
-                                {% endif %}
+                                {% get_user talk.receiving_user_id as talk_partner %}
                             {% else %}
-                                <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">
-                                {% get_newest_message talk.id %}
-                                </a>
+                                {% get_user talk.sending_user_id as talk_partner %}
                             {% endif %}
+                            <img src="{{talk_partner.user_info.profile_image.url}}" class="you_image" />
+                            <div class="list_name">    
+                                {% if talk.sending_user == user %}                   
+                                    {{talk.receiving_user}}
+                                {% else %}
+                                    {{talk.sending_user}}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="list2">
+                            <div class="overflow">
+                                {% if talk.sending_user == user %}
+                                    {% if talk.exist_reply == True %}
+                                    <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">
+                                        {% get_newest_message talk.id %}
+                                    </a>
+                                    {% else %}
+                                        {% get_newest_message talk.id %}
+                                    {% endif %}
+                                {% else %}
+                                    <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">
+                                    {% get_newest_message talk.id %}
+                                    </a>
+                                {% endif %}
+                            </div>
                         </div>
                         <div class="list3">
                             <table>
                                 <tr>
                                     <td class="td1">
-                                        <span class="span_time">
+                                    </td>
+                                    <td class="td2">
+                                        <button class="button_bye" onclick="location.href='report.html'">
+                                            <i class="fas fa-ellipsis-v"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="td1">
+                                        <div class="span_time">
                                             {% integer_to_string talk.id as flag %}
-                                            <p>Limit</p>
                                             <p class="time" id={{flag}}></p>
                                             <input class="lefttime" type="hidden" id={{flag}}
                                                 value={{talk.created_at|date:"Y-m-d_H:i:sO"}}>
-                                        </span>
+                                        </div>
                                     </td>
                                     <td class="td2">
                                         {% if talk.exist_reply == True %}
@@ -270,11 +295,6 @@
                                             {% endif %}
                                         {% endif %}
                                     </td>
-                                    <td class="td3">
-                                        <button class="button_bye" onclick="location.href='report.html'">
-                                            <i class="fas fa-exclamation-triangle"></i>
-                                        </button>
-                                    </td>
                                 </tr>
                             </table>
                         </div>
@@ -283,34 +303,45 @@
                 {% endfor %}
 
                 {% for talk in favorite_dead_talks %}
-                <div class="list0">
+                <div class="frame_table">
                     <div class="read_lamp"></div>
-                    <div class="list1">
-                        {% if talk.sending_user == user %}
-                            {% get_user talk.receiving_user_id as talk_partner %}
-                        {% else %}
-                            {% get_user talk.sending_user_id as talk_partner %}
-                        {% endif %}
-                        <img src="{{talk_partner.user_info.profile_image.url}}" class="you_image" />
-                        <div class="list_name">    
-                            {% if talk.sending_user == user %}                   
-                                {{talk.receiving_user}}
-                                {{talk.sending_user}}
-                            {% endif %}
-                        </div>
-                    </div>
-                    <div class="list2">
-                        <div class="overflow">
-                            {% if talk.exist_reply == True %}
-                            <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">
-                                {% get_newest_message talk.id %}
-                            </a>
+                    <div class="list0">
+                        <div class="list1">
+                            {% if talk.sending_user == user %}
+                                {% get_user talk.receiving_user_id as talk_partner %}
                             {% else %}
-                            {% get_newest_message talk.id %}
+                                {% get_user talk.sending_user_id as talk_partner %}
                             {% endif %}
+                            <img src="{{talk_partner.user_info.profile_image.url}}" class="you_image" />
+                            <div class="list_name">    
+                                {% if talk.sending_user == user %}                   
+                                    {{talk.receiving_user}}
+                                    {{talk.sending_user}}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="list2">
+                            <div class="overflow">
+                                {% if talk.exist_reply == True %}
+                                <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">
+                                    {% get_newest_message talk.id %}
+                                </a>
+                                {% else %}
+                                {% get_newest_message talk.id %}
+                                {% endif %}
+                            </div>
                         </div>
                         <div class="list3">
                             <table>
+                                <tr>
+                                    <td class="td1">
+                                    </td>
+                                    <td class="td2">
+                                        <button class="button_bye" onclick="location.href='report.html'">
+                                            <i class="fas fa-ellipsis-v"></i>
+                                        </button>
+                                    </td>
+                                </tr>
                                 <tr>
                                     <td class="td1">
                                         <span class="span_time">End and Favorite</span>
@@ -330,11 +361,6 @@
                                             </button>
                                             {% endif %}
                                         {% endif %}
-                                    </td>
-                                    <td class="td3">
-                                        <button class="button_bye" onclick="location.href='report.html'">
-                                            <i class="fas fa-exclamation-triangle"></i>
-                                        </button>
                                     </td>
                                 </tr>
                             </table>
