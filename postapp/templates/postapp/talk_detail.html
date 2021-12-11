@@ -371,6 +371,7 @@
                             <br>
                             トーク履歴は以下(終了トークのため送信はできません)
                         {% endif %}
+                        <div class="data_detail">Yesterday</div>
                         {% for message in messages %}
                             {% if message.sending_user_id != user.id %}
                                 <div class="list0_detail">
