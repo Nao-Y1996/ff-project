@@ -11,7 +11,7 @@ urlpatterns = [
     #メールアドレスとパスワードの変更
     path('profile/', views.EmailPasswordView, name='EmailPasswordView'),
 
-    path('profile', views.profile, name='profile'),
+    #path('profile', views.profile, name='profile'),
     # path('login', views.Login.as_view(), name='login'),
     path('login', views.Login, name='login'),
     path('logout',  views.Logout.as_view(), name='logout'),

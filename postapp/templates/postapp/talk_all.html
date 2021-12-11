@@ -55,7 +55,7 @@
                         <i class="fas fa-home fa-lg"></i>
                         <p class="button-title">Home</p>
                     </a>
-                    <a href="{% url 'users:profile' %}" class="menu_button" id="v-pills-profile-tab" role="tab"
+                    <a href="{% url 'users:EmailPasswordView' %}" class="menu_button" id="v-pills-profile-tab" role="tab"
                         aria-controls="v-pills-profile" aria-selected="false">
                         <p class="button-title">Account</p>
                         <i class="fas fa-cog fa-lg"></i>
@@ -78,6 +78,7 @@
         <main>
             <div class="all">
                 {% for talk in unchecked_dead_talks %}
+                未確認終了トーク
                 <div class="list0">
                     <div class="unread_lamp"></div>
                     <div class="list1">
@@ -145,6 +146,7 @@
                 {% endfor %}
 
                 {% for talk in unread_talks %}
+                未読
                 <div class="list0" id="unread_talks">
                     <div class="unread_lamp"></div>
                     <div class="list1">
@@ -209,6 +211,7 @@
                 {% endfor %}
 
                 {% for talk in read_talks %}
+                既読
                 <div class="list0">
                     <div class="read_lamp"></div>
                     <div class="list1">
@@ -283,6 +286,7 @@
                 {% endfor %}
 
                 {% for talk in favorite_dead_talks %}
+                お気に入り終了
                 <div class="list0">
                     <div class="read_lamp"></div>
                     <div class="list1">
@@ -368,13 +372,18 @@
 
     function update_time() {
         let nowTime = new Date();
-        let limit_date = new Date(days = 14)
+        let limit_date = new Date(days = 0)
+        DAY = 14
+        HOURS = 0
+        MINUTES = 0
 
         const get_date = document.getElementsByClassName('lefttime');
 
         for (let d of get_date) {
             let created_at = new Date(d.getAttribute('value').replace("_", "T"))
-            created_at.setDate(created_at.getDate() + 14);
+            created_at.setDate(created_at.getDate()+DAY);
+            created_at.setHours(created_at.getHours()+HOURS);
+            created_at.setMinutes(created_at.getMinutes()+MINUTES);
             let left_time = (created_at - nowTime) / 1000
 
             let daysLeft = Math.floor(left_time / (24 * 60 * 60));

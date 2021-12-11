@@ -24,9 +24,9 @@ from django.http.response import JsonResponse
 from datetime import date, datetime, timezone,timedelta
 import random
 import numpy as np
-DAYS = 20
+DAYS =14
 HOURS=9
-MINUTES=2
+MINUTES=0
 
 def mypage(request):
     return render(request, "postapp/mypage.html")
