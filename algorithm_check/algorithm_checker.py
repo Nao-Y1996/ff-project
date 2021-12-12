@@ -212,12 +212,22 @@ if __name__ == '__main__':
         _max = user_login_rate.max()
         user_login_rate = (user_login_rate - _min).astype(float) / (_max - _min).astype(float)
         user_login_rate.sort()
+        with open(BASE_PATH+'/user_login_rate.csv', 'w') as f:
+            writer = csv.writer(f)
+            writer.writerow(user_login_rate)
+            
         
         # 返信率
         user_reply_rate = np.random.rand(user_num)
+        with open(BASE_PATH+'/user_reply_rate.csv', 'w') as f:
+            writer = csv.writer(f)
+            writer.writerow(user_reply_rate)
         
         # 投稿率
         user_newpost_rate = np.random.rand(user_num)
+        with open(BASE_PATH+'/user_newpost_rate.csv', 'w') as f:
+            writer = csv.writer(f)
+            writer.writerow(user_newpost_rate)
         
         # userの名前リストの作成
         users_name = []

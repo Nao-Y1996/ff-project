@@ -5,8 +5,8 @@ import os
 import time
 BASE_PATH = os.path.dirname(__file__)
 USER_DATA_DIR = BASE_PATH + '/user_data/'
-USER_NUM = 5
-SIM_DAYS = 100
+USER_NUM = 100
+SIM_DAYS = 50
 TALK_LIMIT_DAYS = 7
 FRERUENCY_UPDATE_PRIORITY = 7
 TIMING_UPDATE_PRIORITY = np.arange(1,SIM_DAYS+1, step = FRERUENCY_UPDATE_PRIORITY).tolist()
