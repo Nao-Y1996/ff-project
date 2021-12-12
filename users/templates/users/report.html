@@ -2,11 +2,13 @@
 {% block content %}
 <p>通報ページ</p>
 {% if user.is_authenticated %}
-<p>{{user.email}}でログインしています</p>
 <div>
     <form method="POST">
         {% csrf_token %}
-        {{ form.as_p }}
+        通報相手は:{{ username }}
+        <br>
+        {{ form.reason }}
+        {{ form.content }}
         <button type="submit">通報</button>
     </form>
 </div>
