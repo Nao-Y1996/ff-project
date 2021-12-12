@@ -71,7 +71,7 @@
                     </a>
                     <a href="{% url 'users:logout' %}" class="menu_button" class="nav-link" id="v-pills-settings-tab"
                         role="tab" aria-controls="v-pills-settings" aria-selected="false">
-                        <p class="button-title">Logut</p>
+                        <p class="button-title">Logout</p>
                         <i class="fas fa-sign-out-alt fa-lg"></i>
                     </a>
                 </nav>
@@ -127,7 +127,7 @@
                                               <i class="fas fa-ellipsis-v"></i>
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                              <a class="dropdown-item" href="#">report</a>
+                                              <a class="dropdown-item" href="{% url 'users:report' talk_id=talk.id %}">report</a>
                                             </div>
                                         </div>
                                     </td>
@@ -194,18 +194,28 @@
                             <div class="list3">
                                 <table>
                                     <tr>
-                                        <td class="td2">
-                                            <div class="btn-group" role="group">
-                                                <button id="btnGroupDrop1" type="button" class="table_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <i class="fas fa-ellipsis-v"></i>
-                                                </button>
-                                                <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                                    <a class="dropdown-item" href="#">report</a>
+                                        <tr>
+                                            <td class="td1">
+                                            </td>
+                                            <td class="td2">
+                                                <div class="btn-group" role="group">
+                                                    <button id="btnGroupDrop1" type="button" class="table_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                      <i class="fas fa-ellipsis-v"></i>
+                                                    </button>
+                                                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                                      <a class="dropdown-item" href="{% url 'users:report' talk_id=talk.id %}">report</a>
+                                                    </div>
                                                 </div>
+                                            </td>
+                                        </tr>
+                                        <td class="td1">
+                                            <div class="span_time">
+                                                {% integer_to_string talk.id as flag %}
+                                                <p class="time" id={{flag}}></p>
+                                                <input class="lefttime" type="hidden" id={{flag}}
+                                                    value={{talk.created_at|date:"Y-m-d_H:i:sO"}}>
                                             </div>
                                         </td>
-                                    </tr>
-                                    <tr>
                                         <td class="td2">
                                             {% if talk.exist_reply == True %}
                                                 {% favorite_check user talk as flag %}
@@ -282,7 +292,7 @@
                                               <i class="fas fa-ellipsis-v"></i>
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                              <a class="dropdown-item" href="#">report</a>
+                                              <a class="dropdown-item" href="{% url 'users:report' talk_id=talk.id %}">report</a>
                                             </div>
                                         </div>
                                     </td>
@@ -353,7 +363,7 @@
                                               <i class="fas fa-ellipsis-v"></i>
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                              <a class="dropdown-item" href="#">report</a>
+                                              <a class="dropdown-item" href="{% url 'users:report' talk_id=talk.id %}">report</a>
                                             </div>
                                         </div>
                                     </td>

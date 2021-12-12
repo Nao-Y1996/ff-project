@@ -19,7 +19,7 @@
 .signup_tab{
 	width:100%;
 	display:flex;
-	align-items: left;
+	align-items: center;
     justify-content: center;
 	flex-flow: column;
 }
@@ -48,7 +48,8 @@ table,tr{
 }
 
 .td_form{
-	padding: 0 20px; 
+	padding: 0 20px;
+	width: 400px;
 	
 
 }

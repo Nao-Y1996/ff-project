@@ -54,7 +54,7 @@
                     </a>
                     <a href="{% url 'users:logout' %}" class="menu_button" class="nav-link" id="v-pills-settings-tab"
                         role="tab" aria-controls="v-pills-settings" aria-selected="false">
-                        <p class="button-title">Logut</p>
+                        <p class="button-title">Logout</p>
                         <i class="fas fa-sign-out-alt fa-lg"></i>
                     </a>
                 </nav>
@@ -75,15 +75,17 @@
                         <div class="email_newform">Email</div>
                         <table>
                             <tr>
-                                <td class="td_form"
-                                    {% csrf_token %}
-                                    {{form_set_1.management_form}}
-                                    {{ form_set_1.non_field_errors }}
-                                    {% for form in form_set_1 %}
-                                    {% for field in form %}
-                                    {{ field }}
-                                    {% endfor %}
-                                    {% endfor %}
+                                <td class="td_form">
+                                    <div>
+                                        {% csrf_token %}
+                                        {{form_set_1.management_form}}
+                                        {{ form_set_1.non_field_errors }}
+                                        {% for form in form_set_1 %}
+                                        {% for field in form %}
+                                        {{ field }}
+                                        {% endfor %}
+                                        {% endfor %}
+                                    </div>
                                 </td>
                                 <td class="td_button">
                                     <div class="buttonlist">
@@ -117,7 +119,9 @@
                         </table>
                     </form>
                     <div class="buttonlist">
-                        <button class="button_next" id="withdrawal_button" href="{% url 'users:withdrawal' %}"> Withdrawal </button>
+                            <a class="Withdrawal_button" href="{% url 'users:withdrawal' %}">
+                                <p>Withdrawal</p>
+                            </a>
                     </div>
                 </div>
             </div>
