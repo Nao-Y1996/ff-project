@@ -1,0 +1,4 @@
+.reoprt_frame{
+    display: flex;
+    flex-flow: column;
+}
