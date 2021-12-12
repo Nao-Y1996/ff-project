@@ -75,7 +75,7 @@ def my_talks_classification(request):
     data = datetime.now()
     my_talks = Talks.objects.filter((Q(sending_user=request.user) | Q(
         receiving_user=request.user)))  # .order_by('-created_at')  # 自分の関わっているトークを全て取得
-
+    
     unchecked_dead_talks = []
     unread_talks = []
     read_talks = []
