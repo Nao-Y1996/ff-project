@@ -373,32 +373,6 @@
             <main class="main2">
 				<div class="detail_detail">
 					<div class="all_detail">
-                        {% if flag %}
-                            事後公開情報掲載
-                            <br>
-                            <br>
-                            {{sending_user}}
-                            <br>
-                            {{user_info.age}}歳
-                            <br>
-                            {{user_info.country}}
-                            <br>
-                            {{user_info.introduction}}
-                            <br>
-                            <br>
-                            {% if Exist_favorites == False %}
-                            <a href="{% url 'postapp:final_favorite_add' talk_id=talk_id %}">お気に入りする</a>
-                            <br>
-                            <a href="{% url 'postapp:final_favorite_delete' talk_id=talk_id %}">お気に入りしない</a>
-                            {% else %}
-
-                            <a href="{% url 'postapp:confirmed_add' talk_id=talk_id %}">確認を終了してトーク一覧へ戻る</a><br>
-
-                            {% endif %}
-                            <br>
-                            トーク履歴は以下(終了トークのため送信はできません)
-                        {% endif %}
-
                         {% for message in messages %}
                             {% if message.is_date == True %}
                                 <div class="data_detail">{{message.created_at|date:"Y-m-d"}}</div>
@@ -428,6 +402,26 @@
                                 {% endif %}
                             {% endif %}
                         {% endfor %}
+                        {% if flag %}
+                            <div class="all_opendata">
+                                <div class="opendata_first">●Public information</div>
+                                <div class="data_list">
+                                    <div class="name_data">Username:{{sending_user}}</div>
+                                    <div class="age_data">Age:{{user_info.age}}years old</div>
+                                    <div class="country_data">country:{{user_info.country}}</div>
+                                    <div class="intro_data">introduction:{{user_info.introduction}}</div>
+                                </div>
+                                <div class="button_list_detail">
+                                {% if Exist_favorites == False %}
+                                    <a type="submit" class="button_favorite_data" href="{% url 'postapp:final_favorite_add' talk_id=talk_id %}">favorite</a>
+                                    <a class="button_favorite_data" href="{% url 'postapp:final_favorite_delete' talk_id=talk_id %}">good bye</a>
+                                    {% else %}
+                                    <a class="button_favorite_data" href="{% url 'postapp:confirmed_add' talk_id=talk_id %}">Finish</a>
+                                {% endif %}
+                                </div>
+                                <div class="opendata_end">cannot send message</div>
+                            </div>
+                        {% endif %}
                         <div id="endtalk"></div>
                     </div>
                     {% if not flag %}
