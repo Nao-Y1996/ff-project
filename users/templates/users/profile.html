@@ -75,15 +75,17 @@
                         <div class="email_newform">Email</div>
                         <table>
                             <tr>
-                                <td class="td_form"
-                                    {% csrf_token %}
-                                    {{form_set_1.management_form}}
-                                    {{ form_set_1.non_field_errors }}
-                                    {% for form in form_set_1 %}
-                                    {% for field in form %}
-                                    {{ field }}
-                                    {% endfor %}
-                                    {% endfor %}
+                                <td class="td_form">
+                                    <div>
+                                        {% csrf_token %}
+                                        {{form_set_1.management_form}}
+                                        {{ form_set_1.non_field_errors }}
+                                        {% for form in form_set_1 %}
+                                        {% for field in form %}
+                                        {{ field }}
+                                        {% endfor %}
+                                        {% endfor %}
+                                    </div>
                                 </td>
                                 <td class="td_button">
                                     <div class="buttonlist">

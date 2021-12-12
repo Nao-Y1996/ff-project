@@ -79,7 +79,7 @@
             <!-- </div> -->
         </aside>
 
-        <main>
+        <main class="main1">
             <div class="all">
                 {% for talk in unchecked_dead_talks %}
                 <div class="frame_table">
@@ -114,12 +114,13 @@
                                 {% get_newest_message talk.id %}
                                 {% endif %}
                             </div>
+                            <div class="table_lefttime">
+                                <span class="span_time">End and Unconfirmed</span>
+                            </div>
                         </div>
                         <div class="list3">
                             <table>
                                 <tr>
-                                    <td class="td1">
-                                    </td>
                                     <td class="td2">
                                         <div class="btn-group" role="group">
                                             <button id="btnGroupDrop1" type="button" class="table_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -132,9 +133,6 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="td1">
-                                        <span class="span_time">End and Unconfirmed</span>
-                                    </td>
                                     <td class="td2">
                                         {% if talk.exist_reply == True %}
                                         <!--返信があればいいねボタンを表示-->
@@ -183,6 +181,14 @@
                                     <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">
                                         {% get_newest_message talk.id %}
                                     </a>
+                                </div>
+                                <div class="table_lefttime">
+                                    <div class="span_time">
+                                        {% integer_to_string talk.id as flag %}
+                                        <p class="time" id={{flag}}></p>
+                                        <input class="lefttime" type="hidden" id={{flag}}
+                                            value={{talk.created_at|date:"Y-m-d_H:i:sO"}}>
+                                    </div>
                                 </div>
                             </div>
                             <div class="list3">
@@ -268,12 +274,18 @@
                                     </a>
                                 {% endif %}
                             </div>
+                            <div class="table_lefttime">
+                                <div class="span_time">
+                                    {% integer_to_string talk.id as flag %}
+                                    <p class="time" id={{flag}}></p>
+                                    <input class="lefttime" type="hidden" id={{flag}}
+                                        value={{talk.created_at|date:"Y-m-d_H:i:sO"}}>
+                                </div>
+                            </div>
                         </div>
                         <div class="list3">
                             <table>
                                 <tr>
-                                    <td class="td1">
-                                    </td>
                                     <td class="td2">
                                         <div class="btn-group" role="group">
                                             <button id="btnGroupDrop1" type="button" class="table_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -286,14 +298,6 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="td1">
-                                        <div class="span_time">
-                                            {% integer_to_string talk.id as flag %}
-                                            <p class="time" id={{flag}}></p>
-                                            <input class="lefttime" type="hidden" id={{flag}}
-                                                value={{talk.created_at|date:"Y-m-d_H:i:sO"}}>
-                                        </div>
-                                    </td>
                                     <td class="td2">
                                         {% if talk.exist_reply == True %}
                                             {% favorite_check user talk as flag %}
@@ -346,12 +350,13 @@
                                 {% get_newest_message talk.id %}
                                 {% endif %}
                             </div>
+                            <div class="table_lefttime">
+                                <span class="span_time">End and Favorite</span>
+                            </div>
                         </div>
                         <div class="list3">
                             <table>
                                 <tr>
-                                    <td class="td1">
-                                    </td>
                                     <td class="td2">
                                         <div class="btn-group" role="group">
                                             <button id="btnGroupDrop1" type="button" class="table_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -364,9 +369,6 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="td1">
-                                        <span class="span_time">End and Favorite</span>
-                                    </td>
                                     <td class="td2">
                                         {% if talk.exist_reply == True %}
                                             {% favorite_check user talk as flag %}
