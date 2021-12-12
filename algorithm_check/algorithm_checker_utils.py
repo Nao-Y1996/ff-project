@@ -2,20 +2,27 @@ import pandas as pd
 import csv
 import numpy as np
 import os
-
+import time
 BASE_PATH = os.path.dirname(__file__)
 USER_DATA_DIR = BASE_PATH + '/user_data/'
-# print('='*20)
-# print(BASE_PATH)
+USER_NUM = 5
+SIM_DAYS = 100
+TALK_LIMIT_DAYS = 7
+FRERUENCY_UPDATE_PRIORITY = 7
+TIMING_UPDATE_PRIORITY = np.arange(1,SIM_DAYS+1, step = FRERUENCY_UPDATE_PRIORITY).tolist()
+TIMING_UPDATE_PRIORITY.pop(0)
+TIMING_DELETE_TALK = np.arange(1,SIM_DAYS+1, step = TALK_LIMIT_DAYS).tolist()
+TIMING_DELETE_TALK.pop(0)
+
 class csv_controller4user():
-    def init_csv(self, file_name):
+    def __init__(self):
         if not os.path.exists(USER_DATA_DIR):
             os.mkdir(USER_DATA_DIR)
         else:
             import shutil
             shutil.rmtree(USER_DATA_DIR)
-            # os.listdir(USER_DATA_DIR)
             os.mkdir(USER_DATA_DIR)
+    def init_csv(self, file_name):
         # CSV ファイルの初期化
         df = pd.DataFrame(columns=['day', 'recieve_num', 'is_logedin'],)
         df.to_csv(USER_DATA_DIR+file_name+".csv", index=False, header=True)

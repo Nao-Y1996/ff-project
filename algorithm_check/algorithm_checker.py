@@ -62,11 +62,11 @@ class ffChecker():
         # ログイン
         login_button_xpath = '/html/body/div/form/input[2]'
         self.click_with_xpath(login_button_xpath)
-        if self.driver.current_url == 'http://http://localhost:8000/profile':
-            is_success = False
+        if self.driver.current_url == 'http://localhost:8000/profile':
+            login_success = True
         else:
-            is_success = True
-        return is_success
+            login_success = False
+        return login_success
         
 
 
@@ -87,7 +87,7 @@ class ffChecker():
         else:
             is_success = True
         return is_success
-        time.sleep(1)
+        # time.sleep(1)
     
     def create_userinfo(self, username):
             
@@ -115,8 +115,8 @@ if __name__ == '__main__':
     args = sys.argv
     checker = ffChecker()
     csv_controller = algorithm_checker_utils.csv_controller4user()
-    user_num = 10
-    sim_days =100
+    user_num = algorithm_checker_utils.USER_NUM
+    sim_days =algorithm_checker_utils.SIM_DAYS
     
     if args[1] is not None and args[1]=='init':
         
@@ -155,7 +155,7 @@ if __name__ == '__main__':
                     time.sleep((0.2))
                     # 確認ボタンを押す
                     checker.click_with_xpath('//*[@id="content"]/form/div/input['+str(delete_user_num+3)+']')
-                    time.sleep(2)
+                    time.sleep(1)
                     break
             except:
                 import traceback
@@ -168,17 +168,17 @@ if __name__ == '__main__':
         # Executedfunctionの登録
         # update_seiding_priorityを追加
         checker.driver.get('http://localhost:8000/admin/postapp/executedfunction/add/')
-        checker.write_with_xpath('//*[@id="id_name"]', 'update_seiding_priority')
+        checker.write_with_xpath('//*[@id="id_name"]', 'update_sending_priority')
         checker.click_with_xpath('//*[@id="executedfunction_form"]/div/div/input[1]') # save
-        # update_count_for_priorityを追加
+        # reset_count_for_priorityを追加
         checker.driver.get('http://localhost:8000/admin/postapp/executedfunction/add/')
-        checker.write_with_xpath('//*[@id="id_name"]', 'update_count_for_priority')
+        checker.write_with_xpath('//*[@id="id_name"]', 'reset_count_for_priority')
         checker.click_with_xpath('//*[@id="executedfunction_form"]/div/div/input[1]') # save
         
         
         
         # userとuserInfoの作成
-        user_count  =0
+        user_count  = 0
         while user_count < user_num:
             
             username = 'user_'+str(user_count)
@@ -219,33 +219,40 @@ if __name__ == '__main__':
         # 投稿率
         user_newpost_rate = np.random.rand(user_num)
         
+        # userの名前リストの作成
         users_name = []
         for i in range(user_num):
             users_name.append('user_'+str(i))
 
+        # user dataを保存するcsvファイルの作成
+        for name in users_name:
+            csv_controller.init_csv(file_name=name)
+        
+        df = pd.DataFrame(columns=['day']+users_name)
+        df.to_csv(BASE_PATH + "/rank.csv", index=False, header=True)
+
         days = list(range(1, sim_days+1))
         for day in days:
+            print(f' ======================== day : {day} ======================== ')
+            print()
 
-            # ファイルの書き込み
+            # 日付の更新
             with open(BASE_PATH + '/day.txt', mode='w') as f:
                 f.write(str(day))
-            with open(BASE_PATH + '/day_end.txt', mode='w') as f:
-                f.write(str(False))
+                
             for name in users_name:
-                csv_controller.init_csv(file_name=name)
                 csv_controller.add_one_line(file_name=name, idx_name='day'+str(day), receive_num=0, is_logedin=False)
 
-            df = pd.DataFrame(columns=['day']+users_name)
-            df.to_csv(BASE_PATH + "/rank.csv", index=False, header=True)
             
             # 1日分のシミュレーション
             for user_idx, login_rate in enumerate(user_login_rate):
+                username = users_name[user_idx]
                 
                 if login_rate <= random.random():# ログインするかどうか
+                    print(f'{username} --> skip login')
                     continue
-
-                username = users_name[user_idx]
-                print(f'----------------------------{username}でログインします')
+                print(f' --------- {username}  login --------- ')
+                
                 # ログイン画面へ
                 checker.driver.get('http://localhost:8000/login')
                 login_success = checker.login(username)
@@ -257,7 +264,7 @@ if __name__ == '__main__':
                 time.sleep(1)
                 
                 # 新規投稿
-                max_post_num = 5
+                max_post_num = 3
                 post_num = int((max_post_num+1) * user_newpost_rate[user_idx])
                 print(f'{post_num}件投稿します')
                 for i in range(post_num):
@@ -273,7 +280,6 @@ if __name__ == '__main__':
 
                 # トーク一覧へ http://localhost:8000/post/talk_all/
                 checker.driver.get('http://localhost:8000/post/talk_all/')
-                print('=====================================================')
                 talk_detail_urls = []
                 for i in range(20):
                     #未読の時にトーク詳細へのリンクを取得する
@@ -309,17 +315,3 @@ if __name__ == '__main__':
 
 
         checker.driver.close()
-
-    # //*[@id="talks"]/table/tbody/tr[2]/td[2]/a
-    # //*[@id="talks"]/table/tbody/tr[3]/td[2]/a
-    """
-    //*[@id="talks"]/table/tbody/tr[2]/td[1]
-    //*[@id="talks"]/table/tbody/tr[3]/td[1]
-
-    //*[@id="talks"]/table/tbody/tr[2]/td[2]/a
-    //*[@id="talks"]/table/tbody/tr[3]/td[2]/a
-    //*[@id="talks"]/table/tbody/tr[3]/td[2]/a
-
-    //*[@id="talks"]/table/tbody/tr[2]/td[1]
-
-    """

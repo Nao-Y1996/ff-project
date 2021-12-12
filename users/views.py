@@ -24,26 +24,24 @@ from .forms import LoginForm, UserCreateForm, MyPasswordChangeForm, MyPasswordRe
 from .models import UserInfo, Report, ReportReasons, CustomUser
 from datetime import datetime, timezone
 from dateutil import tz
-from postapp.views import update_count_for_priority, update_seiding_priority
+from postapp.views import reset_count_for_priority, update_sending_priority
 from postapp.models import Executedfunction
 User = get_user_model()
 
+ # -----------------------（アルゴリズム検証）---------------------------
+from datetime import timedelta
 from algorithm_check import algorithm_checker_utils
+from postapp.models import Talks
 import pandas as pd
+from django_pandas.io import read_frame
 csv_controller = algorithm_checker_utils.csv_controller4user()
-
-users_name = ["user_0","user_1","user_2","user_3","user_4","user_5","user_6","user_7","user_8","user_9",
-                    "user_10","user_11","user_12","user_13","user_14","user_15","user_16","user_17","user_18",
-                    "user_19","user_20","user_21","user_22","user_23","user_24","user_25","user_26","user_27",
-                    "user_28","user_29","user_30","user_31","user_32","user_33","user_34","user_35","user_36",
-                    "user_37","user_38","user_39","user_40","user_41","user_42","user_43","user_44","user_45",
-                    "user_46","user_47","user_48","user_49","user_50","user_51","user_52","user_53","user_54",
-                    "user_55","user_56","user_57","user_58","user_59","user_60","user_61","user_62","user_63",
-                    "user_64","user_65","user_66","user_67","user_68","user_69","user_70","user_71","user_72",
-                    "user_73","user_74","user_75","user_76","user_77","user_78","user_79","user_80","user_81",
-                    "user_82","user_83","user_84","user_85","user_86","user_87","user_88","user_89","user_90",
-                    "user_91","user_92","user_93","user_94","user_95","user_96","user_97","user_98","user_99"]
-
+users_name = []
+user_num = algorithm_checker_utils.USER_NUM
+timing_update_priority = algorithm_checker_utils.TIMING_UPDATE_PRIORITY
+for i in range(user_num):
+    users_name.append('user_'+str(i))
+ # -----------------------（アルゴリズム検証）---------------------------
+ 
 # ログインユーザー自身以外は遷移できないようにするクラス
 class OnlyYouMixin(UserPassesTestMixin):
     raise_exception = True
@@ -78,9 +76,9 @@ def profile(request):
     else:
         exist_profile_image = bool(user_info.profile_image)
         if exist_profile_image:
-            profile_image = 'media/'+str(user_info.profile_image)
+            profile_image = str(user_info.profile_image)
         else:
-            profile_image = 'media/no_image.png'
+            profile_image = 'no_image.png'
     return render(request, 'users/profile.html', {'profile_image': profile_image})
     # if request.method == 'POST':
     #     if form.is_valid():
@@ -132,9 +130,6 @@ def Login(request):
             pass
         # パスワードとメールで認証
         user = authenticate(request, email=email, password=password)
-        print('--------------------------------')
-        print(user)
-        print('--------------------------------')
         if user is not None:
             last_login = user.last_login # UTC
             now = datetime.now(timezone.utc)
@@ -145,9 +140,9 @@ def Login(request):
                 user.user_info.save()
             else:
                 # 24時間以上、メッセージ送信の優先順位が更新されていなかったら更新
-                priority_updated_at = Executedfunction.objects.get(name='update_seiding_priority').executed_at
+                priority_updated_at = Executedfunction.objects.get(name='update_sending_priority').executed_at
                 if ((now - priority_updated_at).seconds > 24*60*60):
-                    update_seiding_priority()
+                    update_sending_priority()
                 else:
                     pass
                 # 24時間以上ぶりにログインしたら
@@ -162,9 +157,9 @@ def Login(request):
                 else:
                     pass
                 # 1週間以上、更新関数が実行されていなかったら実行する
-                count_updated_at = Executedfunction.objects.get(name='update_count_for_priority').executed_at
+                count_updated_at = Executedfunction.objects.get(name='reset_count_for_priority').executed_at
                 if ((now - count_updated_at).seconds > 7*24*60*60):
-                    update_count_for_priority()
+                    reset_count_for_priority()
                 else:
                     pass
             login(request, user)  # ログイン
@@ -173,43 +168,49 @@ def Login(request):
             with open(algorithm_checker_utils.BASE_PATH +'/day_end.txt') as f:
                 l = f.readlines()
                 is_end_day = l[0]
-            # 1日分のシミュレーションが終わっていたら　送信優先度のrankを記録
+            day_num = int(csv_controller.get_day())
+            print(f'day = {day_num}')
+            # 1日分のシミュレーションが終わっていたら　送信優先度priorityを記録, talkのcreated_atをマイナス1日する
             if is_end_day == 'True':
-                print("="*30)
-                print('-------------1日経過-------------')
-                print('-------Priorityを記録します-------')
-                update_seiding_priority()
-                day_num = csv_controller.get_day()
-                user_num = User.objects.all().count()
+                print('==============================1日経過=============================')
+                print('======================== Priorityを記録します ====================')
+                print('=================================================================')
+                update_sending_priority()
                 all_user_rank = []
                 for name in users_name:
                     _user = User.objects.filter(username=name)
-                    all_user_rank.append(_user.user_info.priority)
+                    all_user_rank.append(_user[0].user_info.priority)
                 df = pd.read_csv(algorithm_checker_utils.BASE_PATH + "/rank.csv", index_col=0)
                 df.loc[str(day_num)] = all_user_rank
                 df.to_csv(algorithm_checker_utils.BASE_PATH + "/rank.csv", index=True, header=True)
                 with open(algorithm_checker_utils.BASE_PATH + '/day_end.txt', mode='w') as f:
                     f.write(str(False))
+
+                # 1日経過するごとにtalkのcreated_atをマイナス1日する
+                upd_talks = []
+                talks = Talks.objects.all()
+                for talk in talks:
+                    talk.created_at = talk.created_at.replace(tzinfo=timezone.utc) - timedelta(days=1)
+                    upd_talks.append(talk)
+                Talks.objects.bulk_update(upd_talks, fields=['created_at'])
             else:
                 pass
             # 毎回（1日1回のログインでシミュレーションするので）
             user.user_info.count_login += 1 # ログインカウントをインクリメント
             user.user_info.count_send_new_messages_in_a_day = 0 # 本日の投稿可能数をリセット
             user.user_info.save()
-            # 1週間以上、更新関数が実行されていなかったら（イテレーションが7で割れたら）更新関数を実行する
-            day_num = int(csv_controller.get_day())
-            if day_num % 7 == 0:
-                print("="*30)
-                print('-------------7日経過-------------')
-                print('-------Priorityを更新します-------')
-                update_count_for_priority()
+            # 更新関数を実行する
+            if day_num in timing_update_priority:
+                print('===============================================================')
+                print('=================== 各種カウントをリセットします ===================')
+                print('===============================================================')
+                reset_count_for_priority()
             else:
                 pass
             # （アルゴリズム検証）ログインしたかどうかを記録
-            day_num = csv_controller.get_day()
-            csv_controller.record_logedin(file_name=user.username,idx_name='day'+day_num)
-            print('--------------------------------')
+            csv_controller.record_logedin(file_name=user.username,idx_name='day'+str(day_num))
             login(request, user)  # ログイン
+            print(f'---------------{user.username}ログイン成功-----------------')
             # -----------------------（アルゴリズム検証）---------------------------
 
             return redirect('users:profile')
