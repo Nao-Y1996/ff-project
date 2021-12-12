@@ -2,3 +2,8 @@
     display: flex;
     flex-flow: column;
 }
+
+.Reported_username{
+    margin: 30px 0px;
+}
+

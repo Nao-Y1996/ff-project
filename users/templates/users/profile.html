@@ -54,7 +54,7 @@
                     </a>
                     <a href="{% url 'users:logout' %}" class="menu_button" class="nav-link" id="v-pills-settings-tab"
                         role="tab" aria-controls="v-pills-settings" aria-selected="false">
-                        <p class="button-title">Logut</p>
+                        <p class="button-title">Logout</p>
                         <i class="fas fa-sign-out-alt fa-lg"></i>
                     </a>
                 </nav>
@@ -119,7 +119,9 @@
                         </table>
                     </form>
                     <div class="buttonlist">
-                        <button class="button_next" id="withdrawal_button" href="{% url 'users:withdrawal' %}"> Withdrawal </button>
+                            <a class="Withdrawal_button" href="{% url 'users:withdrawal' %}">
+                                <p>Withdrawal</p>
+                            </a>
                     </div>
                 </div>
             </div>
