@@ -25,7 +25,7 @@ from .models import UserInfo, Report, ReportReasons, CustomUser
 from datetime import datetime, timezone
 from dateutil import tz
 from postapp.views import update_count_for_priority, update_seiding_priority
-from postapp.models import Executedfunction
+from postapp.models import Executedfunction, Talks
 import urllib
 from urllib.parse import urlparse
 
@@ -84,14 +84,24 @@ def profile(request):
 
 
 @login_required
-def report(request):
+def report(request,talk_id):
+
+    talk = Talks.objects.get(id=talk_id)
+
+    if talk.sending_user_id == request.user.id:
+        user_reported = talk.receiving_user_id
+        username = CustomUser.objects.get(id=talk.receiving_user_id)
+    else:
+        user_reported = talk.sending_user_id
+        username = CustomUser.objects.get(id=talk.sending_user_id)
+
     if request.method == 'POST':
         form = ReportForm(request.POST)
         if form.is_valid():
             # 送信内容を1個ずつ取り出してReportを新規作成する（ModelFormを使う意味ない..もっと良い方法がありそう）
             post = request.POST
             reason = ReportReasons.objects.get(id=post['reason'])
-            user_reported = CustomUser.objects.get(id=post['user_reported'])
+            #user_reported = CustomUser.objects.get(id=post['user_reported'])
             user_reporting = request.user
             content = post['content']
             report = Report(reason=reason, user_reported=user_reported,
@@ -102,7 +112,7 @@ def report(request):
             return render(request, 'users/report.html', {'form': form})
     else:
         form = ReportForm()
-        return render(request, 'users/report.html', {'form': form})
+        return render(request, 'users/report.html', {'form': form ,'username':username})
 
 
 def Login(request):

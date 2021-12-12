@@ -104,7 +104,7 @@ class UserInfoUpdateForm(forms.ModelForm):
 class ReportForm(forms.ModelForm):
     class Meta:
         model = Report
-        fields = ('reason', 'user_reported', 'content')
+        fields = ('reason', 'content')
 
 
 class UserReregistrationForm(forms.Form):

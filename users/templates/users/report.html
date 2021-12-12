@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<p>通報ページ</p>
+{% if user.is_authenticated %}
+<div>
+    <form method="POST">
+        {% csrf_token %}
+        通報相手は:{{ username }}
+        <br>
+        {{ form.reason }}
+        {{ form.content }}
+        <button type="submit">通報</button>
+    </form>
+</div>
+{% else %}
+<p>ログインしていません。</p>
+{% endif %}
+{% endblock %}

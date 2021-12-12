@@ -40,7 +40,7 @@ urlpatterns = [
     path('userinfo/edit/<str:info_id>/', views.EditUserInfo, name='userinfo_edit'),
     
     # 通報
-    path('report', views.report, name='report'),
+    path('report/<str:talk_id>/', views.report, name='report'),
     
     # 退会
     path('withdrawal', views.withdrawal, name='withdrawal'),
