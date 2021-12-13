@@ -24,7 +24,7 @@ from .forms import LoginForm, UserCreateForm, MyPasswordChangeForm, MyPasswordRe
 from .models import UserInfo, Report, ReportReasons, CustomUser
 from datetime import datetime, timezone
 from dateutil import tz
-from postapp.views import reset_count_for_priority, update_sending_priority
+from postapp.views import reset_count_for_priority_rank, update_sending_priority_rank
 from postapp.models import Executedfunction
 User = get_user_model()
 
@@ -37,7 +37,7 @@ from django_pandas.io import read_frame
 csv_controller = algorithm_checker_utils.csv_controller4user()
 users_name = []
 user_num = algorithm_checker_utils.USER_NUM
-timing_update_priority = algorithm_checker_utils.TIMING_UPDATE_PRIORITY
+timing_update_priority_rank = algorithm_checker_utils.TIMING_UPDATE_PRIORITY
 for i in range(user_num):
     users_name.append('user_'+str(i))
  # -----------------------（アルゴリズム検証）---------------------------
@@ -140,9 +140,9 @@ def Login(request):
                 user.user_info.save()
             else:
                 # 24時間以上、メッセージ送信の優先順位が更新されていなかったら更新
-                priority_updated_at = Executedfunction.objects.get(name='update_sending_priority').executed_at
-                if ((now - priority_updated_at).seconds > 24*60*60):
-                    update_sending_priority()
+                priority_rank_updated_at = Executedfunction.objects.get(name='update_sending_priority_rank').executed_at
+                if ((now - priority_rank_updated_at).seconds > 24*60*60):
+                    update_sending_priority_rank()
                 else:
                     pass
                 # 24時間以上ぶりにログインしたら
@@ -157,9 +157,9 @@ def Login(request):
                 else:
                     pass
                 # 1週間以上、更新関数が実行されていなかったら実行する
-                count_updated_at = Executedfunction.objects.get(name='reset_count_for_priority').executed_at
+                count_updated_at = Executedfunction.objects.get(name='reset_count_for_priority_rank').executed_at
                 if ((now - count_updated_at).seconds > 7*24*60*60):
-                    reset_count_for_priority()
+                    reset_count_for_priority_rank()
                 else:
                     pass
             login(request, user)  # ログイン
@@ -173,13 +173,13 @@ def Login(request):
             # 1日分のシミュレーションが終わっていたら　送信優先度priorityを記録, talkのcreated_atをマイナス1日する
             if is_end_day == 'True':
                 print('==============================1日経過=============================')
-                print('======================== Priorityを記録します ====================')
+                print('======================== Priority_rankを記録します ====================')
                 print('=================================================================')
-                update_sending_priority()
+                update_sending_priority_rank()
                 all_user_rank = []
                 for name in users_name:
                     _user = User.objects.filter(username=name)
-                    all_user_rank.append(_user[0].user_info.priority)
+                    all_user_rank.append(_user[0].user_info.priority_rank)
                 df = pd.read_csv(algorithm_checker_utils.BASE_PATH + "/rank.csv", index_col=0)
                 df.loc[str(day_num)] = all_user_rank
                 df.to_csv(algorithm_checker_utils.BASE_PATH + "/rank.csv", index=True, header=True)
@@ -200,17 +200,17 @@ def Login(request):
             user.user_info.count_send_new_messages_in_a_day = 0 # 本日の投稿可能数をリセット
             user.user_info.save()
             # 更新関数を実行する
-            if day_num in timing_update_priority:
+            if day_num in timing_update_priority_rank:
                 print('===============================================================')
                 print('=================== 各種カウントをリセットします ===================')
                 print('===============================================================')
-                reset_count_for_priority()
+                reset_count_for_priority_rank()
             else:
                 pass
             # （アルゴリズム検証）ログインしたかどうかを記録
             csv_controller.record_logedin(file_name=user.username,idx_name='day'+str(day_num))
             login(request, user)  # ログイン
-            print(f'---------------{user.username}ログイン成功-----------------')
+            print(f'---------------userid = {user.id}ログイン成功 = {user.username} -----------------')
             # -----------------------（アルゴリズム検証）---------------------------
 
             return redirect('users:profile')

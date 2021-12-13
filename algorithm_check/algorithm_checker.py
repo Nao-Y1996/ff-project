@@ -166,13 +166,13 @@ if __name__ == '__main__':
         _ = checker.create_userinfo(username='admin')
         
         # Executedfunctionの登録
-        # update_seiding_priorityを追加
+        # update_seiding_priority_rankを追加
         checker.driver.get('http://localhost:8000/admin/postapp/executedfunction/add/')
-        checker.write_with_xpath('//*[@id="id_name"]', 'update_sending_priority')
+        checker.write_with_xpath('//*[@id="id_name"]', 'update_sending_priority_rank')
         checker.click_with_xpath('//*[@id="executedfunction_form"]/div/div/input[1]') # save
-        # reset_count_for_priorityを追加
+        # reset_count_for_priority_rankを追加
         checker.driver.get('http://localhost:8000/admin/postapp/executedfunction/add/')
-        checker.write_with_xpath('//*[@id="id_name"]', 'reset_count_for_priority')
+        checker.write_with_xpath('//*[@id="id_name"]', 'reset_count_for_priority_rank')
         checker.click_with_xpath('//*[@id="executedfunction_form"]/div/div/input[1]') # save
         
         

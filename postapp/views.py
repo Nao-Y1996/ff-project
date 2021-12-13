@@ -28,7 +28,7 @@ import sys
 from django_pandas.io import read_frame
 DAYS = 0
 HOURS = 0
-MINUTES = 1
+MINUTES = 0
 SEND_NUM_LIMIT = 5
 
  # -----------------------（アルゴリズム検証）---------------------------
@@ -36,6 +36,7 @@ from algorithm_check import algorithm_checker_utils
 timing_delete_talk = algorithm_checker_utils.TIMING_DELETE_TALK
 import time
 csv_controller2 = algorithm_checker_utils.csv_controller4user()
+DAYS = algorithm_checker_utils.TALK_LIMIT_DAYS
  # -----------------------（アルゴリズム検証）---------------------------
 
 def mypage(request):
@@ -122,59 +123,86 @@ def talk_all(request):
 
 
 def decide_reciever(request):  # 送り先を決定するアルゴリズム
-    found_send_user = False
-    all_user_num = CustomUser.objects.all().count()
-    for i in range(16):
-        priority=i+1
-        candidates_info = UserInfo.objects.filter(priority=priority)
-        candidates_num_list = list(range(len(candidates_info)))
-        send_id = None
-        print(f'------------- ランク : {priority} ------------------')
-        # print(' 候補者の数 : ',len(candidates_info))
-        
-        if len(candidates_info)!=0:
+    found_reciever = False
+    send_id = None
+    all_user_info = UserInfo.objects.all()
+    df = read_frame(all_user_info, fieldnames=['user',
+                                            'priority_rank',
+                                            'capacity_new_msg'])
+    # print('-----------  df  -----------')
+    # print(df)
+    # print('----------------------------')
+    cap = df['capacity_new_msg'].max() + 1
+    # cap_min = df['capacity_new_msg'].min()
+    exist_talk_count = 0
+    while True:
+        cap -= 1
+        # print(f'capacity={cap}')
+        for rank in range(1,16+1):
+            # print(f'rank={rank}')
+            df_candidates = df[(df['capacity_new_msg'] == cap) &
+                            (df['priority_rank'] == rank)] # 今日の新規メッセージ受け取り残数がcap, 優先度ランクがrankのユーザーに絞る
+            # print('----------  df_candidates  ------------')
+            # print(df_candidates)
+            # print('---------------------------------------')
+            if len(df_candidates) == 0:
+                continue # 調べているrankのユーザーがいない時は次のrankを調べる
+            candidates_choice_list = list(range(len(df_candidates)))
+            # 候補者からランダムに選択してチェック
             while True:
-                # print(candidates_num_list)
-                # 候補者listが空になったら抜ける
-                if len(candidates_num_list) == 0:
-                    break
-                rand_num = random.randint(0, len(candidates_num_list)-1)# 同じ優先順位の中からランダムに送信先の候補者ユーザーを選択
-                info_id = candidates_num_list[rand_num]
-                candidate_user_info = candidates_info[info_id]
-                candidate = candidate_user_info.user
+                # print(f'選択肢 --> {candidates_choice_list}')
+                if len(candidates_choice_list) == 0:
+                    break # 候補者を調べ切った時は次のrankを調べる
+                # 絞ったユーザーの中からランダムに一人選択する
+                rand_num = random.randint(0, len(candidates_choice_list)-1)
+                candidate_choice = candidates_choice_list[rand_num]
+                # print(f'選択 --> {candidate_choice} ')
+                candidate_user_id = df_candidates.iloc[candidate_choice, 0] # candidate_choice行目 0列目のデータを取得(0列目はuserID)
+                # print(f'ユーザーID {candidate_user_id}')
+                candidate = CustomUser.objects.get(id=candidate_user_id)
+                # print('候補者-->',candidate.username)
+                # 候補者がadminならスキップする
                 if candidate.username == 'admin':
                     # print('候補者がadminでした')
-                    candidates_num_list.pop(candidates_num_list.index(info_id)) # 候補者listから現在のユーザーを削除
-                    # print(f'候補{info_id}を削除')
+                    candidates_choice_list.pop(candidates_choice_list.index(candidate_choice)) # 候補者の選択肢からから現在選択されているユーザーを削除
+                    # print(f'候補{candidate_choice}を削除')
                     continue
-                # 送信先の候補者とのトークがまだ存在していない時
                 talk = Talks.objects.filter( (Q(sending_user=request.user) & Q(receiving_user=candidate)) | (Q(sending_user=candidate) & Q(receiving_user=request.user)) )
-                if len(talk) == 0:
-                    # 送信先が自分の時
-                    if candidate == request.user:
-                        candidates_num_list.pop(candidates_num_list.index(info_id)) # 候補者listから現在のユーザーを削除
-                        # print('候補者が自分でした')
-                        # print(f'候補{info_id}を削除')
-                        continue
-                    else:
-                        send_id = candidate.id
-                        found_send_user = True
-                        break
-                else:
+                if len(talk) != 0: # 候補者とのトークがある時はスキップ
                     # print('すでに送信先の候補者とのトークが存在しています')
-                    candidates_num_list.pop(candidates_num_list.index(info_id)) # 候補者listから現在のユーザーを削除
-                    # print(f'候補{info_id}を削除')
+                    candidates_choice_list.pop(candidates_choice_list.index(candidate_choice)) # 候補者の選択肢からから現在選択されているユーザーを削除
+                    # print(f'候補{candidate_choice}を削除')
+                    exist_talk_count += 1
+                    # print(f'exist_talk_count = {exist_talk_count}')
                     continue
-        if found_send_user:
+                else:
+                    if candidate == request.user: # 候補者が自分の時はスキップ
+                        candidates_choice_list.pop(candidates_choice_list.index(candidate_choice)) # 候補者の選択肢からから現在選択されているユーザーを削除
+                        # print('候補者が自分でした')
+                        # print(f'候補{candidate_choice}を削除')
+                        continue
+                    else: # 候補者が自分でなければ送信先に決定
+                        send_id = candidate.id
+                        found_reciever = True
+                if found_reciever:
+                    break
+            if found_reciever:
+                break
+        if found_reciever:
+            break
+        if exist_talk_count == len(df)-2: # -2はadminと自分を除くという意味
+            print('送信先が見つかりません(すべてのユーザーとトーク中です)')
+            # my_talk = Talks.objects.filter( (Q(sending_user=request.user) | Q(receiving_user=request.user)) )
+            # print(f'現在のトーク数 = {len(my_talk)}')
+            # time.sleep(3)
             break
     print(f'送信先 --> user_id={send_id} ')
     return send_id
-
-
-def update_sending_priority():
-    users_info = UserInfo.objects.all()
+        
+def update_sending_priority_rank():
+    all_users_info = UserInfo.objects.all()
     # メッセージ送信の優先度の判定基準となる各カウント数をDataFrameに格納
-    df = read_frame(users_info, fieldnames=['count_receive_new_messages',  # 平均値より、少ない方が優先
+    df = read_frame(all_users_info, fieldnames=['count_receive_new_messages',  # 平均値より、少ない方が優先
                                             'count_first_reply',  # 平均値より、多い方が優先
                                             'count_send_new_messages',  # 平均値より、多い方が優先
                                             'count_login'])  # 平均値より、少ない方が優先
@@ -185,20 +213,27 @@ def update_sending_priority():
     binary_matrix[:, 2] = np.logical_not(binary_matrix[:, 2])
     # ここまでの処理で、全ての項目で「優先」であるなら　True, True, True, True　となる
     # これを10進数に変換すると 15 になり、16から引くことで、優先ランキングが1となる
-    all_user_info = UserInfo.objects.all()
     upd_user_infos = []
-    for i, user_info in enumerate(all_user_info):
+    for i, user_info in enumerate(all_users_info):
         binarys = binary_matrix[i]
         binary = '0b'+str(int(binarys[0]))+str(int(binarys[1])) + \
             str(int(binarys[2]))+str(int(binarys[3])) # 10進数に変換
         priority_rank = 16 - int(binary, 2) # 優先ランキング
-        user_info.priority = priority_rank
+        user_info.priority_rank = priority_rank
+        # 優先ランキングに基づくその日の新規メッセージの受け取り可能数を設定
+        if priority_rank <= 5:
+            capacity_new_msg = 3
+        elif priority_rank <= 10:
+            capacity_new_msg = 2
+        else:
+            capacity_new_msg = 1
+        user_info.capacity_new_msg = capacity_new_msg
         upd_user_infos.append(user_info)
         # print('-------------')
         # print(df.iloc[i])
         # print(binarys)
         # print(priority_rank)
-    update_columns = ['priority']
+    update_columns = ['priority_rank', 'capacity_new_msg']
     UserInfo.objects.bulk_update(upd_user_infos, fields=update_columns)
     # 実行時刻を保存
     self_func_name = sys._getframe().f_code.co_name
@@ -208,7 +243,7 @@ def update_sending_priority():
     print(f'関数を実行しました：{self_func_name}, time --> {func.executed_at}')
 
 
-def reset_count_for_priority():
+def reset_count_for_priority_rank():
     all_user_info = UserInfo.objects.all()
     upd_user_infos = []
     for user_info in all_user_info:
@@ -249,6 +284,7 @@ def talk_create(request):  # 新規トークフォーム
                 # 新規投稿が送られた人にカウント
                 recieving_user_info = UserInfo.objects.get(user_id=send_id)
                 recieving_user_info.count_receive_new_messages += 1
+                recieving_user_info.capacity_new_msg -= 1
                 recieving_user_info.save()
 
                 new_talk = Talks(sending_user=request.user, receiving_user=CustomUser.objects.get(
