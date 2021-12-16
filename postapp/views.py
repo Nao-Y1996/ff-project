@@ -25,9 +25,9 @@ from datetime import date, datetime, timezone,timedelta
 import random
 import numpy as np
 import time
-DAYS =14
+DAYS =0
 HOURS=9
-MINUTES=0
+MINUTES=2
 
 def mypage(request):
     return render(request, "postapp/mypage.html")
@@ -62,15 +62,15 @@ def my_talks_classification(request):
         else:
             return True
 
-    def is_active(talk):
-        now = datetime.now()
-        deadline = talk.created_at.replace(
-            tzinfo=None) + timedelta(days=0) + timedelta(hours=9) + timedelta(minutes=1)
-        if deadline < now:
-            is_talk_active = False
-        else:
-            is_talk_active = True
-        return is_talk_active
+    # def is_active(talk):
+    #     now = datetime.now()
+    #     deadline = talk.created_at.replace(
+    #         tzinfo=None) + timedelta(days=0) + timedelta(hours=9) + timedelta(minutes=1)
+    #     if deadline < now:
+    #         is_talk_active = False
+    #     else:
+    #         is_talk_active = True
+    #    return is_talk_active
 
     data = datetime.now()
     my_talks = Talks.objects.filter((Q(sending_user=request.user) | Q(
@@ -84,7 +84,7 @@ def my_talks_classification(request):
         if not is_talk_active(talk):# 期限終了の時
             messages = Message.objects.filter(talk_id=talk.id).all()
             #if not talk.exist_reply:# 返信がない時
-            if messages.count() == 1:
+            if messages.count() == 2: #日付専用メッセージとコンテントで2
                 talk.delete()
                 continue
             if talk.sending_user == request.user and talk.confirmed_by_sending_user == False:
@@ -109,12 +109,19 @@ def my_talks_classification(request):
     for i, talk in enumerate(my_talks):
         create_data[i] = str(talk.created_at).replace(' ', 'T')
         print(create_data[i])
+
+    talk_count = len(favorite_dead_talks)#お気に入り終了トークの数を取得
+    progress_message_count = len(unchecked_dead_talks)+len(unread_talks)+len(read_talks)#進行中のメッセージ数を取得
+
+    print(progress_message_count)
     params = {"data": data, "my_talks": my_talks,
             'data_json': json.dumps(create_data),
             'unchecked_dead_talks': unchecked_dead_talks,
             'unread_talks':unread_talks,
             'read_talks':read_talks,
             'favorite_dead_talks':favorite_dead_talks,
+            'talk_count':talk_count,
+            'progress_message_count':progress_message_count,
             }
         
     return params
@@ -124,7 +131,52 @@ def talk_all(request):
     
     params = my_talks_classification(request)
 
-    return render(request, "postapp/talk_all.html", params)
+    if request.method == 'POST':
+        #Messageにトークを開始した日付を追加
+        message = Message(content="date_data",is_date=1,sending_user=request.user)
+
+        form = NewTalkForm(request.POST)
+
+        if form.is_valid():
+
+            send_id = decide_sender(request) #送信先決定
+
+            #新規投稿した人にカウント
+            send_count = UserInfo.objects.get(user_id=request.user)
+            send_count.count_send_new_messages += 1
+            send_count.save()
+
+            #新規投稿が送られた人にカウント
+            receive_count = UserInfo.objects.get(user_id=send_id)
+            receive_count.count_receive_new_messages += 1
+            receive_count.save()
+
+            new_talk = Talks(sending_user=request.user, receiving_user=CustomUser.objects.get(
+                id=send_id))  # idにどのようなidを入れるかで送り先が変わる
+            new_talk.save()
+
+            #Messageにトークを開始した日付を追加
+            message.talk = new_talk
+            message.save()
+
+            post = form.save(commit=False)
+
+            post.talk = new_talk
+            post.save()
+            return redirect('postapp:talk_all')
+        else:
+            return render(request, 'postapp/talk_create.html', {'form': form})
+    
+    else:
+        if params["progress_message_count"] == 0: #進行中トークが無いためトーク一覧に新規投稿画面表示
+            initial_dict = dict(sending_user=request.user)
+            form = NewTalkForm(initial=initial_dict)
+            params["form"]=form
+            params["talk_exist"] = False
+            return render(request, 'postapp/talk_all.html', params)
+        else: #トーク一覧へ
+            params["talk_exist"] = True
+            return render(request, "postapp/talk_all.html", params)
 
 
 def decide_sender(request): #送り先を決定するアルゴリズム
@@ -181,8 +233,8 @@ def update_count_for_priority():
 
 
 def talk_create(request):  # 新規トークフォーム
+    
     if request.method == 'POST':
-
         #Messageにトークを開始した日付を追加
         message = Message(content="date_data",is_date=1,sending_user=request.user)
 
