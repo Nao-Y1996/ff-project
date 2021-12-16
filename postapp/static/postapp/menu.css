@@ -10,7 +10,6 @@
     border-radius: 50px;
     padding-top: 5px;
     margin:20px auto;
-    text-align: center;
 }
 
 .menu_button:hover{
@@ -22,6 +21,7 @@
     cursor:pointer;
     text-decoration: none;
     color: #000000;
+    
 }
 
 .title{
@@ -30,6 +30,10 @@
     font-weight: bold;
     font-family: Comic Sans MS;
     color: orange;
+}
+.title:hover{
+    text-decoration: none;
+    color:orange;
 }
 
 #v-pills-user-tab{
@@ -71,6 +75,12 @@
 
 #username{
     font-size: 15px;
+    width:100%;
+    padding-left:10px;
+    padding-right:10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .fa-key, .fa-home, .fa-cog, .fa-plus, .fa-sign-out-alt, .fa-user-plus, .fa-sign-in-alt{
