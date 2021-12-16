@@ -114,7 +114,7 @@
                                                   <i class="fas fa-ellipsis-v"></i>
                                                 </button>
                                                 <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                                  <a class="dropdown-item" href="{% url 'users:report' talk_id=talk.id %}">report</a>
+                                                    <a class="dropdown-item" href="{% url 'users:report' talk_id=talk.id %}">report</a>
                                                 </div>
                                             </div>
                                         </td>
@@ -125,10 +125,16 @@
                                             <!--返信があればいいねボタンを表示-->
                                                 {% favorite_check user talk as flag %}
                                                 {% if flag %}
-                                                <button class="button_love">
-                                                    <a href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}"
-                                                        class="fas fa-heart"></a>
-                                                </button>
+                                                    <button type="button" class="button_love" id="btnGroupDrop1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        <i class="fas fa-heart"></i>
+                                                    </button>
+                                                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                                        <p>If you remove favorite,this talk will disappear.</p>
+                                                        <p>Do you remove favorite?</p>
+                                                        <div class="remove_favorite_frame">
+                                                            <a class="remove_favorite" href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}" >YES</a>
+                                                        </div>
+                                                    </div>
                                                 {% else %}
                                                 <button class="button_love2">
                                                     <a href="{% url 'postapp:talk_favorite_add' talk_id=talk.id %}"
@@ -197,10 +203,9 @@
                                                 {% if talk.exist_reply == True %}
                                                     {% favorite_check user talk as flag %}
                                                     {% if flag %}
-                                                    <button class="button_love">
-                                                        <a href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}"
-                                                            class="fas fa-heart"></a>
-                                                    </button>
+                                                        <button class="button_love">
+                                                            <a href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}" class="fas fa-heart"></a>
+                                                        </button>
                                                     {% else %}
                                                     <button class="button_love2">
                                                         <a href="{% url 'postapp:talk_favorite_add' talk_id=talk.id %}"
@@ -279,10 +284,9 @@
                                             {% if talk.exist_reply == True %}
                                                 {% favorite_check user talk as flag %}
                                                 {% if flag %}
-                                                <button class="button_love">
-                                                    <a href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}"
-                                                        class="fas fa-heart"></a>
-                                                </button>
+                                                    <button class="button_love">
+                                                        <a href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}" class="fas fa-heart"></a>
+                                                    </button>
                                                 {% else %}
                                                 <button class="button_love2">
                                                     <a href="{% url 'postapp:talk_favorite_add' talk_id=talk.id %}"
@@ -348,12 +352,19 @@
                                     <tr>
                                         <td class="td2">
                                             {% if talk.exist_reply == True %}
+                                            <!--返信があればいいねボタンを表示-->
                                                 {% favorite_check user talk as flag %}
                                                 {% if flag %}
-                                                <button class="button_love">
-                                                    <a href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}"
-                                                        class="fas fa-heart"></a>
-                                                </button>
+                                                    <button type="button" class="button_love" id="btnGroupDrop1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        <i class="fas fa-heart"></i>
+                                                    </button>
+                                                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                                        <p>If you remove favorite,this talk will disappear.</p>
+                                                        <p>Do you remove favorite?</p>
+                                                        <div class="remove_favorite_frame">
+                                                            <a class="remove_favorite" href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}" >YES</a>
+                                                        </div>
+                                                    </div>
                                                 {% else %}
                                                 <button class="button_love2">
                                                     <a href="{% url 'postapp:talk_favorite_add' talk_id=talk.id %}"
