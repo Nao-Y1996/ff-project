@@ -31,7 +31,7 @@
             <!-- <header>FF project<br /></header> -->
         <div class="container flexbox-container">
             <aside>
-                <div class="title">FF<br />project</div>
+                <a href="{% url 'postapp:talk_all' %}" class="title">FF<br />project</a>
                 <i class="fas fa-key fa-lg"></i>
                 <!-- <div class="col-3"> -->
                 <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
@@ -415,9 +415,9 @@
                                 <div class="button_list_detail">
                                 {% if Exist_favorites == False %}
                                     <a type="submit" class="button_favorite_data" href="{% url 'postapp:final_favorite_add' talk_id=talk_id %}">favorite</a>
-                                    <a class="button_favorite_data" href="{% url 'postapp:final_favorite_delete' talk_id=talk_id %}">good bye</a>
+                                    <a class="button_favorite_data" href="{% url 'postapp:final_favorite_delete' talk_id=talk_id %}">delete</a>
                                     {% else %}
-                                    <a class="button_favorite_data" href="{% url 'postapp:confirmed_add' talk_id=talk_id %}">Finish</a>
+                                    <a class="button_favorite_data" href="{% url 'postapp:confirmed_add' talk_id=talk_id %}">Home</a>
                                 {% endif %}
                                 </div>
                                 <div class="opendata_end">cannot send message</div>

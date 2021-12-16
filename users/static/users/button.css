@@ -3,7 +3,7 @@
 	border:solid #FFF;
 	
 }
-.button_back,.button_next,.Withdrawal_button{
+.button_back,.button_next{
 	width: 120px;
 	height: 46px;
 	background-color: white;
@@ -44,21 +44,20 @@
 	display: inline-block;
     width: 120px;
     height: 46px;
-    background-color: white;
-    color: orange;
+    color: white;
+    background-color: orange;
     font-size: 16px;
     font-weight: bold;
-    border-radius: 50px;
     padding-top: 10px;
     margin:50px auto;
 	text-align: center;
 }
 
 .Withdrawal_button:hover{
-    background-color: rgb(232, 232, 232);
+    color: black;
     outline: none;
     -webkit-tap-highlight-color:none;
     cursor:pointer;
 	text-decoration: none;
-	color: orange;
+	background-color: orange;
 }
