@@ -1,12 +1,56 @@
-{% extends "base.html" %}
-{% block content %}
-<p>退会ページ</p>
-<p>{{user.email}}でログインしています</p>
-<div>
-    <form method="POST">
-        {% csrf_token %}
-        <button type="submit">退会</button>
-    </form>
-    <a href="{% url 'postapp:talk_all' %}"></a>
-</div>
-{% endblock %}
+
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+
+	<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, shrink-to-fit=no"
+		/>
+		<!-- Bootstrap CSS -->
+		<link
+			rel="stylesheet"
+			href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+			integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+			crossorigin="anonymous"
+		/>
+        <link rel="stylesheet" href="{% static 'postapp/Signup.css' %}">
+		<link rel="stylesheet" href="{% static 'users/button.css' %}">
+		<title>signup</title>
+	</head>
+	<body>
+		<div class="all_sighup" id="withdraw_frame" >
+			<div class="hello_signup">Do you withdraw from this app?</div>
+			<div class="signup_tab">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="button_list" id="withdrawal_buttonlist"></div>
+                        <a class="Withdrawal_button" href="{% url 'postapp:talk_all' %}">Back</a>
+                        <button  class="button_next" type="submit">Withdrawal</button>
+                    </div>
+                </form>
+			</div>
+		</div>
+
+		<!-- Optional JavaScript -->
+		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+		<script
+			src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+			integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+			crossorigin="anonymous"
+		></script>
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
+			integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+			crossorigin="anonymous"
+		></script>
+		<script
+			src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
+			integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+			crossorigin="anonymous"
+		></script>
+	</body>
+</html>
