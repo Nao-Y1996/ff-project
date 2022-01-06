@@ -24,15 +24,30 @@ from .forms import LoginForm, UserCreateForm, MyPasswordChangeForm, MyPasswordRe
 from .models import UserInfo, Report, ReportReasons, CustomUser
 from datetime import datetime, timezone
 from dateutil import tz
-from postapp.views import update_count_for_priority, update_seiding_priority
+from postapp.views import reset_count_for_priority_rank, update_sending_priority_rank
 from postapp.models import Executedfunction, Talks
+
 import urllib
 from urllib.parse import urlparse
-
 from django.forms.models import modelformset_factory
 from django.db import transaction
+
 User = get_user_model()
 
+ # -----------------------（アルゴリズム検証）---------------------------
+from datetime import timedelta
+from algorithm_check import algorithm_checker_utils
+from postapp.models import Talks
+import pandas as pd
+from django_pandas.io import read_frame
+csv_controller = algorithm_checker_utils.csv_controller4user()
+users_name = []
+user_num = algorithm_checker_utils.USER_NUM
+timing_update_priority_rank = algorithm_checker_utils.TIMING_UPDATE_PRIORITY
+for i in range(user_num):
+    users_name.append('user_'+str(i))
+ # -----------------------（アルゴリズム検証）---------------------------
+ 
 # ログインユーザー自身以外は遷移できないようにするクラス
 class OnlyYouMixin(UserPassesTestMixin):
     raise_exception = True
@@ -67,9 +82,9 @@ def profile(request):
     else:
         exist_profile_image = bool(user_info.profile_image)
         if exist_profile_image:
-            profile_image = 'media/'+str(user_info.profile_image)
+            profile_image = str(user_info.profile_image)
         else:
-            profile_image = 'media/no_image.png'
+            profile_image = 'no_image.png'
     return render(request, 'users/profile.html', {'profile_image': profile_image})
     # if request.method == 'POST':
     #     if form.is_valid():
@@ -85,7 +100,7 @@ def profile(request):
 
 @login_required
 def report(request,talk_id):
-
+    
     talk = Talks.objects.get(id=talk_id)
 
     if talk.sending_user_id == request.user.id:
@@ -134,34 +149,87 @@ def Login(request):
         if user is not None:
             last_login = user.last_login # UTC
             now = datetime.now(timezone.utc)
+           
             # 初回ログインをしたらログインカウントをインクリメント
             if last_login is None:
                 user.user_info.count_login += 1
                 user.user_info.save()
             else:
                 # 24時間以上、メッセージ送信の優先順位が更新されていなかったら更新
-                priority_updated_at = Executedfunction.objects.get(name='update_seiding_priority').executed_at
-                if ((now - priority_updated_at).seconds > 24*60*60):
-                    update_seiding_priority()
+                priority_rank_updated_at = Executedfunction.objects.get(name='update_sending_priority_rank').executed_at
+                if ((now - priority_rank_updated_at).seconds > 24*60*60):
+                    update_sending_priority_rank()
                 else:
                     pass
-                # 24時間以上ぶりにログインしたらログインカウントをインクリメント
+                # 24時間以上ぶりにログインしたら
                 if ((now - last_login).seconds > 24*60*60):
-                    user.user_info.count_login += 1
+                    user.user_info.count_login += 1 # ログインカウントをインクリメント
+                    user_info.count_send_new_messages_in_a_day = 0 # 本日の投稿可能数をリセット
                     user.user_info.save()
                 elif user.user_info.count_login == 0:
                     user.user_info.count_login += 1
+                    user.user_info.count_send_new_messages_in_a_day = 0 # 本日の投稿可能数をリセット
                     user.user_info.save()
                 else:
                     pass
                 # 1週間以上、更新関数が実行されていなかったら実行する
-                count_updated_at = Executedfunction.objects.get(name='update_count_for_priority').executed_at
+                count_updated_at = Executedfunction.objects.get(name='reset_count_for_priority_rank').executed_at
                 if ((now - count_updated_at).seconds > 7*24*60*60):
-                    update_count_for_priority()
+                    reset_count_for_priority_rank()
                 else:
                     pass
             login(request, user)  # ログイン
-            return redirect('postapp:talk_all')
+            """
+            # -----------------------（アルゴリズム検証）---------------------------
+            with open(algorithm_checker_utils.BASE_PATH +'/day_end.txt') as f:
+                l = f.readlines()
+                is_end_day = l[0]
+            day_num = int(csv_controller.get_day())
+            print(f'day = {day_num}')
+            # 1日分のシミュレーションが終わっていたら　送信優先度priorityを記録, talkのcreated_atをマイナス1日する
+            if is_end_day == 'True':
+                print('==============================1日経過=============================')
+                print('======================== Priority_rankを記録します ====================')
+                print('=================================================================')
+                update_sending_priority_rank()
+                all_user_rank = []
+                for name in users_name:
+                    _user = User.objects.filter(username=name)
+                    all_user_rank.append(_user[0].user_info.priority_rank)
+                df = pd.read_csv(algorithm_checker_utils.BASE_PATH + "/rank.csv", index_col=0)
+                df.loc[str(day_num)] = all_user_rank
+                df.to_csv(algorithm_checker_utils.BASE_PATH + "/rank.csv", index=True, header=True)
+                with open(algorithm_checker_utils.BASE_PATH + '/day_end.txt', mode='w') as f:
+                    f.write(str(False))
+
+                # 1日経過するごとにtalkのcreated_atをマイナス1日する
+                upd_talks = []
+                talks = Talks.objects.all()
+                for talk in talks:
+                    talk.created_at = talk.created_at.replace(tzinfo=timezone.utc) - timedelta(days=1)
+                    upd_talks.append(talk)
+                Talks.objects.bulk_update(upd_talks, fields=['created_at'])
+            else:
+                pass
+            # 毎回（1日1回のログインでシミュレーションするので）
+            user.user_info.count_login += 1 # ログインカウントをインクリメント
+            user.user_info.count_send_new_messages_in_a_day = 0 # 本日の投稿可能数をリセット
+            user.user_info.save()
+            # 更新関数を実行する
+            if day_num in timing_update_priority_rank:
+                print('===============================================================')
+                print('=================== 各種カウントをリセットします ===================')
+                print('===============================================================')
+                reset_count_for_priority_rank()
+            else:
+                pass
+            # （アルゴリズム検証）ログインしたかどうかを記録
+            csv_controller.record_logedin(file_name=user.username,idx_name='day'+str(day_num))
+            login(request, user)  # ログイン
+            print(f'---------------userid = {user.id}ログイン成功 = {user.username} -----------------')
+            # -----------------------（アルゴリズム検証）---------------------------
+             """
+            return redirect('users:profile')
         else:
             # form = LoginForm(initial={"username":email, 'password':password}) # htmlで　form.errosでエラーが出なくなってしまう
             form = LoginForm(request, request.POST)
@@ -351,12 +419,11 @@ def EditUserInfo(request, info_id):
         return redirect('users:profile')
     if request.method == 'POST':
         # return reverse('users:profile', kwargs={'pk': request.user.id})
-        
+        messages.success(request, 'Successfully Update')
         form = UserInfoUpdateForm(
             request.POST, request.FILES, instance=user_info)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Successful Update')
             return redirect("postapp:talk_all")
         else:
             # return redirect('users:profile', pk=request.user.id)
@@ -484,7 +551,6 @@ def withdrawal(request):
     else:
         # form = WithdrawalForm
         return render(request, 'users/withdrawal.html')
-
 
 
 def EmailPasswordView(request):

@@ -108,12 +108,15 @@ class UserInfo(models.Model):
         validators.MaxValueValidator(1.0)], blank=True, null=True)
     introduction = models.TextField(blank=True,null=True)
     profile_image = models.ImageField(upload_to=image_directory_path, blank=True, null=True, default='no_image.png')
+    count_send_new_messages_in_a_day = models.IntegerField(default=0)
+    priority_rank = models.IntegerField(default=7)
+    capacity_new_msg = models.IntegerField(default=2)
     count_send_new_messages = models.IntegerField(blank=True,null=True,default=0)
     count_receive_new_messages = models.IntegerField(blank=True,null=True,default=0)
     count_login = models.IntegerField(blank=True,null=True,default=0)
     count_first_reply = models.IntegerField(blank=True,null=True,default=0)
     count_bad_messages = models.IntegerField(blank=True,null=True,default=0)
-    priority = models.IntegerField(default=7)
+
     def __str__(self):
         return str(self.user)
 
