@@ -30,35 +30,21 @@
 <form method="post" action="{% url 'users:login' %}">
     {% csrf_token %}
 
-    <!-- 
-    <table>
-        <tr>
-            <td>{{ form.username.label_tag }}</td>
-            <td>{{ form.username }}</td>
-        </tr>
-        <tr>
-            <td>{{ form.password.label_tag }}</td>
-            <td>{{ form.password }}</td>
-        </tr>
-    </table>
-    -->
-
-    <div class="all_signin">
+    <div class="login_area_whole">
         <div class="namelist">
-            <div class="name_account">Username / E-mail</div> 
+            <div class="login_font_username">Username / E-mail</div> 
                 {{ form.username }}
-                
         </div>
 
         <div class="passlist">
-            <div class="password_account">Password</div>
+            <div class="login_font_password">Password</div>
                 {{ form.password }} 
         </div>
         
-        <div class="buttonlist">
+        <div class="button_area_button">
             <!-- <input type="submit" value="login"> -->
             <button
-                class="button_next"
+                class="button_button_next"
                 type="submit"
                 value="login"
             >
