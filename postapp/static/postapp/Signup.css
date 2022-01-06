@@ -1,6 +1,6 @@
 
 
-.all_sighup{
+.signup_frame_all{
 	widows: 50%;
 	display:flex;
 	align-items: center;
@@ -10,27 +10,27 @@
 	/* border: solid 3px #333; */
 }
 
-.hello_signup{
+.signup_text_content{
 	font-weight: bold;
 	font-size:40px;
 	padding:10px;
 	color: orange;
 }
-.signup_tab{
+.signup_frame_tab{
 	width:100%;
 	display:flex;
 	align-items: center;
     justify-content: center;
 	flex-flow: column;
 }
-.Name_newform,.email_newform,.password_newform{
+.signup_text_name,.signup_text_email,.signup_text_password{
 	font-weight: bold;
 	font-size:20px;
 	padding: 0 20px;
 	color: orange;
 }
 
-.input_newform{
+.signup_input_newform{
     float: left;
     width: 100%;
     max-width: 100%;
@@ -47,17 +47,17 @@ table,tr{
 	
 }
 
-.td_form{
+.signup_form_td_form{
 	padding: 0 20px;
 	width: 400px;
 	
 
 }
 
-.td_button{
+.signup_form_td_button{
 	width:200px;
 }
 
-#withdraw_frame{
+#signup_withdraw_frame{
 	margin-top: 200px;
 }

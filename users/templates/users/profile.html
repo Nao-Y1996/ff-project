@@ -65,17 +65,17 @@
         {% if user.is_authenticated %}
 
         <main>
-            <div class="all_sighup">
-                <div class="hello_signup">Account</div>
+            <div class="signup_frame_all">
+                <div class="signup_text_content">Account</div>
                 
 
                 
-                <div class="signup_tab">
+                <div class="signup_frame_tab">
                     <form action="" method="POST" name="form_change_question_text" id="form_change_question_text" class="newemaillist">
-                        <div class="email_newform">Email</div>
+                        <div class="signup_text_email">Email</div>
                         <table>
                             <tr>
-                                <td class="td_form">
+                                <td class="signup_form_td_form">
                                     <div>
                                         {% csrf_token %}
                                         {{form_set_1.management_form}}
@@ -87,7 +87,7 @@
                                         {% endfor %}
                                     </div>
                                 </td>
-                                <td class="td_button">
+                                <td class="signup_form_td_button">
                                     <div class="buttonlist">
                                         <button type="submit" class="button_next" name="button_change_email"> Change </button>
                                     </div>
@@ -97,10 +97,10 @@
                     </form>
             
                     <form action="" method="POST" name="form_change_choice_text" id="form_change_choice_text" class="newpasslist">
-                        <div class="password_newform">Password</div>
+                        <div class="signup_text_password">Password</div>
                         <table>
                             <tr>
-                                <td class="td_form">
+                                <td class="signup_form_td_form">
                                     {% csrf_token %}
                                     {{form_set_2.management_form}}
                                     {{ form_set_2.non_field_errors }}
@@ -110,7 +110,7 @@
                                     {% endfor %}
                                     {% endfor %}
                                 </td>
-                                <td class="td_button">
+                                <td class="signup_form_td_button">
                                     <div class="buttonlist">
                                         <button type="submit" class="button_next" name="button_change_password"> Change </button>
                                     </div>
