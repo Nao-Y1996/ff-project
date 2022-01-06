@@ -82,9 +82,9 @@
         </aside>
 
         <main>
-            <div class="all_sighup">
-                <div class="hello_signup">Report</div>
-                <div class="signup_tab">
+            <div class="signup_frame_all">
+                <div class="signup_text_content">Report</div>
+                <div class="signup_frame_tab">
                     <div>
                         <form method="POST">
                             {% csrf_token %}
@@ -96,7 +96,7 @@
                                     <td>
                                         <p>Reason</p>
                                     </td>
-                                    <td class="td_form">
+                                    <td class="signup_form_td_form">
                                         {{ form.reason }}
                                     </td>
                                 </tr>
@@ -104,12 +104,13 @@
                                     <td>
                                         <p>Content</p>
                                     </td>
-                                    <td class="td_form">
+                                    <td class="signup_form_td_form">
                                         {{ form.content }}
                                     </td>
                                 </tr>
                             </table>
-                            <div class="signup_tab">
+
+                            <div class="signup_frame_tab">
                                 <button class="button_button_next"　id="button_report" type="submit">report</button>
                             </div>
                         </form>

@@ -56,9 +56,9 @@
             <!-- </div> -->
         </aside>
         <main>
-            <div class="content_newpost">
+            <div class="talk_create_content_newpost">
                 <h1>New posts</h1>
-                <p class="posts_title">Would you like to send a message?</p>
+                <p class="talk_create_post_title">Would you like to send a message?</p>
 
                 <form method="POST" wrap="soft">
                     {% csrf_token %}
@@ -66,7 +66,7 @@
                     {{ form.sending_user.as_hidden }}
                     {{ form.content }}
                     <div class="control">
-                        <button type="submit" class="newpost_button">
+                        <button type="submit" class="talk_create_button_newpost">
                             Post a message
                         </button>
                     </div>
