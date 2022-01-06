@@ -1,5 +1,5 @@
 @media screen and (min-width: 999px) {  
-.menu_button{
+.menu_unit_button{
     display: inline-block;
     width: 150px;
     height: 40px;
@@ -12,7 +12,7 @@
     margin:20px auto;
 }
 
-.menu_button:hover{
+.menu_unit_button:hover{
 	font-size: 21px;
     font-weight: bold;
     background-color: rgb(232, 232, 232);
@@ -24,56 +24,56 @@
     
 }
 
-.title{
+.menu_font_ProjectName{
     height: 150px;
     font-size: 35px;
     font-weight: bold;
     font-family: Comic Sans MS;
     color: orange;
 }
-.title:hover{
+.menu_font_ProjectName:hover{
     text-decoration: none;
     color:orange;
 }
 
-#v-pills-user-tab{
+#menu_shape_UserButton{
     border-radius: 30px;
     height: 100px;  
 }
 
 
-#v-pills-messages-tab{
+#menu_color_NewpostButton{
     background-color: orange;
 }
 
-#v-pills-messages-tab:hover{
+#menu_color_NewpostButton:hover{
     background-color: darkorange;
 }
 
-#v-pills-signin-tab{
+#menu_color_SigninButton{
     background-color: orange;
 }
 
-#v-pills-signin-tab:hover{
+#menu_color_SigninButton:hover{
     background-color: darkorange;
 }
 
-#v-pills-login-tab{
+#menu_color_LoginButton{
     background-color: lemonchiffon;
 }
 
-#v-pills-login-tab:hover{
+#menu_color_LoginButton:hover{
     background-color:yellow;
 }
 
-.button-title{
+.menu_font_MenuButton{
     font-size: 20px;
     text-decoration: none;
     font-family: Arial Black;
     margin: 0;
 }
 
-#username{
+#_menu_font_username{
     font-size: 15px;
     width:100%;
     padding-left:10px;
@@ -91,7 +91,7 @@
     padding-right: 4px;
 }
 
-img.prof_picture{
+img.menu_shape_ProfPicture{
     width: 65px;
     height: 65px;
     object-fit: cover;
@@ -101,7 +101,7 @@ img.prof_picture{
 }
 
 @media screen and (max-width: 999px) {  
-    .menu_button{
+    .menu_unit_button{
         display: inline-block;
         width: 50px;
         height: 50px;
@@ -115,7 +115,7 @@ img.prof_picture{
         padding-top: 10px;
 
     }
-    .menu_button:hover{
+    .menu_unit_button:hover{
         font-size: 21px;
         font-weight: bold;
         background-color: rgb(232, 232, 232);
@@ -125,47 +125,39 @@ img.prof_picture{
         color: #000000;
     }
     
-    .title{
-        font-size: 35px;
-        font-weight: bold;
-        font-family: Comic Sans MS;
-        color: orange;
-        
-    }
-    
-    #v-pills-user-tab{
+    #menu_shape_UserButton{
         border-radius: 25px;
         height: 50px; 
         padding-top: 5px;
     }
    
-    #v-pills-messages-tab, #v-pills-signin-tab{
+    #menu_color_NewpostButton, #menu_color_SigninButton{
         background-color: orange;
     }
     
-    #v-pills-messages-tab:hover, #v-pills-signin-tab:hover{
+    #menu_color_NewpostButton:hover, #menu_color_SigninButton:hover{
         background-color: darkorange;
     }
     
-    #v-pills-login-tab{
+    #menu_color_LoginButton{
         background-color: lemonchiffon;
     }
     
-    #v-pills-login-tab:hover{
+    #menu_color_LoginButton:hover{
         background-color:yellow;
     }
 
-    a > .button-title{
+    a > .menu_font_MenuButton{
         display:none;
         text-decoration: none;
     }
 
 
-    .title{
+    .menu_font_ProjectName{
         display: none;
     }
 
-    img.prof_picture{
+    img.menu_shape_ProfPicture{
         border-radius: 50%;
         width: 40px;
         height: 40px;

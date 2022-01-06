@@ -1,9 +1,9 @@
-.buttonlist{
+.button_area_button{
 	display:flex;
 	border:solid #FFF;
 	
 }
-.button_back,.button_next{
+.button_button_back,.button_button_next{
 	width: 120px;
 	height: 46px;
 	background-color: white;
@@ -18,7 +18,7 @@
 	cursor:pointer;
 	border:solid 1px lightgray;
 }
-.button_back:hover{
+.button_button_back:hover{
 	font-weight: bold;
 	background-color:rgb(242, 242, 242);
 	outline: none;
@@ -26,7 +26,7 @@
 	-webkit-tap-highlight-color:none;
 	cursor:pointer;
 }
-.button_next:hover{
+.button_button_next:hover{
 	font-weight: bold;
 	background-color: rgb(242, 242, 242);
 	outline: none;
@@ -35,12 +35,7 @@
 	cursor:pointer;
 }
 
-
-#button_report{
-
-}
-
-.Withdrawal_button{
+.button_button_withdrawal{
 	display: inline-block;
     width: 120px;
     height: 46px;
@@ -53,7 +48,7 @@
 	text-align: center;
 }
 
-.Withdrawal_button:hover{
+.button_button_withdrawal:hover{
     color: black;
     outline: none;
     -webkit-tap-highlight-color:none;
