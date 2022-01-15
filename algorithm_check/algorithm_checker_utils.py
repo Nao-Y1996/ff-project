@@ -5,7 +5,7 @@ import os
 import time
 BASE_PATH = os.path.dirname(__file__)
 USER_DATA_DIR = BASE_PATH + '/user_data/'
-USER_NUM = 10
+USER_NUM = 50
 SIM_DAYS = 50
 TALK_LIMIT_DAYS = 7
 FRERUENCY_UPDATE_PRIORITY = 7
