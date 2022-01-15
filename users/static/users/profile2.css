@@ -1,6 +1,4 @@
-
-
-.all_profile{
+.userinfo_area_whole{
 	width:70%;
 	display:flex;
 	align-items: left;
@@ -10,18 +8,18 @@
 	/* border: solid 3px #333; */
 }
 
-.Nationally_profile{
+.userinfo_area_item{
 	font-weight: bold;
 	font-size:20px;
 	display:flex;
 	margin-bottom: 20px;
 }
 
-.Gender_profile{
+.userinfo_tag_gender{
 	margin:0px 10px 0px 10px
 }
 
-.slider_profile{
+.userinfo_area_slider{
 	display:flex;
 	font-weight: bold;
 	font-size:20px;
@@ -66,24 +64,17 @@ input[type="range"]::-moz-focus-outer {
   border: 0;
 }
 
-textarea{
-	resize: none;
-	height: 200px;
-	width: 100%;
-	
-}
-
-select,input[type="number"]{
+input[type="number"]{
 	width: 100%;
 }
 
-.label{
+.userinfo_font_label{
 	width: 200px;
 	text-align: right;
   padding-right: 30px;
   color: orange;
 }
 
-.input{
+.userinfo_width_form{
   width: 80%;
 }

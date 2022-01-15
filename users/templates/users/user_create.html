@@ -5,19 +5,18 @@
 <link rel="stylesheet" href="{% static 'users/user_create.css' %}">
 
 <form action="" method="POST">
-    <div class="all_user_create">
+    <div class="UserCreate_area_whole">
         {{ form.non_field_errors }}
         {% for field in form %}
-        <div class="form-group">
-            <div class="label_user_create" for="{{ field.id_for_label }}">{{ field.label_tag }}</div>
+        <div class="UserCreate_area_form">
+            <div class="UserCreate_font_label" for="{{ field.id_for_label }}">{{ field.label_tag }}</div>
             {{ field }}
             {{ field.errors }}
         </div>
         {% endfor %}
         {% csrf_token %}
-        <div class="buttonlist">
-            <button type="submit" class="button_next">Next</button>
-            <!-- <input type="submit" value="login"> -->
+        <div class="button_area_button">
+            <button type="submit" class="button_button_next">Next</button>
         </div>
     </div>
 </form>

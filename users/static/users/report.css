@@ -1,9 +1,9 @@
-.reoprt_frame{
+.report_config_area{
     display: flex;
     flex-flow: column;
 }
 
-.Reported_username{
+.report_text_reportedaccount{
     margin: 30px 0px;
 }
 

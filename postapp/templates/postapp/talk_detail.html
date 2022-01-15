@@ -31,34 +31,34 @@
             <!-- <header>FF project<br /></header> -->
         <div class="container flexbox-container">
             <aside>
-                <a href="{% url 'postapp:talk_all' %}" class="title">FF<br />project</a>
+                <a href="{% url 'postapp:talk_all' %}" class="menu_font_ProjectName">FF<br />project</a>
                 <i class="fas fa-key fa-lg"></i>
                 <!-- <div class="col-3"> -->
                 <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                     <nav class="nav flex-column">
-                        <a href="{% url 'users:userinfo_edit' user.user_info.id %}" class="menu_button"
-                            id="v-pills-user-tab" role="tab" aria-controls="v-pills-user" aria-selected="false">
-                            <img class="prof_picture" src="{{user.user_info.profile_image.url}}" />
-                            <p class="button-title" id="username">{{user.username}}</p>
+                        <a href="{% url 'users:userinfo_edit' user.user_info.id %}" class="menu_unit_button"
+                            id="menu_shape_UserButton" role="tab" aria-controls="v-pills-user" aria-selected="false">
+                            <img class="menu_shape_ProfPicture" src="{{user.user_info.profile_image.url}}" />
+                            <p class="menu_font_MenuButton" id="_menu_font_username">{{user.username}}</p>
                         </a>
-                        <a href="{% url 'postapp:talk_all' %}" class="menu_button" id="v-pills-home-tab" role="tab"
+                        <a href="{% url 'postapp:talk_all' %}" class="menu_unit_button" id="v-pills-home-tab" role="tab"
                             aria-controls="v-pills-home" aria-selected="false">
                             <i class="fas fa-home fa-lg"></i>
-                            <p class="button-title">Home</p>
+                            <p class="menu_font_MenuButton">Home</p>
                         </a>
-                        <a href="{% url 'users:EmailPasswordView' %}" class="menu_button" id="v-pills-profile-tab" role="tab"
+                        <a href="{% url 'users:EmailPasswordView' %}" class="menu_unit_button" id="v-pills-profile-tab" role="tab"
                             aria-controls="v-pills-profile" aria-selected="false">
-                            <p class="button-title">Account</p>
+                            <p class="menu_font_MenuButton">Account</p>
                             <i class="fas fa-cog fa-lg"></i>
                         </a>
-                        <a href="{% url 'postapp:talk_create' %}" class="menu_button" class="nav-link"
-                            id="v-pills-messages-tab" role="tab" aria-controls="v-pills-messages" aria-selected="false">
-                            <p class="button-title">New post</p>
+                        <a href="{% url 'postapp:talk_create' %}" class="menu_unit_button" class="nav-link"
+                            id="menu_color_NewpostButton" role="tab" aria-controls="v-pills-messages" aria-selected="false">
+                            <p class="menu_font_MenuButton">New post</p>
                             <i class="fas fa-plus fa-lg"></i>
                         </a>
-                        <a href="{% url 'users:logout' %}" class="menu_button" class="nav-link" id="v-pills-settings-tab"
+                        <a href="{% url 'users:logout' %}" class="menu_unit_button" class="nav-link" id="v-pills-settings-tab"
                             role="tab" aria-controls="v-pills-settings" aria-selected="false">
-                            <p class="button-title">Logout</p>
+                            <p class="menu_font_MenuButton">Logout</p>
                             <i class="fas fa-sign-out-alt fa-lg"></i>
                         </a>
                     </nav>
@@ -67,19 +67,19 @@
             </aside>
 
             <main class="main1">
-                <div class="all">
+                <div class="TalkList_inTalkDetail_table_frame_all">
                     {% for talk in unchecked_dead_talks %}
-                    <div class="frame_table">
-                        <div class="unread_lamp"></div>
-                        <div class="list0">
-                            <div class="list1">
+                    <div class="TalkList_inTalkDetail_frame_table">
+                        <div class="TalkList_inTalkDetail_unTalkList_inTalkDetail_read_lamp"></div>
+                        <div class="TalkList_inTalkDetail_frame_outline0">
+                            <div class="TalkList_inTalkDetail_frame_outline1">
                                 {% if talk.sending_user == user %}
                                     {% get_user talk.receiving_user_id as talk_partner %}
                                 {% else %}
                                     {% get_user talk.sending_user_id as talk_partner %}
                                 {% endif %}
-                                <img src="{{talk_partner.user_info.profile_image.url}}" class="you_image" />
-                                <div class="list_name">
+                                <img src="{{talk_partner.user_info.profile_image.url}}" class="TalkList_inTalkDetail_you_image" />
+                                <div class="TalkList_inTalkDetail_list_name">
                                     <!-- 自分がメセージを送った時 -->
                                     {% if talk.sending_user == user %}
                                         {{talk.receiving_user}}
@@ -89,8 +89,8 @@
                                     {% endif %}
                                 </div>
                             </div>
-                            <div class="list2">
-                                <div class="overflow">
+                            <div class="TalkList_inTalkDetail_frame_outline2">
+                                <div class="TalkList_inTalkDetail_overflow">
                                     {% if talk.exist_reply == True %}
                                     <!--返信があればトーク詳細のリンク表示-->
                                     <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">
@@ -101,16 +101,16 @@
                                     {% get_newest_message talk.id %}
                                     {% endif %}
                                 </div>
-                                <div class="table_lefttime">
-                                    <span class="span_time">End and Unconfirmed</span>
+                                <div class="TalkList_inTalkDetail_table_lefttime">
+                                    <span class="TalkList_inTalkDetail_span_time">End and Unconfirmed</span>
                                 </div>
                             </div>
-                            <div class="list3">
+                            <div class="TalkList_inTalkDetail_frame_outline3">
                                 <table>
                                     <tr>
-                                        <td class="td2">
+                                        <td class="TalkList_inTalkDetail_td2">
                                             <div class="btn-group" role="group">
-                                                <button id="btnGroupDrop1" type="button" class="table_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <button id="btnGroupDrop1" type="button" class="TalkList_inTalkDetail_table_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                   <i class="fas fa-ellipsis-v"></i>
                                                 </button>
                                                 <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
@@ -120,23 +120,23 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="td2">
+                                        <td class="TalkList_inTalkDetail_td2">
                                             {% if talk.exist_reply == True %}
                                             <!--返信があればいいねボタンを表示-->
                                                 {% favorite_check user talk as flag %}
                                                 {% if flag %}
-                                                    <button type="button" class="button_love" id="btnGroupDrop1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <button type="button" class="TalkList_inTalkDetail_button_love" id="btnGroupDrop1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                         <i class="fas fa-heart"></i>
                                                     </button>
                                                     <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
                                                         <p>If you remove favorite,this talk will disappear.</p>
                                                         <p>Do you remove favorite?</p>
-                                                        <div class="remove_favorite_frame">
-                                                            <a class="remove_favorite" href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}" >YES</a>
+                                                        <div class="TalkList_inTalkDetail_table_remove_favorite_frame">
+                                                            <a class="TalkList_inTalkDetail_table_remove_favorite" href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}" >YES</a>
                                                         </div>
                                                     </div>
                                                 {% else %}
-                                                <button class="button_love2">
+                                                <button class="TalkList_inTalkDetail_button_love2">
                                                     <a href="{% url 'postapp:talk_favorite_add' talk_id=talk.id %}"
                                                         class="fas fa-heart"></a>
                                                 </button>
@@ -151,17 +151,17 @@
                     {% endfor %}
     
                     {% for talk in unread_talks %}
-                    <div class="frame_table">
-                            <div class="unread_lamp"></div>
-                            <div class="list0">
-                                <div class="list1">
+                    <div class="TalkList_inTalkDetail_frame_table">
+                            <div class="TalkList_inTalkDetail_unTalkList_inTalkDetail_read_lamp"></div>
+                            <div class="TalkList_inTalkDetail_frame_outline0">
+                                <div class="TalkList_inTalkDetail_frame_outline1">
                                     {% if talk.sending_user == user %}
                                         {% get_user talk.receiving_user_id as talk_partner %}
                                     {% else %}
                                         {% get_user talk.sending_user_id as talk_partner %}
                                     {% endif %}
-                                    <img src="{{talk_partner.user_info.profile_image.url}}" class="you_image" />
-                                    <div class="list_name">
+                                    <img src="{{talk_partner.user_info.profile_image.url}}" class="TalkList_inTalkDetail_you_image" />
+                                    <div class="TalkList_inTalkDetail_list_name">
                                         {% if talk.sending_user == user %}
                                         {{talk.receiving_user}}
                                         {% else %}
@@ -169,27 +169,27 @@
                                         {% endif %}
                                     </div>
                                 </div>
-                                <div class="list2">
-                                    <div class="overflow">
+                                <div class="TalkList_inTalkDetail_frame_outline2">
+                                    <div class="TalkList_inTalkDetail_overflow">
                                         <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">
                                             {% get_newest_message talk.id %}
                                         </a>
                                     </div>
-                                    <div class="table_lefttime">
-                                        <div class="span_time">
+                                    <div class="TalkList_inTalkDetail_table_lefttime">
+                                        <div class="TalkList_inTalkDetail_span_time">
                                             {% integer_to_string talk.id as flag %}
-                                            <p class="time" id={{flag}}></p>
+                                            <p class="TalkList_inTalkDetail_time" id={{flag}}></p>
                                             <input class="lefttime" type="hidden" id={{flag}}
                                                 value={{talk.created_at|date:"Y-m-d_H:i:sO"}}>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="list3">
+                                <div class="TalkList_inTalkDetail_frame_outline3">
                                     <table>
                                         <tr>
-                                            <td class="td2">
+                                            <td class="TalkList_inTalkDetail_td2">
                                                 <div class="btn-group" role="group">
-                                                    <button id="btnGroupDrop1" type="button" class="table_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <button id="btnGroupDrop1" type="button" class="TalkList_inTalkDetail_table_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                         <i class="fas fa-ellipsis-v"></i>
                                                     </button>
                                                     <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
@@ -199,15 +199,15 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="td2">
+                                            <td class="TalkList_inTalkDetail_td2">
                                                 {% if talk.exist_reply == True %}
                                                     {% favorite_check user talk as flag %}
                                                     {% if flag %}
-                                                        <button class="button_love">
+                                                        <button class="TalkList_inTalkDetail_button_love">
                                                             <a href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}" class="fas fa-heart"></a>
                                                         </button>
                                                     {% else %}
-                                                    <button class="button_love2">
+                                                    <button class="TalkList_inTalkDetail_button_love2">
                                                         <a href="{% url 'postapp:talk_favorite_add' talk_id=talk.id %}"
                                                             class="fas fa-heart"></a>
                                                     </button>
@@ -222,17 +222,17 @@
                     {% endfor %}
     
                     {% for talk in read_talks %}
-                    <div class="frame_table">
-                        <div class="read_lamp"></div>
-                        <div class="list0">
-                            <div class="list1">
+                    <div class="TalkList_inTalkDetail_frame_table">
+                        <div class="TalkList_inTalkDetail_read_lamp"></div>
+                        <div class="TalkList_inTalkDetail_frame_outline0">
+                            <div class="TalkList_inTalkDetail_frame_outline1">
                                 {% if talk.sending_user == user %}
                                     {% get_user talk.receiving_user_id as talk_partner %}
                                 {% else %}
                                     {% get_user talk.sending_user_id as talk_partner %}
                                 {% endif %}
-                                <img src="{{talk_partner.user_info.profile_image.url}}" class="you_image" />
-                                <div class="list_name">    
+                                <img src="{{talk_partner.user_info.profile_image.url}}" class="TalkList_inTalkDetail_you_image" />
+                                <div class="TalkList_inTalkDetail_list_name">    
                                     {% if talk.sending_user == user %}                   
                                         {{talk.receiving_user}}
                                     {% else %}
@@ -240,8 +240,8 @@
                                     {% endif %}
                                 </div>
                             </div>
-                            <div class="list2">
-                                <div class="overflow">
+                            <div class="TalkList_inTalkDetail_frame_outline2">
+                                <div class="TalkList_inTalkDetail_overflow">
                                     {% if talk.sending_user == user %}
                                         {% if talk.exist_reply == True %}
                                         <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">
@@ -256,21 +256,21 @@
                                         </a>
                                     {% endif %}
                                 </div>
-                                <div class="table_lefttime">
-                                    <div class="span_time">
+                                <div class="TalkList_inTalkDetail_table_lefttime">
+                                    <div class="TalkList_inTalkDetail_span_time">
                                         {% integer_to_string talk.id as flag %}
-                                        <p class="time" id={{flag}}></p>
+                                        <p class="TalkList_inTalkDetail_time" id={{flag}}></p>
                                         <input class="lefttime" type="hidden" id={{flag}}
                                             value={{talk.created_at|date:"Y-m-d_H:i:sO"}}>
                                     </div>
                                 </div>
                             </div>
-                            <div class="list3">
+                            <div class="TalkList_inTalkDetail_frame_outline3">
                                 <table>
                                     <tr>
-                                        <td class="td2">
+                                        <td class="TalkList_inTalkDetail_td2">
                                             <div class="btn-group" role="group">
-                                                <button id="btnGroupDrop1" type="button" class="table_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <button id="btnGroupDrop1" type="button" class="TalkList_inTalkDetail_table_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                   <i class="fas fa-ellipsis-v"></i>
                                                 </button>
                                                 <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
@@ -280,15 +280,15 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="td2">
+                                        <td class="TalkList_inTalkDetail_td2">
                                             {% if talk.exist_reply == True %}
                                                 {% favorite_check user talk as flag %}
                                                 {% if flag %}
-                                                    <button class="button_love">
+                                                    <button class="TalkList_inTalkDetail_button_love">
                                                         <a href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}" class="fas fa-heart"></a>
                                                     </button>
                                                 {% else %}
-                                                <button class="button_love2">
+                                                <button class="TalkList_inTalkDetail_button_love2">
                                                     <a href="{% url 'postapp:talk_favorite_add' talk_id=talk.id %}"
                                                         class="fas fa-heart"></a>
                                                 </button>
@@ -303,17 +303,17 @@
                     {% endfor %}
     
                     {% for talk in favorite_dead_talks %}
-                    <div class="frame_table">
-                        <div class="read_lamp"></div>
-                        <div class="list0">
-                            <div class="list1">
+                    <div class="TalkList_inTalkDetail_frame_table">
+                        <div class="TalkList_inTalkDetail_read_lamp"></div>
+                        <div class="TalkList_inTalkDetail_frame_outline0">
+                            <div class="TalkList_inTalkDetail_frame_outline1">
                                 {% if talk.sending_user == user %}
                                     {% get_user talk.receiving_user_id as talk_partner %}
                                 {% else %}
                                     {% get_user talk.sending_user_id as talk_partner %}
                                 {% endif %}
-                                <img src="{{talk_partner.user_info.profile_image.url}}" class="you_image" />
-                                <div class="list_name">    
+                                <img src="{{talk_partner.user_info.profile_image.url}}" class="TalkList_inTalkDetail_you_image" />
+                                <div class="TalkList_inTalkDetail_list_name">    
                                     {% if talk.sending_user == user %}                   
                                         {{talk.receiving_user}}
                                     {% else %}
@@ -321,8 +321,8 @@
                                     {% endif %}
                                 </div>
                             </div>
-                            <div class="list2">
-                                <div class="overflow">
+                            <div class="TalkList_inTalkDetail_frame_outline2">
+                                <div class="TalkList_inTalkDetail_overflow">
                                     {% if talk.exist_reply == True %}
                                     <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">
                                         {% get_newest_message talk.id %}
@@ -331,16 +331,16 @@
                                     {% get_newest_message talk.id %}
                                     {% endif %}
                                 </div>
-                                <div class="table_lefttime">
-                                    <span class="span_time">End and Favorite</span>
+                                <div class="TalkList_inTalkDetail_table_lefttime">
+                                    <span class="TalkList_inTalkDetail_span_time">End and Favorite</span>
                                 </div>
                             </div>
-                            <div class="list3">
+                            <div class="TalkList_inTalkDetail_frame_outline3">
                                 <table>
                                     <tr>
-                                        <td class="td2">
+                                        <td class="TalkList_inTalkDetail_td2">
                                             <div class="btn-group" role="group">
-                                                <button id="btnGroupDrop1" type="button" class="table_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <button id="btnGroupDrop1" type="button" class="TalkList_inTalkDetail_table_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                   <i class="fas fa-ellipsis-v"></i>
                                                 </button>
                                                 <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
@@ -350,23 +350,23 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="td2">
+                                        <td class="TalkList_inTalkDetail_td2">
                                             {% if talk.exist_reply == True %}
                                             <!--返信があればいいねボタンを表示-->
                                                 {% favorite_check user talk as flag %}
                                                 {% if flag %}
-                                                    <button type="button" class="button_love" id="btnGroupDrop1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <button type="button" class="TalkList_inTalkDetail_button_love" id="btnGroupDrop1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                         <i class="fas fa-heart"></i>
                                                     </button>
                                                     <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
                                                         <p>If you remove favorite,this talk will disappear.</p>
                                                         <p>Do you remove favorite?</p>
-                                                        <div class="remove_favorite_frame">
-                                                            <a class="remove_favorite" href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}" >YES</a>
+                                                        <div class="TalkList_inTalkDetail_table_remove_favorite_frame">
+                                                            <a class="TalkList_inTalkDetail_table_remove_favorite" href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}" >YES</a>
                                                         </div>
                                                     </div>
                                                 {% else %}
-                                                <button class="button_love2">
+                                                <button class="TalkList_inTalkDetail_button_love2">
                                                     <a href="{% url 'postapp:talk_favorite_add' talk_id=talk.id %}"
                                                         class="fas fa-heart"></a>
                                                 </button>
@@ -383,68 +383,68 @@
             </main>
 
             <main class="main2">
-				<div class="detail_detail">
-					<div class="all_detail">
+				<div class="chat_frame_outline">
+					<div class="chat_frame_outline2">
                         {% for message in messages %}
                             {% if message.is_date == True %}
-                                <div class="data_detail">{{message.created_at|date:"Y-m-d"}}</div>
+                                <div class="chat_form_data">{{message.created_at|date:"Y-m-d"}}</div>
                             {% else %}
                                 {% if message.sending_user_id != user.id %}
-                                    <div class="list0_detail">
-                                        <div class='image_detail'>
+                                    <div class="chat_frame_outline3">
+                                        <div class='chat_frame_image'>
                                             {% get_user message.sending_user_id as talk_partner %}
-                                            <img src="{{talk_partner.user_info.profile_image.url}}"  class="rounded-circle_detail">
-                                            <div class="talktime">{{message.created_at|date:"H:i"}}</div>   
+                                            <img src="{{talk_partner.user_info.profile_image.url}}"  class="chat_image_rounded">
+                                            <div class="chart_text_talk-limit">{{message.created_at|date:"H:i"}}</div>   
                                         </div>
-                                        <div class="you_message_detail">
-                                            <p class="talks_message">{{message.content}}</p>
+                                        <div class="chat_frame_talk_partner">
+                                            <p class="chat_text_talk">{{message.content}}</p>
                                         </div>
                                     </div>
                                 {% else %}
-                                    <div class="list1_detail">
-                                        <div class="I_message_detail">
-                                            <p class="talks_message">{{message.content}}</p>    
+                                    <div class="chat_frame_outline4">
+                                        <div class="chat_frame_talk_me">
+                                            <p class="chat_text_talk">{{message.content}}</p>    
                                         </div>
-                                        <div class='image_detail'>
+                                        <div class='chat_frame_image'>
                                             {% get_user message.sending_user_id as talk_partner %}
-                                            <img src="{{talk_partner.user_info.profile_image.url}}" class="rounded-circle_detail">
-                                            <div class="talktime">{{message.created_at|date:"H:i"}}</div>   
+                                            <img src="{{talk_partner.user_info.profile_image.url}}" class="chat_image_rounded">
+                                            <div class="chart_text_talk-limit">{{message.created_at|date:"H:i"}}</div>   
                                         </div>
                                     </div>
                                 {% endif %}
                             {% endif %}
                         {% endfor %}
                         {% if flag %}
-                            <div class="all_opendata">
-                                <div class="opendata_first">●Public information</div>
-                                <div class="data_list">
-                                    <div class="name_data">Username:{{sending_user}}</div>
-                                    <div class="age_data">Age:{{user_info.age}}years old</div>
-                                    <div class="country_data">country:{{user_info.country}}</div>
-                                    <div class="intro_data">introduction:{{user_info.introduction}}</div>
+                            <div class="chat_frame_opendata">
+                                <div class="chat_text_heading">●Public information</div>
+                                <div class="chat_frame_userdata">
+                                    <div class="chat_item_name">Username:{{sending_user}}</div>
+                                    <div class="chat_item_age">Age:{{user_info.age}}years old</div>
+                                    <div class="chat_item_nationality">country:{{user_info.country}}</div>
+                                    <div class="chat_item_introduction">introduction:{{user_info.introduction}}</div>
                                 </div>
-                                <div class="button_list_detail">
+                                <div class="chat_frame_button">
                                 {% if Exist_favorites == False %}
-                                    <a type="submit" class="button_favorite_data" href="{% url 'postapp:final_favorite_add' talk_id=talk_id %}">favorite</a>
-                                    <a class="button_favorite_data" href="{% url 'postapp:final_favorite_delete' talk_id=talk_id %}">delete</a>
+                                    <a type="submit" class="chat_button_opendata" href="{% url 'postapp:final_favorite_add' talk_id=talk_id %}">favorite</a>
+                                    <a class="chat_button_opendata" href="{% url 'postapp:final_favorite_delete' talk_id=talk_id %}">delete</a>
                                     {% else %}
-                                    <a class="button_favorite_data" href="{% url 'postapp:confirmed_add' talk_id=talk_id %}">Home</a>
+                                    <a class="chat_button_opendata" href="{% url 'postapp:confirmed_add' talk_id=talk_id %}">Home</a>
                                 {% endif %}
                                 </div>
-                                <div class="opendata_end">cannot send message</div>
+                                <div class="chat_text_caution">cannot send message</div>
                             </div>
                         {% endif %}
-                        <div id="endtalk"></div>
+                        <div id="chat_frame_bottom"></div>
                     </div>
                     {% if not flag %}
-                        <form method="POST" class="list2_detail" id="scroll">
+                        <form method="POST" class="chat_frame_form" id="scroll">
                             {% csrf_token %}
                             {{ form.id.as_hidden }}
                             {{ form.sending_user.as_hidden }}
                             {{ form.content }}
                             {{ form.talk.as_hidden}}
                             {{ form.created_at.as_hidden }}
-                            <button type="submit" class="button_go_detail">
+                            <button type="submit" class="chat_frame_send-button">
                                 <i class="fas fa-paper-plane fa-lg"></i>
                             </button>
                         </form>
@@ -520,7 +520,7 @@
 
             
             <script>
-                let target = document.getElementById('endtalk');
+                let target = document.getElementById('chat_frame_bottom');
                 target.scrollIntoView(false);
             </script>
         </div>
