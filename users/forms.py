@@ -6,6 +6,7 @@ from django.contrib.auth.forms import (
 from django.contrib.auth import get_user_model
 # from .models import CustomUser
 from .models import UserInfo, Report, CustomUser
+from .widgets import FileInputWithPreview
 
 User = get_user_model()
 
@@ -96,7 +97,8 @@ class UserInfoUpdateForm(forms.ModelForm):
                   'introduction', 'profile_image')
         widgets = {
             'gender': forms.NumberInput(attrs={'type': 'range', 'min': -1, 'max': 1, }),
-            'gender_of_love': forms.NumberInput(attrs={'type': 'range', 'min': -1, 'max': 1, })
+            'gender_of_love': forms.NumberInput(attrs={'type': 'range', 'min': -1, 'max': 1, }),
+            'file': FileInputWithPreview,
             # 'class': 'custom-range'
         }
 
