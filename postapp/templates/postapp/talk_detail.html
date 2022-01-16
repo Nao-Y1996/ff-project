@@ -472,15 +472,20 @@
             
                 function update_time() {
                     let nowTime = new Date();
-                    let limit_date = new Date(days = 14)
-            
+                    let limit_date = new Date(days = 0)
+                    DAY = 0
+                    HOURS = 0
+                    MINUTES = 10
+
                     const get_date = document.getElementsByClassName('lefttime');
-            
+
                     for (let d of get_date) {
-                        let created_at = new Date(d.getAttribute('value').replace("_","T"))
-                        created_at.setDate(created_at.getDate() + 14);
+                        let created_at = new Date(d.getAttribute('value').replace("_", "T"))
+                        created_at.setDate(created_at.getDate()+DAY);
+                        created_at.setHours(created_at.getHours()+HOURS);
+                        created_at.setMinutes(created_at.getMinutes()+MINUTES);
                         let left_time = (created_at - nowTime) / 1000
-            
+
                         let daysLeft = Math.floor(left_time / (24 * 60 * 60));
                         let hoursLeft = (Math.floor(left_time / (60 * 60))) % 24;
                         let minitesLeft = (Math.floor(left_time / 60)) % 60;
@@ -489,9 +494,9 @@
                         minitesLeft = ("0" + minitesLeft).slice(-2)
                         secondsLeft = ("0" + secondsLeft).slice(-2)
                         // 出力
-                        console.log(typeof(d.id))
-            
-                        document.querySelector("#"+d.id).innerHTML = (daysLeft + "d " + hoursLeft + "h " + minitesLeft + "m " + secondsLeft + "s ");
+                        console.log(typeof (d.id))
+
+                        document.querySelector("#" + d.id).innerHTML = (daysLeft + "d " + hoursLeft + "h " + minitesLeft + "m " + secondsLeft + "s ");
                     }
                 }
                 /*
