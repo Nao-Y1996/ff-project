@@ -28,7 +28,7 @@ import sys
 from django_pandas.io import read_frame
 DAYS = 0
 HOURS = 0
-MINUTES = 2
+MINUTES = 1
 SEND_NUM_LIMIT = 10
 
  # -----------------------（アルゴリズム検証）---------------------------
@@ -80,9 +80,9 @@ def my_talks_classification(request):
     favorite_dead_talks = []
     for talk in my_talks:
         if not is_talk_active(talk):# 期限終了の時
-            messages = Message.objects.filter(talk_id=talk.id).all()
+            message = Message.objects.filter(talk_id=talk.id).all()
             #if not talk.exist_reply:# 返信がない時
-            if messages.count() == 2: #日付専用メッセージとコンテントで2
+            if message.count() == 2: #日付専用メッセージとコンテントで2
                 talk.delete()
                 continue
             if talk.sending_user == request.user and talk.confirmed_by_sending_user == False:
@@ -370,6 +370,7 @@ def talk_create(request):  # 新規トークフォーム
 
 def talk_detail(request, talk_id):  # 既存トークフォーム
     talk = Talks.objects.get(id=talk_id)
+
     if request.method == 'POST':
         if not is_talk_active(talk):#終了トークなのに誤って送信が行われた場合
             return redirect(request.META['HTTP_REFERER']) 
@@ -383,11 +384,11 @@ def talk_detail(request, talk_id):  # 既存トークフォーム
             #現在時刻の取得
             now_date = datetime.now()
 
-            flag = False
+            straddle_date = False #日付を跨いでいるかどうか
             if latest_message_date < now_date: #日付を跨いだ更新なので日付フラグをメッセージに追加
                 #Messageにトークを開始した日付を追加
                 message = Message(content="date_data",is_date=1,sending_user=request.user)
-                flag = True
+                straddle_date = True
             else:
                 print("同じ日の更新")
             
@@ -395,7 +396,7 @@ def talk_detail(request, talk_id):  # 既存トークフォーム
             form = MessageForm(request.POST)
             if form.is_valid():
 
-                if flag == True: #Messageにトークを開始した日付を追加
+                if straddle_date == True: #Messageにトークを開始した日付を追加
                     message.talk = talk
                     message.save()
 
@@ -411,16 +412,16 @@ def talk_detail(request, talk_id):  # 既存トークフォーム
 
                 initial_dict = {"sending_user": request.user, "talk": talk_id, }
                 form = MessageForm(initial=initial_dict)
-                messages = Message.objects.filter(talk_id=talk_id).all
+                message = Message.objects.filter(talk_id=talk_id).all
                 return redirect(request.META['HTTP_REFERER'])
                 # return render(request, 'postapp/talk_detail.html', {'messages':messages, 'form': form ,'talk_id':talk_id , 'Exist_favorites':Exist_favorites})
 
             else:
-                messages = Message.objects.filter(talk_id=talk_id).all
+                message = Message.objects.filter(talk_id=talk_id).all
 
                 #talk_allの内容を取得し、更にデータを格納している
                 params = my_talks_classification(request)
-                params['messages'] = messages
+                params['messages'] = message
                 params['form'] = form
                 params['talk_id'] = talk_id
                 params['Exist_favorites'] = Exist_favorites
@@ -430,33 +431,45 @@ def talk_detail(request, talk_id):  # 既存トークフォーム
         if (not talk.exist_reply) & (talk.sending_user == request.user):
             return redirect("postapp:talk_all")
         else:
-            flag = False
+            # is_active = False #トーク可能時間外かどうか
+            is_active = is_talk_active(talk)
+
             newest_message = Message.objects.filter(talk_id=talk_id).latest("created_at")#.order_by('-created_at')[0]
             if newest_message.sending_user != request.user:
                 talk.detail_opened = True
                 talk.save()
             # トーク可能時間内かどうか判定し時間外なら事後公開情報画面へ推移
-            if not is_talk_active(talk):
+            if not is_active:
+                message = Message.objects.filter(talk_id=talk.id).all()
+                if message.count() == 2: #日付専用メッセージとコンテントで2. トーク時間外かつメッセージが2の時は直ちに削除
+                    talk.delete()
+                    messages.info(request,'このトークは終了しています')
+                    return redirect("postapp:talk_all")
                 Exist_favorites = favorite_check(request, talk)
-                sending_user = talk.sending_user
-                user_info = UserInfo.objects.get(user_id=sending_user)
-                messages = Message.objects.filter(talk_id=talk_id).all
-                flag = True
+
+                if request.user == talk.sending_user:
+                    talk_partner = talk.receiving_user
+                else:
+                    talk_partner = talk.sending_user
+
+                user_info = UserInfo.objects.get(user_id=talk_partner)
+                #message = Message.objects.filter(talk_id=talk_id).all
+                #is_active = True
 
                 #talk_allの内容を取得し、更にデータを格納している
                 params = my_talks_classification(request)
-                params['messages'] = messages
+                params['messages'] = message
                 params['talk_id'] = talk_id
                 params['Exist_favorites'] = Exist_favorites
-                params['flag'] = flag
+                params['off_hours'] = not is_active
                 params['user_info'] = user_info
-                params['sending_user'] = sending_user
+                params['sending_user'] = talk_partner
                 return render(request, 'postapp/talk_detail.html' ,params)
             else:
                 initial_dict = {
                     "sending_user": request.user, "talk": talk_id, }
                 form = MessageForm(initial=initial_dict)
-                messages = Message.objects.filter(talk_id=talk_id).all
+                message = Message.objects.filter(talk_id=talk_id).all
                 Exist_favorites = favorite_check(request, talk)
                 params = my_talks_classification(request)
 
@@ -474,15 +487,15 @@ def talk_detail(request, talk_id):  # 既存トークフォーム
                         user_info.count_first_reply += 1
                         user_info.save()
 
-                        params['user_info'] = user_info
+                        #params['user_info'] = user_info
                 
                 #talk_allの内容を取得し、更にデータを格納している
-                params['messages'] = messages
+                params['messages'] = message
                 params['talk_id'] = talk_id
                 params['Exist_favorites'] = Exist_favorites
-                params['flag'] = flag
+                params['off_hours'] = not is_active
                 params['form'] = form
-        return render(request, 'postapp/talk_detail.html', params)
+                return render(request, 'postapp/talk_detail.html', params)
 
 
 def talk_favorite_add(request, talk_id):  # お気に入り追加
