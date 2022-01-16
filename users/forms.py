@@ -95,6 +95,7 @@ class UserInfoUpdateForm(forms.ModelForm):
         fields = ('nationality', 'age', 'gender', 'gender_of_love',
                   'introduction', 'profile_image')
         widgets = {
+            'age': forms.NumberInput(attrs={'min': 1, 'max': 120, }),
             'gender': forms.NumberInput(attrs={'type': 'range', 'min': -1, 'max': 1, }),
             'gender_of_love': forms.NumberInput(attrs={'type': 'range', 'min': -1, 'max': 1, })
             # 'class': 'custom-range'
