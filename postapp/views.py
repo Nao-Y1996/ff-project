@@ -28,7 +28,7 @@ import sys
 from django_pandas.io import read_frame
 DAYS = 0
 HOURS = 0
-MINUTES = 3
+MINUTES = 2
 SEND_NUM_LIMIT = 10
 
  # -----------------------（アルゴリズム検証）---------------------------
