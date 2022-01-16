@@ -86,7 +86,7 @@
                 
                     {% for talk in unchecked_dead_talks %}
                     <div class="TalkList_inTalkDetail_frame_table">
-                        <div class="TalkList_inTalkDetail_unTalkList_inTalkDetail_read_lamp"></div>
+                        <div class="TalkList_inTalkDetail_read_lamp"></div>
                         <div class="TalkList_inTalkDetail_frame_outline0">
                             <div class="TalkList_inTalkDetail_frame_outline1">
                                 {% if talk.sending_user == user %}
@@ -138,13 +138,18 @@
                                     <tr>
                                         <td class="TalkList_inTalkDetail_td2">
                                             {% if talk.exist_reply == True %}
-                                            <!--返信があればいいねボタンを表示-->
                                                 {% favorite_check user talk as flag %}
                                                 {% if flag %}
-                                                <button class="TalkList_inTalkDetail_button_love">
-                                                    <a href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}"
-                                                        class="fas fa-heart"></a>
+                                                <button type="button" class="TalkList_inTalkDetail_button_love" id="btnGroupDrop1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="fas fa-heart"></i>
                                                 </button>
+                                                <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                                    <p>If you remove favorite,this talk will disappear.</p>
+                                                    <p>Do you remove favorite?</p>
+                                                    <div class="TalkList_inTalkDetail_table_remove_favorite_frame">
+                                                        <a class="TalkList_inTalkDetail_table_remove_favorite" href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}" >YES</a>
+                                                    </div>
+                                                </div>
                                                 {% else %}
                                                 <button class="TalkList_inTalkDetail_button_love2">
                                                     <a href="{% url 'postapp:talk_favorite_add' talk_id=talk.id %}"
@@ -162,7 +167,7 @@
 
                     {% for talk in unread_talks %}
                     <div class="TalkList_inTalkDetail_frame_table">
-                            <div class="TalkList_inTalkDetail_unTalkList_inTalkDetail_read_lamp"></div>
+                            <div class="TalkList_inTalkDetail_unread_lamp"></div>
                             <div class="TalkList_inTalkDetail_frame_outline0">
                                 <div class="TalkList_inTalkDetail_frame_outline1">
                                     {% if talk.sending_user == user %}
@@ -323,6 +328,7 @@
                         </div>
                     </div>
                     {% endfor %}
+
                 </div>
             {% else %}
                 <div class="talk_create_content_newpost">
@@ -334,7 +340,7 @@
                         {{ form.sending_user.as_hidden }}
                         {{ form.content }}
                         <p id="inputlength">Word count・・・ 0/500</p>
-                        <div class="control">
+                        <div class="talk_create_position_button">
                             <button type="submit" class="talk_create_button_newpost">
                                 Post a message
                             </button>
@@ -388,6 +394,7 @@
                                             <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
                                             <a class="dropdown-item" href="{% url 'users:report' talk_id=talk.id %}">report</a>
                                             </div>
+
                                         </div>
                                     </td>
                                 </tr>
@@ -402,8 +409,9 @@
                                             <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
                                                 <p>If you remove favorite,this talk will disappear.</p>
                                                 <p>Do you remove favorite?</p>
-                                                <div class="remove_favorite_frame">
-                                                    <a class="remove_favorite" href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}" >YES</a>
+                                                <div class="TalkList_inTalkDetail_table_remove_favorite_frame">
+                                                    <a class="TalkList_inTalkDetail_table_remove_favorite" href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}" >YES</a>
+
                                                 </div>
                                             </div>
                                             {% else %}

@@ -70,7 +70,7 @@
                 <div class="TalkList_inTalkDetail_table_frame_all">
                     {% for talk in unchecked_dead_talks %}
                     <div class="TalkList_inTalkDetail_frame_table">
-                        <div class="TalkList_inTalkDetail_unTalkList_inTalkDetail_read_lamp"></div>
+                        <div class="TalkList_inTalkDetail_read_lamp"></div>
                         <div class="TalkList_inTalkDetail_frame_outline0">
                             <div class="TalkList_inTalkDetail_frame_outline1">
                                 {% if talk.sending_user == user %}
@@ -152,7 +152,7 @@
     
                     {% for talk in unread_talks %}
                     <div class="TalkList_inTalkDetail_frame_table">
-                            <div class="TalkList_inTalkDetail_unTalkList_inTalkDetail_read_lamp"></div>
+                            <div class="TalkList_inTalkDetail_unread_lamp"></div>
                             <div class="TalkList_inTalkDetail_frame_outline0">
                                 <div class="TalkList_inTalkDetail_frame_outline1">
                                     {% if talk.sending_user == user %}
@@ -420,8 +420,32 @@
                             <div class="chat_frame_opendata">
                                 <div class="chat_text_heading">●Public information</div>
                                 <div class="chat_frame_userdata">
-                                    <div class="chat_item_name">Username:{{sending_user}}</div>
-                                    <div class="chat_item_age">Age:{{user_info.age}}years old</div>
+                                    <div class="chat_frame_info">
+                                        <div class="chat_item_name">Username:</div>
+                                        <div class="chat_info_name">{{sending_user}}</div>
+                                    </div>
+                                    <div class="chat_frame_info">
+                                        <div class="chat_item_age">Age:</div>
+                                        <div class="chat_info_age">{{user_info.age}}</div>
+                                    </div>
+                                    <div class="chat_frame_info">
+                                        <div class="chat_item_nationality">country:</div>
+                                        <div class="chat_info_nationality">{{user_info.country}}</div>
+                                    </div>
+                                    <div class="chat_frame_info_introduction">
+                                        <div class="chat_item_introduction">introduction:</div>
+                                        <div class="chat_info_introduction">
+                                            <div class="grad-wrap">
+                                                <input id="trigger1" class="grad-trigger" type="checkbox">
+                                                <div class="grad-item">{{user_info.introduction}}</div>
+                                                <div class="chat_positon_infobutton">
+                                                    <label class="grad-btn" for="trigger1">Click to read more</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
                                     <div class="chat_item_nationality">country:{{user_info.nationality}}</div>
                                     <div class="chat_item_introduction">introduction:{{user_info.introduction}}</div>
                                 </div>
