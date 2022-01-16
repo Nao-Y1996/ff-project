@@ -82,40 +82,30 @@
         </aside>
 
         <main>
-            <div class="signup_frame_all">
-                <div class="signup_text_content">Report</div>
-                <div class="signup_frame_tab">
-                    <div>
-                        <form method="POST">
-                            {% csrf_token %}
-                            <div class="report_text_reportedaccount">
-                                Reported username : {{ username }}
+            <div class="report_area_frame">
+                <div class="report_text_content">Report</div>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="report_area_whole">
+                        <div class="report_area_item">
+                            <div class="report_font_label">Target</div>
+                            <div class="report_area_form">{{ username }}</div>
+                        </div>
+                        <div class="report_area_item">
+                            <div class="report_font_label">Reason</div>
+                            <div class="report_area_form">{{ form.reason }}</div>
+                        </div>
+                        <div class="report_area_item">
+                            <div class="report_font_label">Content</div>
+                            <div class="report_area_form">
+                                {{ form.content }}
                             </div>
-                            <table>
-                                <tr>
-                                    <td>
-                                        <p>Reason</p>
-                                    </td>
-                                    <td class="signup_form_td_form">
-                                        {{ form.reason }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <p>Content</p>
-                                    </td>
-                                    <td class="signup_form_td_form">
-                                        {{ form.content }}
-                                    </td>
-                                </tr>
-                            </table>
-
-                            <div class="signup_frame_tab">
-                                <button class="button_button_next"　id="button_report" type="submit">report</button>
-                            </div>
-                        </form>
+                        </div>
+                        <div class="button_area_button">
+                            <button class="button_button_next"　id="button_report" type="submit">report</button>
+                        </div>
                     </div>
-                </div>
+                </form>
             </div>
         </main>
     </div>

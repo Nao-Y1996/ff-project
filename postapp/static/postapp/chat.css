@@ -86,7 +86,7 @@
 	justify-content: right;
 }
 
-/* .text1_detail {
+.text1_detail {
 	width: calc(100% - 50px);
 	height: 45px;
 	margin: 0.5rem 0;
@@ -95,7 +95,7 @@
     border-radius: 0.3rem;
 	border:1px solid black;
 	resize: none;
-} */
+}
 
 .chat_frame_send-button{
     border-radius:50%;
