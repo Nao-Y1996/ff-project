@@ -3,12 +3,12 @@ from django import forms
 
 class FileInputWithPreview(forms.ClearableFileInput):
     """プレビュー表示されるinput type=file"""
-    template_name = 'app/widgets/file_input_with_preview.html'
+    template_name = 'users/widgets/file_input_with_preview.html'
 
     class Media:
-        js = ['app/preview.js']
+        js = ['users/preview.js']
 
-    def __init__(self, attrs=None, include_preview=True):
+    def __init__(self, attrs=None, include_preview=False):
         super().__init__(attrs)
         if 'class' in self.attrs:
             self.attrs['class'] += ' preview-marker'

@@ -93,12 +93,12 @@ class EmailChangeForm(forms.ModelForm):
 class UserInfoUpdateForm(forms.ModelForm):
     class Meta:
         model = UserInfo
-        fields = ('nationality', 'age', 'gender', 'gender_of_love',
-                  'introduction', 'profile_image')
+        fields = '__all__'
+        #('nationality', 'age', 'gender', 'gender_of_love','introduction', 'profile_image',)
         widgets = {
             'gender': forms.NumberInput(attrs={'type': 'range', 'min': -1, 'max': 1, }),
             'gender_of_love': forms.NumberInput(attrs={'type': 'range', 'min': -1, 'max': 1, }),
-            'file': FileInputWithPreview,
+            'profile_image': FileInputWithPreview,
             # 'class': 'custom-range'
         }
 

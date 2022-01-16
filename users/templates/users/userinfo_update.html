@@ -65,6 +65,7 @@
             <form action="" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="all_profile">
+                    <img id="profile_image-preview">
                     <div class="Nationally_profile">
                         <div class="label">image</div>
                         <div class="input">
@@ -109,6 +110,7 @@
                         <button class="button_next" type="submit">Change</button>
                     </div>
                 </div>
+                {{ form.media }}
             </form>
         </main>
 

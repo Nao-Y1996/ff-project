@@ -48,7 +48,6 @@ INSTALLED_APPS = [
     'users',
     'django_cleanup.apps.CleanupConfig',
     "postapp",
-    'django.forms',
 ]
 
 MIDDLEWARE = [
