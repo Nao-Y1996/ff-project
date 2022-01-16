@@ -91,7 +91,7 @@ class CustomUser(AbstractBaseUser):
 
 
 def image_directory_path(instance, filename):
-    print('{}.{}'.format(str(uuid.uuid4()), filename.split('.')[-1]))
+    # print('{}.{}'.format(str(uuid.uuid4()), filename.split('.')[-1]))
     return '{}.{}'.format(str(uuid.uuid4()), filename.split('.')[-1])
 
 
@@ -106,7 +106,7 @@ class UserInfo(models.Model):
     gender_of_love = models.FloatField(validators=[validators.MinValueValidator(-1.0),
         validators.MaxValueValidator(1.0)], blank=True, null=True)
     introduction = models.TextField(blank=True,null=True)
-    profile_image = models.ImageField(upload_to=image_directory_path, blank=True, null=True, default='no_image.png')
+    profile_image = models.ImageField(upload_to=image_directory_path, blank=True, null=False, default='no_image.png')
     count_send_new_messages_in_a_day = models.IntegerField(default=0)
     priority_rank = models.IntegerField(default=7)
     capacity_new_msg = models.IntegerField(default=2)
@@ -118,6 +118,12 @@ class UserInfo(models.Model):
 
     def __str__(self):
         return str(self.user)
+    
+    def save(self, *args, **kwargs):
+        if self.profile_image == "":
+            self.profile_image = 'no_image.png'
+        super().save(*args, **kwargs)
+
 
 class ReportReasons(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
