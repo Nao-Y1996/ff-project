@@ -70,7 +70,7 @@
                 <div class="TalkList_inTalkDetail_table_frame_all">
                     {% for talk in unchecked_dead_talks %}
                     <div class="TalkList_inTalkDetail_frame_table">
-                        <div class="TalkList_inTalkDetail_unTalkList_inTalkDetail_read_lamp"></div>
+                        <div class="TalkList_inTalkDetail_read_lamp"></div>
                         <div class="TalkList_inTalkDetail_frame_outline0">
                             <div class="TalkList_inTalkDetail_frame_outline1">
                                 {% if talk.sending_user == user %}
@@ -152,7 +152,7 @@
     
                     {% for talk in unread_talks %}
                     <div class="TalkList_inTalkDetail_frame_table">
-                            <div class="TalkList_inTalkDetail_unTalkList_inTalkDetail_read_lamp"></div>
+                            <div class="TalkList_inTalkDetail_unread_lamp"></div>
                             <div class="TalkList_inTalkDetail_frame_outline0">
                                 <div class="TalkList_inTalkDetail_frame_outline1">
                                     {% if talk.sending_user == user %}
