@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import (BaseUserManager, AbstractBaseUser)
 from django.core.mail import send_mail
 from django.core import validators
-
 from phonenumber_field.modelfields import PhoneNumberField
 from django_countries.fields import CountryField
 
@@ -100,7 +99,7 @@ class UserInfo(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="user_info")
     nationality = CountryField(blank_label='(select country)',blank=False, null=True)
-    age = models.IntegerField(blank=True, null=True)
+    age = models.IntegerField(validators=[validators.MinValueValidator(1), validators.MaxValueValidator(120)],blank=True, null=True)
     # sex_choice = ((0, 'Female'),(1, 'male'),(2, 'other'))
     gender = models.FloatField(validators=[validators.MinValueValidator(-1.0),
         validators.MaxValueValidator(1.0)], blank=True, null=True)
