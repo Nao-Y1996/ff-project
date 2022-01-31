@@ -6,6 +6,7 @@ from django.contrib.auth.forms import (
 from django.contrib.auth import get_user_model
 # from .models import CustomUser
 from .models import UserInfo, Report, CustomUser
+from .widgets import FileInputWithPreview
 
 User = get_user_model()
 
@@ -92,12 +93,13 @@ class EmailChangeForm(forms.ModelForm):
 class UserInfoUpdateForm(forms.ModelForm):
     class Meta:
         model = UserInfo
-        fields = ('nationality', 'age', 'gender', 'gender_of_love',
-                  'introduction', 'profile_image')
+        fields = '__all__'
+        #('nationality', 'age', 'gender', 'gender_of_love','introduction', 'profile_image',)
         widgets = {
             'age': forms.NumberInput(attrs={'min': 1, 'max': 120, }),
             'gender': forms.NumberInput(attrs={'type': 'range', 'min': -1, 'max': 1, }),
-            'gender_of_love': forms.NumberInput(attrs={'type': 'range', 'min': -1, 'max': 1, })
+            'gender_of_love': forms.NumberInput(attrs={'type': 'range', 'min': -1, 'max': 1, }),
+            'profile_image': FileInputWithPreview,
             # 'class': 'custom-range'
         }
 
