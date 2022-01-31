@@ -1,13 +1,13 @@
 /* 全体の枠 */
 
-.detail_detail{
+.chat_frame_outline1{
     display:flex;
     flex-flow:column;
     background-color:white;
     width:100%;
     height:100%;
 }
-.all_detail {
+.chat_frame_outline2 {
 	padding:1em;
 	overflow:auto;
     display:flex;
@@ -17,7 +17,7 @@
 }
 /* 左のトークボックス */
 
-.list0_detail .you_message_detail p:before {  /* 左ふきだしの左三角を描画 */
+.chat_frame_outline3 .chat_frame_talk_partner p:before {  /* 左ふきだしの左三角を描画 */
 	content: '';
 	position:absolute;
 	top:0%;
@@ -25,7 +25,7 @@
 	border: 12px solid transparent;
 	border-right:12px solid lightgray;
 }
-.list0_detail .you_message_detail p { /* 左ふきだしの本体 */
+.chat_frame_outline3 .chat_frame_talk_partner p { /* 左ふきだしの本体 */
 	display:inline-block;
 	position:relative;
 	background-color:lightgray;
@@ -35,7 +35,7 @@
 }
 /* 右のトークボックス */
 
-.list1_detail .I_message_detail {
+.chat_frame_outline4 .chat_frame_talk_me {
 	float:right; /* 右のふきだしは全体的に右寄せ */
 	margin-top:1em;
 	max-width: 75%;
@@ -43,7 +43,7 @@
     align-items: center;
     justify-content: right;
 }
-.list1_detail .I_message_detail p:after { /* 右ふきだしの右三角を描画 */
+.chat_frame_outline4 .chat_frame_talk_me p:after { /* 右ふきだしの右三角を描画 */
 	content: '';
 	position:absolute;
 	top:0%;
@@ -51,7 +51,7 @@
 	border: 12px solid transparent;
 	border-left:12px solid orange;
 }
-.list1_detail .I_message_detail p { /* 右ふきだしの本体 */
+.chat_frame_outline4 .chat_frame_talk_me p { /* 右ふきだしの本体 */
 	display:inline-block;
 	position:relative;
 	background-color:orange;
@@ -61,7 +61,7 @@
 }
 
 
-.list2_detail{
+.chat_frame_form{
     display:flex;
     align-items: center;
 	vertical-align: middle;
@@ -73,14 +73,14 @@
 	padding:10px
 
 }
-.list0_detail{
+.chat_frame_outline3{
 	display:flex;
 	align-items:flex-start;
 	justify-content: left;
 	width: calc(100% - 55px);
 }
 
-.list1_detail{
+.chat_frame_outline4{
 	display:flex;
 	align-items:flex-start;
 	justify-content: right;
@@ -97,7 +97,7 @@
 	resize: none;
 }
 
-.button_go_detail{
+.chat_frame_send-button{
     border-radius:50%;
     width: 50px;
     height:50px;
@@ -106,11 +106,11 @@
     font-weight: bold;
 	border:1px solid black;
 }
-.button_go_detail:hover{
+.chat_frame_send-button:hover{
     background-color: orange;
 }
 
-.talks_message{
+.chat_text_talk{
 	color: black;
 	font-weight: normal;
 	font-size: 15px;
@@ -120,28 +120,28 @@
 }
 
 
-.talktime{
+.chart_text_talk-limit{
 	display:flex;
 	justify-content:center;
 	color:gray;
 	font-size: 11px;
 }
-.rounded-circle_detail{
+.chat_image_rounded{
 	width:45px;
 	height:45px;
 	object-fit:cover;
 	border-radius:50%
 }
-.I_message_detail{
+.chat_frame_talk_me{
 	display:flex;
 	align-items: flex-end;
 }
-.you_message_detail{
+.chat_frame_talk_partner{
 	display:flex;
 	align-items: flex-end;
 	padding-top: 15px;
 }
-.data_detail{
+.chat_form_data{
 	display:flex;
 	align-items: flex-end;
 	padding-top: 15px;
@@ -150,27 +150,63 @@
 	font-size: 12px;
 }
 
-.all_opendata{
+.chat_frame_opendata{
 	display:flex;
 	flex-flow: column;
 	justify-content: center;
 	border:outset;
 	margin:5px;
 } 
-.data_list{
+.chat_frame_userdata{
 	display:flex;
-	width:50%;
+	width:70%;
     justify-content: flex-start;
 	flex-flow: column;
 	margin: auto;
 }
-.name_data,.age_data,.country_data,.intro_data{
+
+.chat_frame_info{
+	width: 100%;
+	display:flex;
+	margin: 5px 0;
+	text-align: right;
+}
+.chat_frame_info_introduction{
+	width: 100%;
+	display:flex;
+	flex-flow: column;
+	justify-content: center;
+	
+}
+
+.chat_item_name,.chat_item_age,.chat_item_nationality,.chat_item_introduction{
+	font-weight: bold;
+	width: 100px;
+	color: orange;
+}
+
+.chat_info_name, .chat_info_age, .chat_info_nationality{
+	width: calc(100% - 100px);
+	text-align: center;
+}
+.chat_info_introduction{
+	width: 100%;
+	margin: 10px 0;
+	padding: 0 20px 0 20px; 
+	border: solid 1px lightgray;
+	;
+}
+.grad-btn{
+	color: orange;
 	font-weight: bold;
 }
-.button_list_detail{
+.chat_positon_infobutton{
+	text-align: center;
+}
+.chat_frame_button{
 	display:flex;
 }
-.button_favorite_data{
+.chat_button_opendata{
 	width: 100px;
 	height: 50px;
 	background-color: white;
@@ -189,7 +225,7 @@
     align-items: center;
 }
 
-.button_favorite_data:hover{
+.chat_button_opendata:hover{
 	font-weight: bold;
 	background-color: rgb(232, 232, 232);
 	outline: none;
@@ -199,16 +235,51 @@
 	text-decoration: none;
 	color: orange;
 }
-.opendata_first{
+.chat_text_heading{
 	display: flex;
     justify-content: center;
     align-items: center;
 	font-weight: bold;
 	font-size: 20px;
+	margin-bottom: 20px;
 }
-.opendata_end{
+.chat_text_caution{
 	display: flex;
     justify-content: center;
     align-items: center;
 	font-size:18px;
 }
+
+.grad-btn {
+	/*.grad-btnのCSSは表示/非表示の動作には関係ないので、ご自由にどうぞ*/
+  }
+  .grad-item {
+	position: relative;
+	overflow: hidden;
+	height: 150px; /*隠した状態の高さ*/
+	word-break: break-all;
+	white-space: pre-wrap;
+  }
+  .grad-item::before {
+	display: block;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	height: 40px; /*グラデーションで隠す高さ*/
+	background: -webkit-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,0.9) 50%, rgba(255,255,255,0.9) 50%, #fff 100%);
+	background: linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,0.9) 50%, rgba(255,255,255,0.9) 50%, #fff 100%);
+	content: "";
+  }
+  .grad-trigger {
+	display: none; /*チェックボックスは常に非表示*/
+  }
+  .grad-trigger:checked ~ .chat_positon_infobutton {
+	display: none; /*チェックされていたら、grad-btnを非表示にする*/
+  }
+  .grad-trigger:checked ~ .grad-item {
+	height: auto; /*チェックされていたら、高さを戻す*/
+  }
+  .grad-trigger:checked ~ .grad-item::before {
+	display: none; /*チェックされていたら、grad-itemのbeforeを非表示にする*/
+  }

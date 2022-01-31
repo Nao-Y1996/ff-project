@@ -27,34 +27,34 @@
     <!-- <header>FF project<br /></header> -->
     <div class="container flexbox-container">
         <aside>
-            <a href="{% url 'postapp:talk_all' %}" class="title">FF<br />project</a>
+            <a href="{% url 'postapp:talk_all' %}" class="menu_font_ProjectName">FF<br />project</a>
             <i class="fas fa-key fa-lg"></i>
             <!-- <div class="col-3"> -->
             <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                 <nav class="nav flex-column">
-                    <a href="{% url 'users:userinfo_edit' user.user_info.id %}" class="menu_button"
-                        id="v-pills-user-tab" role="tab" aria-controls="v-pills-user" aria-selected="false">
-                        <img class="prof_picture" src="{{user.user_info.profile_image.url}}" />
-                        <p class="button-title" id="username">{{user.username}}</p>
+                    <a href="{% url 'users:userinfo_edit' user.user_info.id %}" class="menu_unit_button"
+                        id="menu_shape_UserButton" role="tab" aria-controls="v-pills-user" aria-selected="false">
+                        <img class="menu_shape_ProfPicture" src="{{user.user_info.profile_image.url}}" />
+                        <p class="menu_font_MenuButton" id="_menu_font_username">{{user.username}}</p>
                     </a>
-                    <a href="{% url 'postapp:talk_all' %}" class="menu_button" id="v-pills-home-tab" role="tab"
+                    <a href="{% url 'postapp:talk_all' %}" class="menu_unit_button" id="v-pills-home-tab" role="tab"
                         aria-controls="v-pills-home" aria-selected="false">
                         <i class="fas fa-home fa-lg"></i>
-                        <p class="button-title">Home</p>
+                        <p class="menu_font_MenuButton">Home</p>
                     </a>
-                    <a href="{% url 'users:EmailPasswordView' %}" class="menu_button" id="v-pills-profile-tab" role="tab"
+                    <a href="{% url 'users:EmailPasswordView' %}" class="menu_unit_button" id="v-pills-profile-tab" role="tab"
                         aria-controls="v-pills-profile" aria-selected="false">
-                        <p class="button-title">Account</p>
+                        <p class="menu_font_MenuButton">Account</p>
                         <i class="fas fa-cog fa-lg"></i>
                     </a>
-                    <a href="{% url 'postapp:talk_create' %}" class="menu_button" class="nav-link"
-                        id="v-pills-messages-tab" role="tab" aria-controls="v-pills-messages" aria-selected="false">
-                        <p class="button-title">New post</p>
+                    <a href="{% url 'postapp:talk_create' %}" class="menu_unit_button" class="nav-link"
+                        id="menu_color_NewpostButton" role="tab" aria-controls="v-pills-messages" aria-selected="false">
+                        <p class="menu_font_MenuButton">New post</p>
                         <i class="fas fa-plus fa-lg"></i>
                     </a>
-                    <a href="{% url 'users:logout' %}" class="menu_button" class="nav-link" id="v-pills-settings-tab"
+                    <a href="{% url 'users:logout' %}" class="menu_unit_button" class="nav-link" id="v-pills-settings-tab"
                         role="tab" aria-controls="v-pills-settings" aria-selected="false">
-                        <p class="button-title">Logout</p>
+                        <p class="menu_font_MenuButton">Logout</p>
                         <i class="fas fa-sign-out-alt fa-lg"></i>
                     </a>
                 </nav>
@@ -65,17 +65,17 @@
         {% if user.is_authenticated %}
 
         <main>
-            <div class="all_sighup">
-                <div class="hello_signup">Account</div>
+            <div class="signup_frame_all">
+                <div class="signup_text_content">Account</div>
                 
 
                 
-                <div class="signup_tab">
+                <div class="signup_frame_tab">
                     <form action="" method="POST" name="form_change_question_text" id="form_change_question_text" class="newemaillist">
-                        <div class="email_newform">Email</div>
+                        <div class="signup_text_email">Email</div>
                         <table>
                             <tr>
-                                <td class="td_form">
+                                <td class="signup_form_td_form">
                                     <div>
                                         {% csrf_token %}
                                         {{form_set_1.management_form}}
@@ -87,9 +87,11 @@
                                         {% endfor %}
                                     </div>
                                 </td>
-                                <td class="td_button">
-                                    <div class="buttonlist">
-                                        <button type="submit" class="button_next" name="button_change_email"> Change </button>
+
+                                <td class="signup_form_td_button">
+                                    <div class="button_area_button">
+                                        <button type="submit" class="button_button_next" name="button_change_email"> Change </button>
+
                                     </div>
                                 </td>
                             </tr>
@@ -97,10 +99,10 @@
                     </form>
             
                     <form action="" method="POST" name="form_change_choice_text" id="form_change_choice_text" class="newpasslist">
-                        <div class="password_newform">Password</div>
+                        <div class="signup_text_password">Password</div>
                         <table>
                             <tr>
-                                <td class="td_form">
+                                <td class="signup_form_td_form">
                                     {% csrf_token %}
                                     {{form_set_2.management_form}}
                                     {{ form_set_2.non_field_errors }}
@@ -110,16 +112,18 @@
                                     {% endfor %}
                                     {% endfor %}
                                 </td>
-                                <td class="td_button">
-                                    <div class="buttonlist">
-                                        <button type="submit" class="button_next" name="button_change_password"> Change </button>
+
+                                <td class="signup_form_td_button">
+                                    <div class="button_area_button">
+                                        <button type="submit" class="button_button_next" name="button_change_password"> Change </button>
+
                                     </div>
                                 </td>
                             </tr>
                         </table>
                     </form>
-                    <div class="buttonlist">
-                            <a class="Withdrawal_button" href="{% url 'users:withdrawal' %}">
+                    <div class="button_area_button">
+                            <a class="button_button_withdrawal" href="{% url 'users:withdrawal' %}">
                                 <p>Withdrawal</p>
                             </a>
                     </div>

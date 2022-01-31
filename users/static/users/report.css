@@ -1,9 +1,47 @@
-.reoprt_frame{
+.report_area_frame {
     display: flex;
+    align-items: center;
     flex-flow: column;
+    padding: 20px;
+    margin: auto;
+    /* border: solid 3px #333; */
+}
+.report_text_content {
+    font-weight: bold;
+    font-size: 40px;
+    padding: 10px;
+    color: orange;
 }
 
-.Reported_username{
-    margin: 30px 0px;
+.report_area_whole{
+	width:100%;
+	display:flex;
+	align-items: left;
+    justify-content: center;
+	flex-flow: column;
+	margin: 30px auto;
+	/* border: solid 3px #333; */
 }
 
+.report_area_item{
+	font-weight: bold;
+	font-size:20px;
+	display:flex;
+	margin-bottom: 20px;
+}
+
+.report_font_label{
+	width: 180px;
+	text-align: right;
+  padding-right: 30px;
+  color: orange;
+}
+
+.report_area_form{
+  width: 100%;
+  font-size:17px;
+  resize: none;
+}
+#id_content{
+    resize:none;
+}

@@ -1,31 +1,31 @@
-<div class="title">FF<br />project</div>
+<div class="menu_font_ProjectName">FF<br />project</div>
 <i class="fas fa-key fa-lg"></i>
 <!-- <div class="col-3"> -->
 <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
     <nav class="nav flex-column">
-        <a href="{% url 'users:userinfo_edit' user.user_info.id %}" class="menu_button"
-            id="v-pills-user-tab" role="tab" aria-controls="v-pills-user" aria-selected="false">
-            <img class="prof_picture" src="{{user.user_info.profile_image.url}}" />
-            <p class="button-title">{{user.username}}</p>
+        <a href="{% url 'users:userinfo_edit' user.user_info.id %}" class="menu_unit_button"
+            id="menu_shape_UserButton" role="tab" aria-controls="v-pills-user" aria-selected="false">
+            <img class="menu_shape_ProfPicture" src="{{user.user_info.profile_image.url}}" />
+            <p class="menu_font_MenuButton">{{user.username}}</p>
         </a>
-        <a href="{% url 'postapp:talk_all' %}" class="menu_button" id="v-pills-home-tab" role="tab"
+        <a href="{% url 'postapp:talk_all' %}" class="menu_unit_button" id="v-pills-home-tab" role="tab"
             aria-controls="v-pills-home" aria-selected="false">
             <i class="fas fa-home fa-lg"></i>
-            <p class="button-title">Home</p>
+            <p class="menu_font_MenuButton">Home</p>
         </a>
-        <a href="{% url 'users:profile' %}" class="menu_button" id="v-pills-profile-tab" role="tab"
+        <a href="{% url 'users:profile' %}" class="menu_unit_button" id="v-pills-profile-tab" role="tab"
             aria-controls="v-pills-profile" aria-selected="false">
-            <p class="button-title">Account</p>
+            <p class="menu_font_MenuButton">Account</p>
             <i class="fas fa-cog fa-lg"></i>
         </a>
-        <a href="{% url 'postapp:talk_create' %}" class="menu_button" class="nav-link"
-            id="v-pills-messages-tab" role="tab" aria-controls="v-pills-messages" aria-selected="false">
-            <p class="button-title">New post</p>
+        <a href="{% url 'postapp:talk_create' %}" class="menu_unit_button" class="nav-link"
+            id="menu_color_NewpostButton" role="tab" aria-controls="v-pills-messages" aria-selected="false">
+            <p class="menu_font_MenuButton">New post</p>
             <i class="fas fa-plus fa-lg"></i>
         </a>
-        <a href="{% url 'users:logout' %}" class="menu_button" class="nav-link" id="v-pills-settings-tab"
+        <a href="{% url 'users:logout' %}" class="menu_unit_button" class="nav-link" id="v-pills-settings-tab"
             role="tab" aria-controls="v-pills-settings" aria-selected="false">
-            <p class="button-title">Logout</p>
+            <p class="menu_font_MenuButton">Logout</p>
             <i class="fas fa-sign-out-alt fa-lg"></i>
         </a>
     </nav>

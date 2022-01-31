@@ -7,7 +7,7 @@
     <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet" />
     <link rel="stylesheet" href="{% static 'postapp/frame.css'%}" />
     <link rel="stylesheet" href="{% static 'postapp/menu.css'%}" />
-    <link rel="stylesheet" href="{% static 'postapp/newpost2.css'%}" />
+    <link rel="stylesheet" href="{% static 'postapp/talk_create.css'%}" />
     <!-- Required meta tags -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -21,34 +21,34 @@
     <!-- <header>FF project<br /></header> -->
     <div class="container flexbox-container">
         <aside>
-            <a href="{% url 'postapp:talk_all' %}" class="title">FF<br />project</a>
+            <a href="{% url 'postapp:talk_all' %}" class="menu_font_ProjectName">FF<br />project</a>
             <i class="fas fa-key fa-lg"></i>
             <!-- <div class="col-3"> -->
             <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                 <nav class="nav flex-column">
-                    <a href="{% url 'users:userinfo_edit' user.user_info.id %}" class="menu_button"
-                        id="v-pills-user-tab" role="tab" aria-controls="v-pills-user" aria-selected="false">
-                        <img class="prof_picture" src="{{user.user_info.profile_image.url}}" />
-                        <p class="button-title" id="username">{{user.username}}</p>
+                    <a href="{% url 'users:userinfo_edit' user.user_info.id %}" class="menu_unit_button"
+                        id="menu_shape_UserButton" role="tab" aria-controls="v-pills-user" aria-selected="false">
+                        <img class="menu_shape_ProfPicture" src="{{user.user_info.profile_image.url}}" />
+                        <p class="menu_font_MenuButton" id="_menu_font_username">{{user.username}}</p>
                     </a>
-                    <a href="{% url 'postapp:talk_all' %}" class="menu_button" id="v-pills-home-tab" role="tab"
+                    <a href="{% url 'postapp:talk_all' %}" class="menu_unit_button" id="v-pills-home-tab" role="tab"
                         aria-controls="v-pills-home" aria-selected="false">
                         <i class="fas fa-home fa-lg"></i>
-                        <p class="button-title">Home</p>
+                        <p class="menu_font_MenuButton">Home</p>
                     </a>
-                    <a href="{% url 'users:EmailPasswordView' %}" class="menu_button" id="v-pills-profile-tab" role="tab"
+                    <a href="{% url 'users:EmailPasswordView' %}" class="menu_unit_button" id="v-pills-profile-tab" role="tab"
                         aria-controls="v-pills-profile" aria-selected="false">
-                        <p class="button-title">Account</p>
+                        <p class="menu_font_MenuButton">Account</p>
                         <i class="fas fa-cog fa-lg"></i>
                     </a>
-                    <a href="{% url 'postapp:talk_create' %}" class="menu_button" class="nav-link"
-                        id="v-pills-messages-tab" role="tab" aria-controls="v-pills-messages" aria-selected="false">
-                        <p class="button-title">New post</p>
+                    <a href="{% url 'postapp:talk_create' %}" class="menu_unit_button" class="nav-link"
+                        id="menu_color_NewpostButton" role="tab" aria-controls="v-pills-messages" aria-selected="false">
+                        <p class="menu_font_MenuButton">New post</p>
                         <i class="fas fa-plus fa-lg"></i>
                     </a>
-                    <a href="{% url 'users:logout' %}" class="menu_button" class="nav-link" id="v-pills-settings-tab"
+                    <a href="{% url 'users:logout' %}" class="menu_unit_button" class="nav-link" id="v-pills-settings-tab"
                         role="tab" aria-controls="v-pills-settings" aria-selected="false">
-                        <p class="button-title">Logout</p>
+                        <p class="menu_font_MenuButton">Logout</p>
                         <i class="fas fa-sign-out-alt fa-lg"></i>
                     </a>
                 </nav>
@@ -56,17 +56,22 @@
             <!-- </div> -->
         </aside>
         <main>
-            <div class="content_newpost">
+            <div class="talk_create_content_newpost">
                 <h1>New posts</h1>
-                <p class="posts_title">Would you like to send a message?</p>
+                <p class="talk_create_post_title">Would you like to send a message?</p>
 
                 <form method="POST" wrap="soft">
                     {% csrf_token %}
                     {{ form.id.as_hidden }}
                     {{ form.sending_user.as_hidden }}
                     {{ form.content }}
+
+                    <div class="talk_create_position_button">
+
+                    <p id="inputlength">Word count・・・ 0/500</p>
                     <div class="control">
-                        <button type="submit" class="newpost_button">
+
+                        <button type="submit" class="talk_create_button_newpost">
                             Post a message
                         </button>
                     </div>
@@ -88,3 +93,15 @@
         crossorigin="anonymous"></script>
     </div>
 </body>
+
+<script>
+
+    function ShowLength( str ) {
+        if (str.length < 500) {
+            document.getElementById("inputlength").innerHTML = "Word count・・・ " + str.length + "/500";
+        }else{
+            document.getElementById("inputlength").innerHTML = "Word count・・・ " + str.length + "/500   I can not enter any more";
+        }
+     }
+
+</script>

@@ -23,7 +23,7 @@
 	<title>ff_project</title>
 </head>
 
-<body>
+<body class="top_body">
 
 	{% if messages %}
 	<ul class="messages_ul">
@@ -35,34 +35,30 @@
 
 	<!-- <header>FF project<br /></header> -->
 	<div class="container flexbox-container">
-		<aside>
-			<div class="title">FF<br />project</div>
-			<br />
-			<!-- <div class="col-3"> -->
-			<div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-				<nav class="nav flex-column">
-					<a href="{% url 'users:user_create' %}" type="button" class="menu_button" id="v-pills-signin-tab"
-						role="tab" aria-controls="v-pills-user" aria-selected="false">
-						<i class="fas fa-user-plus fa-lg"></i>
-						<p class="button-title">Signup</p>
-					</a>
-					<a href="{% url 'users:login' %}" type="button" class="menu_button" id="v-pills-login-tab"
-						role="tab" aria-controls="v-pills-home" aria-selected="false">
-						<i class="fas fa-sign-in-alt fa-lg"></i>
-						<p class="button-title">Signin</p>
-					</a>
-				</nav>
+		<div class="top_main_frame">
+			<div class="top_title_earth"></div>
+			<div class="top_title_text1">Talk to people around the world as equals. </div>
+		</div>
+		<div class="top_aside_frame">
+			<div class="top_aside_outline">
+				<div class="top_font_ProjectName">FF <br />project</div>
+				<br />
+				<!-- <div class="col-3"> -->
+				<div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+					<nav class="nav flex-column">
+						<a href="{% url 'users:user_create' %}" type="button" class="top_unit_button" id="top_color_SigninButton"
+							role="tab" aria-controls="v-pills-user" aria-selected="false">
+							<p class="top_font_MenuButton">Signup</p>
+						</a>
+						<a href="{% url 'users:login' %}" type="button" class="top_unit_button" id="top_color_LoginButton"
+							role="tab" aria-controls="v-pills-home" aria-selected="false">
+							<p class="top_font_MenuButton">Signin</p>
+						</a>
+					</nav>
+				</div>
 			</div>
 			<!-- </div> -->
-		</aside>
-
-		<main>
-			<p class="top_title">FF project</p>
-			<h1>What's FFproject?</h1>
-			<h2>
-				FFproject is a social media to talk with people around the world.
-			</h2>
-		</main>
+		</div>
 
 		<!-- Optional JavaScript -->
 		<!-- jQuery first, then Popper.js, then Bootstrap JS -->

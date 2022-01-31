@@ -1,4 +1,4 @@
-.all{
+.TalkList_inTalkDetail_table_frame_all{
     width:calc(100%-20px);
     height:100vh;
     display:flex;
@@ -7,14 +7,14 @@
     border-top: solid 1px lightgray;
 }
 
-.frame_table{
+.TalkList_inTalkDetail_frame_table{
     display: flex;
     width: 100%;
     height: 90px;
     border-bottom: solid 1px lightgray;
 }
 
-.list0{
+.TalkList_inTalkDetail_frame_outline0{
     background-color: #FFF;
     display: flex;
     width: calc(100% - 20px);
@@ -22,19 +22,19 @@
     
 }
 
-.unread_lamp{
+.TalkList_inTalkDetail_unread_lamp{
     background-color: orange;
     width:20px;
     height:100%;
 }
 
-.read_lamp{
+.TalkList_inTalkDetail_read_lamp{
     background-color:transparent;
     width:20px;
     height:100%;
 }
 
-.list1{
+.TalkList_inTalkDetail_frame_outline1{
     display:flex;
     flex-flow: column;
     align-items: center;
@@ -42,7 +42,7 @@
     width:100px;
     height:100%;
 }
-.list2{
+.TalkList_inTalkDetail_frame_outline2{
     display:flex;
     flex-flow: column;
     width: calc(100% - 145px);
@@ -50,7 +50,7 @@
     justify-content: left;
     height: 100%;
 }
-.list3{
+.TalkList_inTalkDetail_frame_outline3{
     display:flex;
     align-items: right;
     justify-content: right;
@@ -59,7 +59,7 @@
     
 }
 
-.list_name{
+.TalkList_inTalkDetail_list_name{
     font-size:15px;
     font-weight: bold;
     text-align: center;
@@ -72,34 +72,34 @@
     padding-right:10px;
 }
 
-.span_time{
+.TalkList_inTalkDetail_span_time{
     font-size:12px;
     color: gray;
     line-height: 100%;
 }
 
-.button_love{
+.TalkList_inTalkDetail_button_love{
     background-color: transparent;
     font-size: 20px;
     font-weight: bold;
     border:none;
     text-align: center;
 }
-.button_love:hover{
+.TalkList_inTalkDetail_button_love:hover{
     -webkit-transform: scale(1.1,1.1);
 	-moz-transform: scale(1.15,1.15);
 	-o-transform: scale(1.15,1.15);
 	-ms-transform: scale(1.15,1.15);
 	transform: scale(1.15,1.15);
 }
-.button_love2{
+.TalkList_inTalkDetail_button_love2{
     background-color: transparent;
     font-size: 20px;
     font-weight: bold;
     border:none;
     text-align: center;
 }
-.button_love2:hover{
+.TalkList_inTalkDetail_button_love2:hover{
     -webkit-transform: scale(1.1,1.1);
 	-moz-transform: scale(1.15,1.15);
 	-o-transform: scale(1.15,1.15);
@@ -107,7 +107,7 @@
     transform: scale(1.15,1.15);
 }
 
-.overflow{
+.TalkList_inTalkDetail_overflow{
     width:100%;
     height: 50%;
     vertical-align: middle;
@@ -117,7 +117,7 @@
     padding-top: 20px;
 }
 
-.table_lefttime{
+.TalkList_inTalkDetail_table_lefttime{
     width:100%;
     height: 50%;
     vertical-align: bottom;
@@ -126,24 +126,24 @@
     text-align: right;
 }
 
-.overflow > a{
+.TalkList_inTalkDetail_overflow > a{
     text-decoration: none;
 }
 
 
-.button_love > .fas.fa-heart{
+.TalkList_inTalkDetail_button_love > .fas.fa-heart{
     text-decoration: none;
     color: red;
 }
 
-.button_love2 > .fas.fa-heart{
+.TalkList_inTalkDetail_button_love2 > .fas.fa-heart{
     text-decoration: none;
     color: gray;
 }
 
 
 
-.td2{
+.TalkList_inTalkDetail_td2{
     width: 45px;
     height: 45px;
     display: table-cell;
@@ -152,7 +152,7 @@
 }
 
 
-.time{
+.TalkList_inTalkDetail_time{
     margin: 0;
 }
 
@@ -160,14 +160,14 @@ p{
     margin: 0;
 }
 
-img.you_image{
+img.TalkList_inTalkDetail_you_image{
 	width: 45px;
 	height: 45px;
 	object-fit: cover;
 	border-radius: 50%;
 }
 
-.table_menu{
+.TalkList_inTalkDetail_table_menu{
     background-color: transparent;
     font-size: 20px;
     font-weight: bold;
@@ -177,12 +177,12 @@ img.you_image{
     height: 40px;
 }
 
-.table_menu:hover{
+.TalkList_inTalkDetail_table_menu:hover{
     background-color: rgb(232, 232, 232);
     border-radius: 50%;
 }
 
-.table_menu:focus{
+.TalkList_inTalkDetail_table_menu:focus{
     outline: 0;
 }
 
@@ -191,7 +191,7 @@ img.you_image{
     color: gray;
 }
 
-.remove_favorite{
+.TalkList_inTalkDetail_table_remove_favorite{
     display: inline-block;
     width: 100px;
     height: 40px;
@@ -205,7 +205,7 @@ img.you_image{
     text-align: center;
 }
 
-.remove_favorite:hover{
+.TalkList_inTalkDetail_table_remove_favorite:hover{
     font-size: 20px;
     font-weight: bold;
     background-color: rgb(232, 232, 232);
@@ -216,7 +216,7 @@ img.you_image{
     color: #000000;
 }
 
-.remove_favorite_frame{
+.TalkList_inTalkDetail_table_remove_favorite_frame{
     width: 100%;
     text-align: center;
 }

@@ -15,7 +15,7 @@ class LoginForm(AuthenticationForm):
     def __init__(self, *args, **kargs):
         super().__init__(*args, **kargs)
         for field in self.fields.values():
-            field.widget.attrs['class'] = 'input'
+            field.widget.attrs['class'] = 'login_shape_form'
             field.widget.attrs['placeholder'] = field.label
 
     class Meta:
@@ -33,7 +33,7 @@ class UserCreateForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
-            field.widget.attrs['class'] = 'form-control'
+            field.widget.attrs['class'] = 'UserCreate_shape_form'
 
     def clean_email(self):
         email = self.cleaned_data['email']
@@ -51,7 +51,7 @@ class MyPasswordChangeForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
-            field.widget.attrs['class'] = 'input_newform'
+            field.widget.attrs['class'] = 'signup_input_newform'
 
 
 class MyPasswordResetForm(PasswordResetForm):
@@ -82,7 +82,7 @@ class EmailChangeForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
-            field.widget.attrs['class'] = 'input_newform'
+            field.widget.attrs['class'] = 'signup_input_newform'
 
     def clean_email(self):
         email = self.cleaned_data['email']
@@ -96,6 +96,7 @@ class UserInfoUpdateForm(forms.ModelForm):
         fields = '__all__'
         #('nationality', 'age', 'gender', 'gender_of_love','introduction', 'profile_image',)
         widgets = {
+            'age': forms.NumberInput(attrs={'min': 1, 'max': 120, }),
             'gender': forms.NumberInput(attrs={'type': 'range', 'min': -1, 'max': 1, }),
             'gender_of_love': forms.NumberInput(attrs={'type': 'range', 'min': -1, 'max': 1, }),
             'profile_image': FileInputWithPreview,

@@ -229,7 +229,7 @@ def Login(request):
             print(f'---------------userid = {user.id}ログイン成功 = {user.username} -----------------')
             # -----------------------（アルゴリズム検証）---------------------------
              """
-            return redirect('users:profile')
+            return redirect('postapp:talk_all')
         else:
             # form = LoginForm(initial={"username":email, 'password':password}) # htmlで　form.errosでエラーが出なくなってしまう
             form = LoginForm(request, request.POST)
