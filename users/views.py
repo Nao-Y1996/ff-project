@@ -103,12 +103,10 @@ def report(request,talk_id):
     
     talk = Talks.objects.get(id=talk_id)
 
-    if talk.sending_user_id == request.user.id:
-        user_reported = talk.receiving_user_id
-        username = CustomUser.objects.get(id=talk.receiving_user_id)
+    if talk.sending_user == request.user:
+        user_reported = talk.receiving_user
     else:
-        user_reported = talk.sending_user_id
-        username = CustomUser.objects.get(id=talk.sending_user_id)
+        user_reported = talk.sending_user
 
     if request.method == 'POST':
         form = ReportForm(request.POST)
@@ -116,9 +114,8 @@ def report(request,talk_id):
             # 送信内容を1個ずつ取り出してReportを新規作成する（ModelFormを使う意味ない..もっと良い方法がありそう）
             post = request.POST
             reason = ReportReasons.objects.get(id=post['reason'])
-            #user_reported = CustomUser.objects.get(id=post['user_reported'])
-            user_reporting = request.user
             content = post['content']
+            user_reporting = request.user
             report = Report(reason=reason, user_reported=user_reported,
                             user_reporting=user_reporting, content=content)
             report.save()
@@ -127,7 +124,7 @@ def report(request,talk_id):
             return render(request, 'users/report.html', {'form': form})
     else:
         form = ReportForm()
-        return render(request, 'users/report.html', {'form': form ,'username':username})
+        return render(request, 'users/report.html', {'form': form ,'report_target_user':user_reported})
 
 
 def Login(request):
