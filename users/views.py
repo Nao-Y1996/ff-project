@@ -67,25 +67,25 @@ def Top(request):
             form = UserInfoUpdateForm(instance=user_info)
             return redirect('users:userinfo_edit', info_id=user_info.id)
         else:
-            return redirect('users:profile')
+            return redirect('postapp:talk_all')
     else:
         return render(request, 'users/top.html')
 
 
-@login_required
-def profile(request):
-    user_info = request.user.user_info
-    # 国が登録されていない時は登録ページに飛ぶ
-    if user_info.nationality == None:
-        form = UserInfoUpdateForm(instance=user_info)
-        return redirect('users:userinfo_edit', info_id=user_info.id)
-    else:
-        exist_profile_image = bool(user_info.profile_image)
-        if exist_profile_image:
-            profile_image = str(user_info.profile_image)
-        else:
-            profile_image = 'no_image.png'
-    return render(request, 'users/profile.html', {'profile_image': profile_image})
+# @login_required
+# def profile(request):
+#     user_info = request.user.user_info
+#     # 国が登録されていない時は登録ページに飛ぶ
+#     if user_info.nationality == None:
+#         form = UserInfoUpdateForm(instance=user_info)
+#         return redirect('users:userinfo_edit', info_id=user_info.id)
+#     else:
+#         exist_profile_image = bool(user_info.profile_image)
+#         if exist_profile_image:
+#             profile_image = str(user_info.profile_image)
+#         else:
+#             profile_image = 'no_image.png'
+#     return render(request, 'users/profile.html', {'profile_image': profile_image})
     # if request.method == 'POST':
     #     if form.is_valid():
     #         form = ReportForm(request.POST)
@@ -122,7 +122,7 @@ def report(request,talk_id):
             report = Report(reason=reason, user_reported=user_reported,
                             user_reporting=user_reporting, content=content)
             report.save()
-            return redirect('users:profile')
+            return redirect('postapp:talk_all')
         else:
             return render(request, 'users/report.html', {'form': form})
     else:
@@ -416,7 +416,7 @@ class UserCreateComplete(generic.TemplateView):
 def EditUserInfo(request, info_id):
     user_info = UserInfo.objects.get(id=info_id)
     if user_info.user != request.user:
-        return redirect('users:profile')
+        return redirect('postapp:talk_all')
     if request.method == 'POST':
         # return reverse('users:profile', kwargs={'pk': request.user.id})
         messages.success(request, 'Successfully Update')
@@ -553,103 +553,7 @@ def withdrawal(request):
         return render(request, 'users/withdrawal.html')
 
 
-def EmailPasswordView(request):
+def AccountView(request):
      
-    template_name = 'users/profile.html'
- 
-    # フォームセット定義
-    MyFormSet_1= modelformset_factory(
-        model=CustomUser,
-        form=EmailChangeForm,
-        extra=1, # セットの表示数 defaultは1
-        max_num=1 # 最大表示数 defaultは1
-    )
-    MyFormSet_2= modelformset_factory(
-        model=CustomUser,
-        # fields='__all__',
-        form=MyPasswordChangeForm,
-        extra=2, # セットの表示数 defaultは1
-        max_num=2 # 最大表示数 defaultは1
-    )
- 
-    if request.method == 'GET' :
 
-        # フォームの初期値を指定する場合
-        """ form_1_initial = [{
-            'field_1' : 'initial_value_1',
-            'field_2' : 'initial_value_2',
-        }]
-        form_2_initial = [{
-            'field_1' : 'initial_value_1',
-            'field_2' : 'initial_value_2',
-        }] """
-        # フォームセットのオブジェクト生成
-        form_set_1 = MyFormSet_1(
-            #initial=form_1_initial,
-            # 新規作成フォームのみ表示(既存レコードは表示しない)
-            queryset=CustomUser.objects.none()
-        )
-        form_set_2 = MyFormSet_2(
-            #initial=form_2_initial,
-            queryset=CustomUser.objects.none()
-        )
-
-    else : # POST
-        
-        print("POSTに入ったああああああああ")
-        # POSTされたデータをコピー（直接編集しようとすると怒られる）
-        post_form_set_1 = request.POST.copy()
-        post_form_set_2 = request.POST.copy()
- 
-        # 'form-TOTAL_FORMS'をもともとのextraの値に上書き
-        post_form_set_1['form-TOTAL_FORMS'] = 1
-        post_form_set_2['form-TOTAL_FORMS'] = 1
- 
-        # 改めてオブジェクト生成
-        form_set_1 = MyFormSet_1(post_form_set_1 )
-        form_set_2 = MyFormSet_2(post_form_set_2 )
-
-        if 'button_change_email' in request.POST:
- 
-            if form_set_1.is_valid():
-
-                user = request.user
-                new_email = request.POST["form-0-email"]
-
-                # URLの送付
-                current_site = get_current_site(request)
-                domain = current_site.domain
-                context = {
-                    'protocol': 'https' if request.is_secure() else 'http',
-                    'domain': domain,
-                    'token': dumps(new_email),
-                    'user': user,
-                }
-
-                subject = render_to_string(
-                    'users/mail_template/email_change/subject.txt', context)
-                message = render_to_string(
-                    'users/mail_template/email_change/message.txt', context)
-                send_mail(subject, message, None, [new_email])
-
-                #return redirect('users:email_change_done')
-                
-                messages.info(request, f'確認メールを送信しました。確認してください')
-                return redirect('postapp:talk_all')
-
-        if 'button_change_password' in request.POST:        
-            
-            if  form_set_2.is_valid():
-
-                request.user.set_password(request.POST["form-0-password"])
-                request.user.save()
-
-                messages.info(request, f'パスワードを変更しました。')
-                return redirect('users:login')
- 
-    # レンダリング
-    context = {
-        'form_set_1': form_set_1,
-        'form_set_2': form_set_2,
-    }
-    return render(request, 'users/profile.html', context)
+    return render(request, 'users/account.html')

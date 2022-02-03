@@ -41,12 +41,8 @@ class UserCreateForm(UserCreationForm):
         return email
 
 
-class MyPasswordChangeForm(forms.ModelForm):
+class MyPasswordChangeForm(PasswordChangeForm):
     """パスワード変更フォーム"""
-
-    class Meta:
-        model = User
-        fields = ('password',)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
