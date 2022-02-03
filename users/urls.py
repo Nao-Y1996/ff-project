@@ -9,7 +9,7 @@ urlpatterns = [
     path('', views.Top, name='top'),
 
     #メールアドレスとパスワードの変更
-    path('account', views.AccountView, name='AccountView'),
+    path('account', views.AccountView, name='account'),
 
     # path('profile', views.profile, name='profile'),
     # path('login', views.Login.as_view(), name='login'),
