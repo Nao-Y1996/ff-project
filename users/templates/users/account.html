@@ -42,7 +42,7 @@
                         <i class="fas fa-home fa-lg"></i>
                         <p class="menu_font_MenuButton">Home</p>
                     </a>
-                    <a href="{% url 'users:EmailPasswordView' %}" class="menu_unit_button" id="v-pills-profile-tab" role="tab"
+                    <a href="{% url 'users:account' %}" class="menu_unit_button" id="v-pills-profile-tab" role="tab"
                         aria-controls="v-pills-profile" aria-selected="false">
                         <p class="menu_font_MenuButton">Account</p>
                         <i class="fas fa-cog fa-lg"></i>
@@ -71,57 +71,14 @@
 
                 
                 <div class="signup_frame_tab">
-                    <form action="" method="POST" name="form_change_question_text" id="form_change_question_text" class="newemaillist">
-                        <div class="signup_text_email">Email</div>
-                        <table>
-                            <tr>
-                                <td class="signup_form_td_form">
-                                    <div>
-                                        {% csrf_token %}
-                                        {{form_set_1.management_form}}
-                                        {{ form_set_1.non_field_errors }}
-                                        {% for form in form_set_1 %}
-                                        {% for field in form %}
-                                        {{ field }}
-                                        {% endfor %}
-                                        {% endfor %}
-                                    </div>
-                                </td>
-
-                                <td class="signup_form_td_button">
-                                    <div class="button_area_button">
-                                        <button type="submit" class="button_button_next" name="button_change_email"> Change </button>
-
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </form>
-            
-                    <form action="" method="POST" name="form_change_choice_text" id="form_change_choice_text" class="newpasslist">
-                        <div class="signup_text_password">Password</div>
-                        <table>
-                            <tr>
-                                <td class="signup_form_td_form">
-                                    {% csrf_token %}
-                                    {{form_set_2.management_form}}
-                                    {{ form_set_2.non_field_errors }}
-                                    {% for form in form_set_2 %}
-                                    {% for field in form %}
-                                    {{ field }}
-                                    {% endfor %}
-                                    {% endfor %}
-                                </td>
-
-                                <td class="signup_form_td_button">
-                                    <div class="button_area_button">
-                                        <button type="submit" class="button_button_next" name="button_change_password"> Change </button>
-
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </form>
+                    <div class="signup_text_email">Email</div>
+                        <div class="button_area_button">
+                            <a href="{% url 'users:email_change' %}" type="button" class="button_button_next" name="button_change_email"> Change </a>
+                        </div>
+                    <div class="signup_text_password">Password</div>
+                        <div class="button_area_button">
+                            <a href="{% url 'users:password_change' %}" type="button" class="button_button_next" name="button_change_password"> Change </a>
+                        </div>
                     <div class="button_area_button">
                             <a class="button_button_withdrawal" href="{% url 'users:withdrawal' %}">
                                 <p>Withdrawal</p>
