@@ -88,18 +88,10 @@
                     <div class="TalkList_inTalkDetail_read_lamp"></div>
                     <div class="TalkList_inTalkDetail_frame_outline0">
                         <div class="TalkList_inTalkDetail_frame_outline1">
-                            {% if talk.sending_user == user %}
-                                {% get_user talk.receiving_user_id as talk_partner %}
-                            {% else %}
-                                {% get_user talk.sending_user_id as talk_partner %}
-                            {% endif %}
+                            {% get_talk_partner user talk as talk_partner %}
                             <img src="{{talk_partner.user_info.profile_image.url}}" class="TalkList_inTalkDetail_you_image" />
                             <div class="TalkList_inTalkDetail_list_name">    
-                                {% if talk.sending_user == user %}                   
-                                    {{talk.receiving_user}}
-                                {% else %}
-                                    {{talk.sending_user}}
-                                {% endif %}
+                                {{ talk_partner }}
                             </div>
                         </div>
                         <div class="TalkList_inTalkDetail_frame_outline2">
@@ -134,8 +126,8 @@
                                 <tr>
                                     <td class="TalkList_inTalkDetail_td2">
                                         {% if talk.exist_reply == True %}
-                                            {% favorite_check user talk as flag %}
-                                            {% if flag %}
+                                            {% favorite_check user talk as exist_favorite %}
+                                            {% if exist_favorite %}
                                             <button type="button" class="TalkList_inTalkDetail_button_love" id="btnGroupDrop1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <i class="fas fa-heart"></i>
                                             </button>
@@ -170,32 +162,20 @@
                         <div class="TalkList_inTalkDetail_read_lamp"></div>
                         <div class="TalkList_inTalkDetail_frame_outline0">
                             <div class="TalkList_inTalkDetail_frame_outline1">
-                                {% if talk.sending_user == user %}
-                                    {% get_user talk.receiving_user_id as talk_partner %}
-                                {% else %}
-                                    {% get_user talk.sending_user_id as talk_partner %}
-                                {% endif %}
+                                {% get_talk_partner user talk as talk_partner %}
                                 <img src="{{talk_partner.user_info.profile_image.url}}" class="TalkList_inTalkDetail_you_image" />
                                 <div class="TalkList_inTalkDetail_list_name">
-                                    <!-- 自分がメセージを送った時 -->
-                                    {% if talk.sending_user == user %}
-                                        {{talk.receiving_user}}
-                                    {% else %}
-                                        <!-- 相手からメッセージが来た時 -->
-                                        {{talk.sending_user}}
-                                    {% endif %}
+                                    {{ talk_partner }}
                                 </div>
                             </div>
                             <div class="TalkList_inTalkDetail_frame_outline2">
                                 <div class="TalkList_inTalkDetail_overflow">
                                     {% if talk.exist_reply == True %}
-                                    <!--返信があればトーク詳細のリンク表示-->
-                                    <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">
-                                        {% get_newest_message talk.id %}
-                                    </a>
+                                        <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">
+                                            {% get_newest_message talk.id %}
+                                        </a>
                                     {% else %}
-                                    <!--返信がなければ相手の名前のみ表示-->
-                                    {% get_newest_message talk.id %}
+                                        {% get_newest_message talk.id %}
                                     {% endif %}
                                 </div>
                                 <div class="TalkList_inTalkDetail_table_lefttime">
@@ -219,8 +199,8 @@
                                     <tr>
                                         <td class="TalkList_inTalkDetail_td2">
                                             {% if talk.exist_reply == True %}
-                                                {% favorite_check user talk as flag %}
-                                                {% if flag %}
+                                                {% favorite_check user talk as exist_favorite %}
+                                                {% if exist_favorite %}
                                                 <button type="button" class="TalkList_inTalkDetail_button_love" id="btnGroupDrop1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                     <i class="fas fa-heart"></i>
                                                 </button>
@@ -251,18 +231,10 @@
                             <div class="TalkList_inTalkDetail_unread_lamp"></div>
                             <div class="TalkList_inTalkDetail_frame_outline0">
                                 <div class="TalkList_inTalkDetail_frame_outline1">
-                                    {% if talk.sending_user == user %}
-                                        {% get_user talk.receiving_user_id as talk_partner %}
-                                    {% else %}
-                                        {% get_user talk.sending_user_id as talk_partner %}
-                                    {% endif %}
+                                    {% get_talk_partner user talk as talk_partner %}
                                     <img src="{{talk_partner.user_info.profile_image.url}}" class="TalkList_inTalkDetail_you_image" />
                                     <div class="TalkList_inTalkDetail_list_name">
-                                        {% if talk.sending_user == user %}
-                                        {{talk.receiving_user}}
-                                        {% else %}
-                                        {{talk.sending_user}}
-                                        {% endif %}
+                                        {{ talk_partner }}
                                     </div>
                                 </div>
                                 <div class="TalkList_inTalkDetail_frame_outline2">
@@ -307,8 +279,8 @@
                                             </td>
                                             <td class="TalkList_inTalkDetail_td2">
                                                 {% if talk.exist_reply == True %}
-                                                    {% favorite_check user talk as flag %}
-                                                    {% if flag %}
+                                                    {% favorite_check user talk as exist_favorite %}
+                                                    {% if exist_favorite %}
                                                     <button class="TalkList_inTalkDetail_button_love">
                                                         <a href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}"
                                                             class="fas fa-heart"></a>
@@ -333,18 +305,10 @@
                         <div class="TalkList_inTalkDetail_read_lamp"></div>
                         <div class="TalkList_inTalkDetail_frame_outline0">
                             <div class="TalkList_inTalkDetail_frame_outline1">
-                                {% if talk.sending_user == user %}
-                                    {% get_user talk.receiving_user_id as talk_partner %}
-                                {% else %}
-                                    {% get_user talk.sending_user_id as talk_partner %}
-                                {% endif %}
+                                {% get_talk_partner user talk as talk_partner %}
                                 <img src="{{talk_partner.user_info.profile_image.url}}" class="TalkList_inTalkDetail_you_image" />
                                 <div class="TalkList_inTalkDetail_list_name">    
-                                    {% if talk.sending_user == user %}                   
-                                        {{talk.receiving_user}}
-                                    {% else %}
-                                        {{talk.sending_user}}
-                                    {% endif %}
+                                    {{ talk_partner }}
                                 </div>
                             </div>
                             <div class="TalkList_inTalkDetail_frame_outline2">
@@ -389,8 +353,8 @@
                                     <tr>
                                         <td class="TalkList_inTalkDetail_td2">
                                             {% if talk.exist_reply == True %}
-                                                {% favorite_check user talk as flag %}
-                                                {% if flag %}
+                                                {% favorite_check user talk as exist_favorite %}
+                                                {% if exist_favorite %}
                                                 <button class="TalkList_inTalkDetail_button_love">
                                                     <a href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}"
                                                         class="fas fa-heart"></a>

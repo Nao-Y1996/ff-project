@@ -461,7 +461,7 @@ def talk_detail(request, talk_id):  # 既存トークフォーム
                 params['messages'] = message
                 params['talk_id'] = talk_id
                 params['Exist_favorites'] = Exist_favorites
-                params['off_hours'] = not is_active
+                params['talk_is_dead'] = not is_active
                 params['user_info'] = user_info
                 params['sending_user'] = talk_partner
                 return render(request, 'postapp/talk_detail.html' ,params)

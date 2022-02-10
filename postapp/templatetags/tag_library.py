@@ -30,10 +30,12 @@ def integer_to_string(integer):
     return string
 
 @register.simple_tag
-def get_user(talk):
-    
-    username = CustomUser.objects.get(id=talk)#.order_by('-created_at')[0]
-    return username
+def get_talk_partner(user, talk):
+    if talk.sending_user == user:
+        talk_partner = talk.receiving_user
+    else:
+        talk_partner = talk.sending_user
+    return talk_partner
 # def multiply(value1, value2):
 #     return value1 * value2
 
