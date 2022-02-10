@@ -76,8 +76,9 @@
                     <summary>End and Favorite | Number : {{talk_count}} </summary>
                     {% for talk in favorite_dead_talks %}
                     <div class="TalkList_inTalkDetail_frame_table">
-                        <div class="TalkList_inTalkDetail_read_lamp"></div>
-                        <div class="TalkList_inTalkDetail_frame_outline0">
+                        {% check_is_detail talk detail_talk_id as is_detail %}
+                        <div class="TalkList_inTalkDetail_read_lamp {{is_detail}} "></div>
+                        <div class="TalkList_inTalkDetail_frame_outline0 {{is_detail}}">
                             <div class="TalkList_inTalkDetail_frame_outline1">
                                 {% get_talk_partner user talk as talk_partner %}
                                 <img src="{{talk_partner.user_info.profile_image.url}}" class="TalkList_inTalkDetail_you_image" />
@@ -150,8 +151,9 @@
                     <!-- 未確認の非activeなトークの表示 -->
                     {% for talk in unchecked_dead_talks %}
                     <div class="TalkList_inTalkDetail_frame_table">
-                        <div class="TalkList_inTalkDetail_read_lamp"></div>
-                        <div class="TalkList_inTalkDetail_frame_outline0">
+                        {% check_is_detail talk detail_talk_id as is_detail %}
+                        <div class="TalkList_inTalkDetail_read_lamp {{is_detail}}"></div>
+                        <div class="TalkList_inTalkDetail_frame_outline0 {{is_detail}}">
                             <div class="TalkList_inTalkDetail_frame_outline1">
                                 {% get_talk_partner user talk as talk_partner %}
                                 <img src="{{talk_partner.user_info.profile_image.url}}" class="TalkList_inTalkDetail_you_image" />
@@ -220,8 +222,9 @@
                      <!-- 未読トークの表示 -->
                     {% for talk in unread_talks %}
                     <div class="TalkList_inTalkDetail_frame_table">
-                            <div class="TalkList_inTalkDetail_unread_lamp"></div>
-                            <div class="TalkList_inTalkDetail_frame_outline0">
+                        {% check_is_detail talk detail_talk_id as is_detail %}
+                            <div class="TalkList_inTalkDetail_unread_lamp {{is_detail}}"></div>
+                            <div class="TalkList_inTalkDetail_frame_outline0 {{is_detail}}">
                                 <div class="TalkList_inTalkDetail_frame_outline1">
                                     {% get_talk_partner user talk as talk_partner %}
                                     <img src="{{talk_partner.user_info.profile_image.url}}" class="TalkList_inTalkDetail_you_image" />
@@ -283,8 +286,9 @@
                     <!-- 既読トークの表示 -->
                     {% for talk in read_talks %}
                     <div class="TalkList_inTalkDetail_frame_table">
-                        <div class="TalkList_inTalkDetail_read_lamp"></div>
-                        <div class="TalkList_inTalkDetail_frame_outline0">
+                        {% check_is_detail talk detail_talk_id as is_detail %}
+                        <div class="TalkList_inTalkDetail_read_lamp {{is_detail}}"></div>
+                        <div class="TalkList_inTalkDetail_frame_outline0 {{is_detail}}">
                             <div class="TalkList_inTalkDetail_frame_outline1">
                                 {% get_talk_partner user talk as talk_partner %}
                                 <img src="{{talk_partner.user_info.profile_image.url}}" class="TalkList_inTalkDetail_you_image" />
@@ -417,10 +421,10 @@
                                 </div>
                                 <div class="chat_frame_button">
                                 {% if Exist_favorites == False %}
-                                    <a type="submit" class="chat_button_opendata" href="{% url 'postapp:final_favorite_add' talk_id=talk_id %}">favorite</a>
-                                    <a class="chat_button_opendata" href="{% url 'postapp:final_favorite_delete' talk_id=talk_id %}">delete</a>
+                                    <a type="submit" class="chat_button_opendata" href="{% url 'postapp:final_favorite_add' talk_id=detail_talk_id %}">favorite</a>
+                                    <a class="chat_button_opendata" href="{% url 'postapp:final_favorite_delete' talk_id=detail_talk_id %}">delete</a>
                                     {% else %}
-                                    <a class="chat_button_opendata" href="{% url 'postapp:confirmed_add' talk_id=talk_id %}">Home</a>
+                                    <a class="chat_button_opendata" href="{% url 'postapp:confirmed_add' talk_id=detail_talk_id %}">Home</a>
                                 {% endif %}
                                 </div>
                                 <div class="chat_text_caution">cannot send message</div>

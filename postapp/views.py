@@ -423,7 +423,7 @@ def talk_detail(request, talk_id):  # 既存トークフォーム
                 params = my_talks_classification(request)
                 params['messages'] = message
                 params['form'] = form
-                params['talk_id'] = talk_id
+                params['detail_talk_id'] = talk_id
                 params['Exist_favorites'] = Exist_favorites
                 return render(request, 'postapp/talk_detail.html',params)
     else:
@@ -459,7 +459,7 @@ def talk_detail(request, talk_id):  # 既存トークフォーム
                 #talk_allの内容を取得し、更にデータを格納している
                 params = my_talks_classification(request)
                 params['messages'] = message
-                params['talk_id'] = talk_id
+                params['detail_talk_id'] = talk_id
                 params['Exist_favorites'] = Exist_favorites
                 params['talk_is_dead'] = not is_active
                 params['user_info'] = user_info
@@ -491,7 +491,7 @@ def talk_detail(request, talk_id):  # 既存トークフォーム
                 
                 #talk_allの内容を取得し、更にデータを格納している
                 params['messages'] = message
-                params['talk_id'] = talk_id
+                params['detail_talk_id'] = talk_id
                 params['Exist_favorites'] = Exist_favorites
                 params['off_hours'] = not is_active
                 params['form'] = form

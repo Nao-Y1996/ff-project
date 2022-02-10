@@ -34,6 +34,10 @@
     height:100%;
 }
 
+.is_detail_true{
+    background-color: rgb(255, 245, 226);
+}
+
 .TalkList_inTalkDetail_frame_outline1{
     display:flex;
     flex-flow: column;

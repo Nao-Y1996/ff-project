@@ -36,6 +36,15 @@ def get_talk_partner(user, talk):
     else:
         talk_partner = talk.sending_user
     return talk_partner
+
+@register.simple_tag
+def check_is_detail(talk, detail_talk_id):
+    if str(talk.id) == detail_talk_id:
+        is_detail = 'is_detail_true'
+    else:
+        is_detail = ''
+    return is_detail
+
 # def multiply(value1, value2):
 #     return value1 * value2
 
