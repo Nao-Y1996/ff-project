@@ -65,7 +65,9 @@
             <form action="" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="userinfo_area_whole">
-                    <img id="profile_image-preview">
+                    <div class="userinfo_image_space">
+                        <img id="profile_image-preview"class="userinfo_image_preview">
+                    </div>
                     <div class="userinfo_area_item">
                         <div class="userinfo_font_label">image</div>
                         <div class="userinfo_width_form">

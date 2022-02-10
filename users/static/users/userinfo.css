@@ -80,6 +80,20 @@ input[type="number"]{
   font-size: 17px;
 }
 
+.userinfo_image_space{
+  display:flex;
+  text-align: center;
+  justify-content: center;
+}
+.userinfo_image_preview{
+  width:200px;
+  height:200px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+
+
 #id_introduction{
   font-size: 15px;
   width: 100%;
