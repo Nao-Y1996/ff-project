@@ -106,12 +106,10 @@ def my_talks_classification(request):
     create_data = {}
     for i, talk in enumerate(my_talks):
         create_data[i] = str(talk.created_at).replace(' ', 'T')
-        print(create_data[i])
 
     talk_count = len(favorite_dead_talks)#お気に入り終了トークの数を取得
     progress_message_count = len(unchecked_dead_talks)+len(unread_talks)+len(read_talks)#進行中のメッセージ数を取得
 
-    print(progress_message_count)
     params = {"data": data, "my_talks": my_talks,
             'data_json': json.dumps(create_data),
             'unchecked_dead_talks': unchecked_dead_talks,
@@ -390,7 +388,8 @@ def talk_detail(request, talk_id):  # 既存トークフォーム
                 message = Message(content="date_data",is_date=1,sending_user=request.user)
                 straddle_date = True
             else:
-                print("同じ日の更新")
+                # print("同じ日の更新")
+                pass
             
             Exist_favorites = favorite_check(request, talk)
             form = MessageForm(request.POST)
@@ -406,9 +405,6 @@ def talk_detail(request, talk_id):  # 既存トークフォーム
                 # talk = Talks.objects.get(id=talk_id)
                 talk.detail_opened = False
                 talk.save()
-
-                print("*"*40)
-                print(talk.detail_opened)
 
                 initial_dict = {"sending_user": request.user, "talk": talk_id, }
                 form = MessageForm(initial=initial_dict)
