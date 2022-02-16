@@ -1,7 +1,29 @@
+.login_body_area{
+	display:flex;
+	width: 100vw;
+	height:100vh;
+	align-items: center;
+    justify-content: center;
+	flex-flow: column;
+	background-color: rgb(250,250,250);
+}
+.login_area_all{
+	display:flex;
+	width: 300px;
+	height:400px;
+	align-items: center;
+    justify-content: center;
+	flex-flow: column;
+	margin: 0 auto;
+	background-color: white;
+	border-color:black;
+	border:1px solid #EEE;
+	-webkit-box-shadow:rgba(122, 122, 122, 0.0588235) 0px 0px 6px 3px;
+}
 .login_area_whole{
 	display:flex;
 	width:100%;
-	height:100vh;
+	height:70%;
 	align-items: center;
     justify-content: center;
 	flex-flow: column;
@@ -21,4 +43,31 @@
 	 color: darken(#f7f7f738, 50%);
 	 border: solid 3px #333;
 	 outline:none;
+	 
  }
+
+.login_area_namelist,.login_area_passlist{
+	display:flex;
+	align-items: center;
+    justify-content: center;
+	flex-flow: column;
+	padding-right: 30px;
+}
+
+.login_card_body{
+	display:flex;
+	align-items: center;
+    justify-content: center;
+	flex-flow: column;
+}
+
+.login_button_button{
+	text-decoration: none;
+	color:black;
+	font-weight:bold;
+}
+.login_button_button:hover {
+    font-weight:bold;
+    cursor: pointer;
+	color:orange;
+}
