@@ -1,15 +1,61 @@
-{% extends "base.html" %}
-{% block content %}
-<form action="" method="POST">
-    {{ form.non_field_errors }}
-    {% for field in form %}
-    <div class="form-group">
-        <label for="{{ field.id_for_label }}">{{ field.label_tag }}</label>
-        {{ field }}
-        {{ field.errors }}
-    </div>
-    {% endfor %}
-    {% csrf_token %}
-    <button type="submit" class="btn btn-primary btn-lg">送信</button>
-</form>
-{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+
+	<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, shrink-to-fit=no"
+		/>
+		<!-- Bootstrap CSS -->
+		<link
+			rel="stylesheet"
+			href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+			integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+			crossorigin="anonymous"
+		/>
+        <link rel="stylesheet" href="{% static 'postapp/Signup.css' %}">
+		<link rel="stylesheet" href="{% static 'users/button.css' %}">
+		<title>change_email</title>
+	</head>
+	<body>
+        <div class="signup_frame_all" id="signup_withdraw_frame">
+            <div class="signup_text_content">change email adress</div>
+            <div class="signup_frame_tab">
+                <form action="" method="POST">
+                    {{ form.non_field_errors }}
+                    {% for field in form %}
+                        <div class="signup_text_email">new email adress:</div>
+                        {{ field }}
+                        {{ field.errors }}
+                    {% endfor %}
+                    {% csrf_token %}
+                    <div class="button_area_button">
+                        <button class="button_button_next" type="submit">save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+		
+
+		<!-- Optional JavaScript -->
+		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+		<script
+			src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+			integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+			crossorigin="anonymous"
+		></script>
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
+			integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+			crossorigin="anonymous"
+		></script>
+		<script
+			src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
+			integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+			crossorigin="anonymous"
+		></script>
+	</body>
+</html>

@@ -1,6 +1,6 @@
 .userinfo_area_whole{
 	width:70%;
-	display:flex;
+	display: flex;
 	align-items: left;
   justify-content: center;
 	flex-flow: column;
@@ -114,3 +114,27 @@ input[type="number"]{
 #id_profile_image{
 }
 
+.userinfo_font_password{
+  width: 50%;
+	text-align: right;
+  padding-right: 70px;
+  color: orange;
+}
+
+.userinfo_width_password{
+  width: 50%;
+  font-size: 17px;
+}
+
+#id_old_password, #id_new_password1, #id_new_password2{
+  width: 200px;
+}
+
+.userinfo_text_content{
+	font-weight: bold;
+	font-size:30px;
+  color: orange;
+  margin-bottom: 50px;
+  text-align: center;
+  margin-top: 100px;
+}
