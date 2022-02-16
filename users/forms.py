@@ -49,6 +49,15 @@ class MyPasswordChangeForm(PasswordChangeForm):
         for field in self.fields.values():
             field.widget.attrs['class'] = 'signup_input_newform'
 
+            if field.label == "Old password":
+                field.label = "Current password"
+            elif field.label == "New password":
+                field.label = "New password"
+            elif field.label == "New password confirmation":
+                field.label = "Confirm password"
+            else:
+                pass
+
 
 class MyPasswordResetForm(PasswordResetForm):
     """パスワード忘れたときのフォーム"""

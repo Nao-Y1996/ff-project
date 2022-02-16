@@ -26,7 +26,7 @@ import random
 import numpy as np
 import sys
 from django_pandas.io import read_frame
-DAYS = 0
+DAYS = 100
 HOURS = 0
 MINUTES = 1
 SEND_NUM_LIMIT = 10
@@ -106,12 +106,10 @@ def my_talks_classification(request):
     create_data = {}
     for i, talk in enumerate(my_talks):
         create_data[i] = str(talk.created_at).replace(' ', 'T')
-        print(create_data[i])
 
     talk_count = len(favorite_dead_talks)#お気に入り終了トークの数を取得
     progress_message_count = len(unchecked_dead_talks)+len(unread_talks)+len(read_talks)#進行中のメッセージ数を取得
 
-    print(progress_message_count)
     params = {"data": data, "my_talks": my_talks,
             'data_json': json.dumps(create_data),
             'unchecked_dead_talks': unchecked_dead_talks,
@@ -390,7 +388,8 @@ def talk_detail(request, talk_id):  # 既存トークフォーム
                 message = Message(content="date_data",is_date=1,sending_user=request.user)
                 straddle_date = True
             else:
-                print("同じ日の更新")
+                # print("同じ日の更新")
+                pass
             
             Exist_favorites = favorite_check(request, talk)
             form = MessageForm(request.POST)
@@ -407,9 +406,6 @@ def talk_detail(request, talk_id):  # 既存トークフォーム
                 talk.detail_opened = False
                 talk.save()
 
-                print("*"*40)
-                print(talk.detail_opened)
-
                 initial_dict = {"sending_user": request.user, "talk": talk_id, }
                 form = MessageForm(initial=initial_dict)
                 message = Message.objects.filter(talk_id=talk_id).all
@@ -423,7 +419,7 @@ def talk_detail(request, talk_id):  # 既存トークフォーム
                 params = my_talks_classification(request)
                 params['messages'] = message
                 params['form'] = form
-                params['talk_id'] = talk_id
+                params['detail_talk_id'] = talk_id
                 params['Exist_favorites'] = Exist_favorites
                 return render(request, 'postapp/talk_detail.html',params)
     else:
@@ -459,9 +455,9 @@ def talk_detail(request, talk_id):  # 既存トークフォーム
                 #talk_allの内容を取得し、更にデータを格納している
                 params = my_talks_classification(request)
                 params['messages'] = message
-                params['talk_id'] = talk_id
+                params['detail_talk_id'] = talk_id
                 params['Exist_favorites'] = Exist_favorites
-                params['off_hours'] = not is_active
+                params['talk_is_dead'] = not is_active
                 params['user_info'] = user_info
                 params['sending_user'] = talk_partner
                 return render(request, 'postapp/talk_detail.html' ,params)
@@ -491,7 +487,7 @@ def talk_detail(request, talk_id):  # 既存トークフォーム
                 
                 #talk_allの内容を取得し、更にデータを格納している
                 params['messages'] = message
-                params['talk_id'] = talk_id
+                params['detail_talk_id'] = talk_id
                 params['Exist_favorites'] = Exist_favorites
                 params['off_hours'] = not is_active
                 params['form'] = form

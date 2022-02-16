@@ -26,38 +26,37 @@
 
 <link rel="stylesheet" href="{% static 'users/button.css' %}">
 <link rel="stylesheet" href="{% static 'users/Login.css' %}">
+<div class="login_body_area">
+    <div class="login_area_all">
+        <form method="post" action="{% url 'users:login' %}"class="login_area_whole">
+            {% csrf_token %}
+            <div class="login_area_namelist">
+                <div class="login_font_username">Username / E-mail</div> 
+                    {{ form.username }}
+            </div>
 
-<form method="post" action="{% url 'users:login' %}">
-    {% csrf_token %}
+            <div class="login_area_passlist">
+                <div class="login_font_password">Password</div>
+                    {{ form.password }} 
+            </div>
+            
+            <div class="button_area_button">
+                <!-- <input type="submit" value="login"> -->
+                <button
+                    class="button_button_next"
+                    type="submit"
+                    value="login"
+                >
+                login</button>
+                <input type="hidden" name="next" value="{{ next }}">
+            </div>
+        </form>
 
-    <div class="login_area_whole">
-        <div class="namelist">
-            <div class="login_font_username">Username / E-mail</div> 
-                {{ form.username }}
-        </div>
-
-        <div class="passlist">
-            <div class="login_font_password">Password</div>
-                {{ form.password }} 
-        </div>
-        
-        <div class="button_area_button">
-            <!-- <input type="submit" value="login"> -->
-            <button
-                class="button_button_next"
-                type="submit"
-                value="login"
-            >
-            login</button>
-            <input type="hidden" name="next" value="{{ next }}">
+        <div class="login_card_body">
+            <a href="{% url 'users:user_create' %}" class="login_button_button">Signup</a>
+            <a href="{% url 'users:password_reset' %}" class="login_button_button">PasswordReset</a>
+            <a href="{% url 'users:reregistration' %}" class="login_button_button">Reregistration</a>
         </div>
     </div>
-</form>
-
-<div class="card-body">
-    <a href="{% url 'users:user_create' %}" class="btn btn-success btn-lg btn-block">Signup</a>
-    <a href="{% url 'users:password_reset' %}" class="btn btn-outline-info btn-lg btn-block">PasswordReset</a>
-    <a href="{% url 'users:reregistration' %}" class="btn btn-success btn-lg btn-block">Reregistration</a>
 </div>
-
 </html>

@@ -67,25 +67,23 @@
             </aside>
 
             <main class="main1">
+                <!-- お気に入りした非activeなトークの一覧 -->
+                {% if talk_is_dead %}
+                <details open>
+                {% else %}
                 <details>
-                    <summary>End and Favorite | Number : {{talk_count}} </summary>   
+                {% endif %}
+                    <summary>End and Favorite | Number : {{talk_count}} </summary>
                     {% for talk in favorite_dead_talks %}
                     <div class="TalkList_inTalkDetail_frame_table">
-                        <div class="TalkList_inTalkDetail_read_lamp"></div>
-                        <div class="TalkList_inTalkDetail_frame_outline0">
+                        {% check_is_detail talk detail_talk_id as is_detail %}
+                        <div class="TalkList_inTalkDetail_read_lamp {{is_detail}} "></div>
+                        <div class="TalkList_inTalkDetail_frame_outline0 {{is_detail}}">
                             <div class="TalkList_inTalkDetail_frame_outline1">
-                                {% if talk.sending_user == user %}
-                                    {% get_user talk.receiving_user_id as talk_partner %}
-                                {% else %}
-                                    {% get_user talk.sending_user_id as talk_partner %}
-                                {% endif %}
+                                {% get_talk_partner user talk as talk_partner %}
                                 <img src="{{talk_partner.user_info.profile_image.url}}" class="TalkList_inTalkDetail_you_image" />
                                 <div class="TalkList_inTalkDetail_list_name">    
-                                    {% if talk.sending_user == user %}                   
-                                        {{talk.receiving_user}}
-                                    {% else %}
-                                        {{talk.sending_user}}
-                                    {% endif %}
+                                    {{talk_partner}}
                                 </div>
                             </div>
                             <div class="TalkList_inTalkDetail_frame_outline2">
@@ -95,7 +93,7 @@
                                         {% get_newest_message talk.id %}
                                     </a>
                                     {% else %}
-                                    {% get_newest_message talk.id %}
+                                        {% get_newest_message talk.id %}
                                     {% endif %}
                                 </div>
                                 <div class="TalkList_inTalkDetail_table_lefttime">
@@ -118,10 +116,10 @@
                                     </tr>
                                     <tr>
                                         <td class="TalkList_inTalkDetail_td2">
-                                            {% if talk.exist_reply == True %}
                                             <!--返信があればいいねボタンを表示-->
-                                                {% favorite_check user talk as off_hours %}
-                                                {% if off_hours %}
+                                            {% if talk.exist_reply == True %}
+                                                {% favorite_check user talk as exist_favorite %}
+                                                {% if exist_favorite %}
                                                     <button type="button" class="TalkList_inTalkDetail_button_love" id="btnGroupDrop1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                         <i class="fas fa-heart"></i>
                                                     </button>
@@ -147,38 +145,30 @@
                     </div>
                     {% endfor %}
                 </details>
+
+                <!-- その他トークの一覧 -->
                 <div class="TalkList_inTalkDetail_table_frame_all">
+                    <!-- 未確認の非activeなトークの表示 -->
                     {% for talk in unchecked_dead_talks %}
                     <div class="TalkList_inTalkDetail_frame_table">
-                        <div class="TalkList_inTalkDetail_read_lamp"></div>
-                        <div class="TalkList_inTalkDetail_frame_outline0">
+                        {% check_is_detail talk detail_talk_id as is_detail %}
+                        <div class="TalkList_inTalkDetail_read_lamp {{is_detail}}"></div>
+                        <div class="TalkList_inTalkDetail_frame_outline0 {{is_detail}}">
                             <div class="TalkList_inTalkDetail_frame_outline1">
-                                {% if talk.sending_user == user %}
-                                    {% get_user talk.receiving_user_id as talk_partner %}
-                                {% else %}
-                                    {% get_user talk.sending_user_id as talk_partner %}
-                                {% endif %}
+                                {% get_talk_partner user talk as talk_partner %}
                                 <img src="{{talk_partner.user_info.profile_image.url}}" class="TalkList_inTalkDetail_you_image" />
                                 <div class="TalkList_inTalkDetail_list_name">
-                                    <!-- 自分がメセージを送った時 -->
-                                    {% if talk.sending_user == user %}
-                                        {{talk.receiving_user}}
-                                    {% else %}
-                                        <!-- 相手からメッセージが来た時 -->
-                                        {{talk.sending_user}}
-                                    {% endif %}
+                                    {{ talk_partner }}
                                 </div>
                             </div>
                             <div class="TalkList_inTalkDetail_frame_outline2">
                                 <div class="TalkList_inTalkDetail_overflow">
                                     {% if talk.exist_reply == True %}
-                                    <!--返信があればトーク詳細のリンク表示-->
                                     <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">
                                         {% get_newest_message talk.id %}
                                     </a>
                                     {% else %}
-                                    <!--返信がなければ相手の名前のみ表示-->
-                                    {% get_newest_message talk.id %}
+                                        {% get_newest_message talk.id %}
                                     {% endif %}
                                 </div>
                                 <div class="TalkList_inTalkDetail_table_lefttime">
@@ -201,10 +191,10 @@
                                     </tr>
                                     <tr>
                                         <td class="TalkList_inTalkDetail_td2">
-                                            {% if talk.exist_reply == True %}
                                             <!--返信があればいいねボタンを表示-->
-                                                {% favorite_check user talk as off_hours %}
-                                                {% if off_hours %}
+                                            {% if talk.exist_reply == True %}
+                                                {% favorite_check user talk as exist_favorite %}
+                                                {% if exist_favorite %}
                                                     <button type="button" class="TalkList_inTalkDetail_button_love" id="btnGroupDrop1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                         <i class="fas fa-heart"></i>
                                                     </button>
@@ -229,24 +219,17 @@
                         </div>
                     </div>
                     {% endfor %}
-    
+                     <!-- 未読トークの表示 -->
                     {% for talk in unread_talks %}
                     <div class="TalkList_inTalkDetail_frame_table">
-                            <div class="TalkList_inTalkDetail_unread_lamp"></div>
-                            <div class="TalkList_inTalkDetail_frame_outline0">
+                        {% check_is_detail talk detail_talk_id as is_detail %}
+                            <div class="TalkList_inTalkDetail_unread_lamp {{is_detail}}"></div>
+                            <div class="TalkList_inTalkDetail_frame_outline0 {{is_detail}}">
                                 <div class="TalkList_inTalkDetail_frame_outline1">
-                                    {% if talk.sending_user == user %}
-                                        {% get_user talk.receiving_user_id as talk_partner %}
-                                    {% else %}
-                                        {% get_user talk.sending_user_id as talk_partner %}
-                                    {% endif %}
+                                    {% get_talk_partner user talk as talk_partner %}
                                     <img src="{{talk_partner.user_info.profile_image.url}}" class="TalkList_inTalkDetail_you_image" />
                                     <div class="TalkList_inTalkDetail_list_name">
-                                        {% if talk.sending_user == user %}
-                                        {{talk.receiving_user}}
-                                        {% else %}
-                                        {{talk.sending_user}}
-                                        {% endif %}
+                                        {{ talk_partner }}
                                     </div>
                                 </div>
                                 <div class="TalkList_inTalkDetail_frame_outline2">
@@ -257,9 +240,9 @@
                                     </div>
                                     <div class="TalkList_inTalkDetail_table_lefttime">
                                         <div class="TalkList_inTalkDetail_span_time">
-                                            {% integer_to_string talk.id as off_hours %}
-                                            <p class="TalkList_inTalkDetail_time" id={{off_hours}}></p>
-                                            <input class="lefttime" type="hidden" id={{off_hours}}
+                                            {% integer_to_string talk.id as str_talk_id %}
+                                            <p class="TalkList_inTalkDetail_time" id={{str_talk_id}}></p>
+                                            <input class="lefttime" type="hidden" id={{str_talk_id}}
                                                 value={{talk.created_at|date:"Y-m-d_H:i:sO"}}>
                                         </div>
                                     </div>
@@ -281,8 +264,8 @@
                                         <tr>
                                             <td class="TalkList_inTalkDetail_td2">
                                                 {% if talk.exist_reply == True %}
-                                                    {% favorite_check user talk as off_hours %}
-                                                    {% if off_hours %}
+                                                    {% favorite_check user talk as exist_favorite %}
+                                                    {% if exist_favorite %}
                                                         <button class="TalkList_inTalkDetail_button_love">
                                                             <a href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}" class="fas fa-heart"></a>
                                                         </button>
@@ -300,24 +283,17 @@
                             </div>
                     </div>
                     {% endfor %}
-    
+                    <!-- 既読トークの表示 -->
                     {% for talk in read_talks %}
                     <div class="TalkList_inTalkDetail_frame_table">
-                        <div class="TalkList_inTalkDetail_read_lamp"></div>
-                        <div class="TalkList_inTalkDetail_frame_outline0">
+                        {% check_is_detail talk detail_talk_id as is_detail %}
+                        <div class="TalkList_inTalkDetail_read_lamp {{is_detail}}"></div>
+                        <div class="TalkList_inTalkDetail_frame_outline0 {{is_detail}}">
                             <div class="TalkList_inTalkDetail_frame_outline1">
-                                {% if talk.sending_user == user %}
-                                    {% get_user talk.receiving_user_id as talk_partner %}
-                                {% else %}
-                                    {% get_user talk.sending_user_id as talk_partner %}
-                                {% endif %}
+                                {% get_talk_partner user talk as talk_partner %}
                                 <img src="{{talk_partner.user_info.profile_image.url}}" class="TalkList_inTalkDetail_you_image" />
                                 <div class="TalkList_inTalkDetail_list_name">    
-                                    {% if talk.sending_user == user %}                   
-                                        {{talk.receiving_user}}
-                                    {% else %}
-                                        {{talk.sending_user}}
-                                    {% endif %}
+                                    {{ talk_partner }}
                                 </div>
                             </div>
                             <div class="TalkList_inTalkDetail_frame_outline2">
@@ -338,9 +314,9 @@
                                 </div>
                                 <div class="TalkList_inTalkDetail_table_lefttime">
                                     <div class="TalkList_inTalkDetail_span_time">
-                                        {% integer_to_string talk.id as off_hours %}
-                                        <p class="TalkList_inTalkDetail_time" id={{off_hours}}></p>
-                                        <input class="lefttime" type="hidden" id={{off_hours}}
+                                        {% integer_to_string talk.id as str_talk_id %}
+                                        <p class="TalkList_inTalkDetail_time" id={{str_talk_id}}></p>
+                                        <input class="lefttime" type="hidden" id={{str_talk_id}}
                                             value={{talk.created_at|date:"Y-m-d_H:i:sO"}}>
                                     </div>
                                 </div>
@@ -362,8 +338,8 @@
                                     <tr>
                                         <td class="TalkList_inTalkDetail_td2">
                                             {% if talk.exist_reply == True %}
-                                                {% favorite_check user talk as off_hours %}
-                                                {% if off_hours %}
+                                                {% favorite_check user talk as exist_favorite %}
+                                                {% if exist_favorite %}
                                                     <button class="TalkList_inTalkDetail_button_love">
                                                         <a href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}" class="fas fa-heart"></a>
                                                     </button>
@@ -381,7 +357,6 @@
                         </div>
                     </div>
                     {% endfor %}
-                    
                 </div>
             </main>
 
@@ -395,8 +370,7 @@
                                 {% if message.sending_user_id != user.id %}
                                     <div class="chat_frame_outline3">
                                         <div class='chat_frame_image'>
-                                            {% get_user message.sending_user_id as talk_partner %}
-                                            <img src="{{talk_partner.user_info.profile_image.url}}"  class="chat_image_rounded">
+                                            <img src="{{message.sending_user.user_info.profile_image.url}}"  class="chat_image_rounded">
                                             <div class="chart_text_talk-limit">{{message.created_at|date:"H:i"}}</div>   
                                         </div>
                                         <div class="chat_frame_talk_partner">
@@ -409,15 +383,14 @@
                                             <p class="chat_text_talk">{{message.content}}</p>    
                                         </div>
                                         <div class='chat_frame_image'>
-                                            {% get_user message.sending_user_id as talk_partner %}
-                                            <img src="{{talk_partner.user_info.profile_image.url}}" class="chat_image_rounded">
+                                            <img src="{{message.sending_user.user_info.profile_image.url}}" class="chat_image_rounded">
                                             <div class="chart_text_talk-limit">{{message.created_at|date:"H:i"}}</div>   
                                         </div>
                                     </div>
                                 {% endif %}
                             {% endif %}
                         {% endfor %}
-                        {% if off_hours %}
+                        {% if talk_is_dead %}
                             <div class="chat_frame_opendata">
                                 <div class="chat_text_heading">●Public information</div>
                                 <div class="chat_frame_userdata">
@@ -448,10 +421,10 @@
                                 </div>
                                 <div class="chat_frame_button">
                                 {% if Exist_favorites == False %}
-                                    <a type="submit" class="chat_button_opendata" href="{% url 'postapp:final_favorite_add' talk_id=talk_id %}">favorite</a>
-                                    <a class="chat_button_opendata" href="{% url 'postapp:final_favorite_delete' talk_id=talk_id %}">delete</a>
+                                    <a type="submit" class="chat_button_opendata" href="{% url 'postapp:final_favorite_add' talk_id=detail_talk_id %}">favorite</a>
+                                    <a class="chat_button_opendata" href="{% url 'postapp:final_favorite_delete' talk_id=detail_talk_id %}">delete</a>
                                     {% else %}
-                                    <a class="chat_button_opendata" href="{% url 'postapp:confirmed_add' talk_id=talk_id %}">Home</a>
+                                    <a class="chat_button_opendata" href="{% url 'postapp:confirmed_add' talk_id=detail_talk_id %}">Home</a>
                                 {% endif %}
                                 </div>
                                 <div class="chat_text_caution">cannot send message</div>
@@ -459,7 +432,7 @@
                         {% endif %}
                         <div id="chat_frame_bottom"></div>
                     </div>
-                    {% if not off_hours %}
+                    {% if not talk_is_dead %}
                         <form method="POST" class="chat_frame_form" id="scroll">
                             {% csrf_token %}
                             {{ form.id.as_hidden }}
