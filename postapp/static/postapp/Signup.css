@@ -26,7 +26,6 @@
 .signup_text_name,.signup_text_email,.signup_text_password{
 	font-weight: bold;
 	font-size:20px;
-	padding: 0 20px;
 	color: orange;
 }
 
