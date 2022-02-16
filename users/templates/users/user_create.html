@@ -3,21 +3,24 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'users/button.css' %}">
 <link rel="stylesheet" href="{% static 'users/user_create.css' %}">
-
-<form action="" method="POST">
-    <div class="UserCreate_area_whole">
-        {{ form.non_field_errors }}
-        {% for field in form %}
-        <div class="UserCreate_area_form">
-            <div class="UserCreate_font_label" for="{{ field.id_for_label }}">{{ field.label_tag }}</div>
-            {{ field }}
-            {{ field.errors }}
-        </div>
-        {% endfor %}
-        {% csrf_token %}
-        <div class="button_area_button">
-            <button type="submit" class="button_button_next">Next</button>
-        </div>
+<div class="user_create_body_area">
+    <div class="user_create_area_all">
+        <form action="" method="POST">
+            <div class="UserCreate_area_whole">
+                {{ form.non_field_errors }}
+                {% for field in form %}
+                <div class="UserCreate_area_form">
+                    <div class="UserCreate_font_label" for="{{ field.id_for_label }}">{{ field.label_tag }}</div>
+                    {{ field }}
+                    {{ field.errors }}
+                </div>
+                {% endfor %}
+                {% csrf_token %}
+                <div class="button_area_button">
+                    <button type="submit" class="button_button_next">Next</button>
+                </div>
+            </div>
+        </form>
     </div>
-</form>
+</div>
 </html>

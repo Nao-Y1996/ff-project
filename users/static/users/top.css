@@ -85,7 +85,10 @@
         align-items: center;
         justify-content:center;
         flex-flow: column;
-        border:none	
+        border:none;
+    }
+    .top_main_frame::-webkit-scrollbar {
+        display:none;
     }
 
     .top_aside_frame {
