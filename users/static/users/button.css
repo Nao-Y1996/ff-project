@@ -44,7 +44,7 @@
 
 .button_button_withdrawal{
 	display: inline-block;
-    width: 120px;
+    width: 170px;
     height: 46px;
     color: white;
     background-color: orange;
@@ -62,4 +62,13 @@
     cursor:pointer;
 	text-decoration: none;
 	background-color: orange;
+}
+
+#button_button_EmailChange{
+	width: 170px;
+}
+
+#button_button_DeleteAccount{
+	width: 170px;
+	color: lightgray;
 }
