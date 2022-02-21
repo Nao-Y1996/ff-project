@@ -95,6 +95,29 @@
 </body>
 
 <script>
+    // window.addEventListener('pageshow',()=>{
+    //     if(window.performance.navigation.type==2) location.reload();
+    // });
+    window.onload = function(){
+        var perfEntries = performance.getEntriesByType("navigation");
+        perfEntries.forEach(function(pe){
+            switch( pe.type ){
+            case 'navigate':
+                // console.log('通常のアクセス');
+                break;
+            case 'reload':
+                // console.log('更新によるアクセス');
+                break;
+            case 'back_forward':
+                // console.log('戻るによるアクセス');
+                location.reload();
+                break;
+            case 'prerender':
+                // console.log('レンダリング前');
+                break;
+            }
+        });
+        };
 
     function ShowLength( str ) {
         if (str.length < 500) {

@@ -26,7 +26,7 @@ import random
 import numpy as np
 import sys
 from django_pandas.io import read_frame
-DAYS = 100
+DAYS = 0
 HOURS = 0
 MINUTES = 1
 SEND_NUM_LIMIT = 10
