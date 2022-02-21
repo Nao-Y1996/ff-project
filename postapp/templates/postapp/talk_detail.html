@@ -73,7 +73,7 @@
                 {% else %}
                 <details>
                 {% endif %}
-                    <summary>End and Favorite | Number : {{talk_count}} </summary>
+                    <summary>Favorite past chats : {{talk_count}} </summary>
                     {% for talk in favorite_dead_talks %}
                     <div class="TalkList_inTalkDetail_frame_table">
                         {% check_is_detail talk detail_talk_id as is_detail %}
@@ -97,7 +97,7 @@
                                     {% endif %}
                                 </div>
                                 <div class="TalkList_inTalkDetail_table_lefttime">
-                                    <span class="TalkList_inTalkDetail_span_time">End and Favorite</span>
+                                    <span class="TalkList_inTalkDetail_span_time">Times up. Please confirm message</span>
                                 </div>
                             </div>
                             <div class="TalkList_inTalkDetail_frame_outline3">
@@ -109,7 +109,7 @@
                                                 <i class="fas fa-ellipsis-v"></i>
                                                 </button>
                                                 <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                                <a class="dropdown-item" href="{% url 'users:report' talk_id=talk.id %}">report</a>
+                                                <a class="dropdown-item" href="{% url 'users:report' talk_id=talk.id %}">Report</a>
                                                 </div>
                                             </div>
                                         </td>
@@ -172,7 +172,7 @@
                                     {% endif %}
                                 </div>
                                 <div class="TalkList_inTalkDetail_table_lefttime">
-                                    <span class="TalkList_inTalkDetail_span_time">End and Unconfirmed</span>
+                                    <span class="TalkList_inTalkDetail_span_time">Times up. Please confirm message</span>
                                 </div>
                             </div>
                             <div class="TalkList_inTalkDetail_frame_outline3">
@@ -184,7 +184,7 @@
                                                   <i class="fas fa-ellipsis-v"></i>
                                                 </button>
                                                 <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                                    <a class="dropdown-item" href="{% url 'users:report' talk_id=talk.id %}">report</a>
+                                                    <a class="dropdown-item" href="{% url 'users:report' talk_id=talk.id %}">Report</a>
                                                 </div>
                                             </div>
                                         </td>
@@ -256,7 +256,7 @@
                                                         <i class="fas fa-ellipsis-v"></i>
                                                     </button>
                                                     <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                                        <a class="dropdown-item" href="{% url 'users:report' talk_id=talk.id %}">report</a>
+                                                        <a class="dropdown-item" href="{% url 'users:report' talk_id=talk.id %}">Report</a>
                                                     </div>
                                                 </div>
                                             </td>
@@ -403,11 +403,11 @@
                                         <div class="chat_info_age">{{user_info.age}}</div>
                                     </div>
                                     <div class="chat_frame_info">
-                                        <div class="chat_item_nationality">country:</div>
+                                        <div class="chat_item_nationality">Nationally:</div>
                                         <div class="chat_info_nationality">{{user_info.country}}</div>
                                     </div>
                                     <div class="chat_frame_info_introduction">
-                                        <div class="chat_item_introduction">introduction:</div>
+                                        <div class="chat_item_introduction">Introduction:</div>
                                         <div class="chat_info_introduction">
                                             <div class="grad-wrap">
                                                 <input id="trigger1" class="grad-trigger" type="checkbox">
@@ -421,13 +421,13 @@
                                 </div>
                                 <div class="chat_frame_button">
                                 {% if Exist_favorites == False %}
-                                    <a type="submit" class="chat_button_opendata" href="{% url 'postapp:final_favorite_add' talk_id=detail_talk_id %}">favorite</a>
-                                    <a class="chat_button_opendata" href="{% url 'postapp:final_favorite_delete' talk_id=detail_talk_id %}">delete</a>
+                                    <a type="submit" class="chat_button_opendata" href="{% url 'postapp:final_favorite_add' talk_id=detail_talk_id %}">Favorite</a>
+                                    <a class="chat_button_opendata" href="{% url 'postapp:final_favorite_delete' talk_id=detail_talk_id %}">Delete</a>
                                     {% else %}
                                     <a class="chat_button_opendata" href="{% url 'postapp:confirmed_add' talk_id=detail_talk_id %}">Home</a>
                                 {% endif %}
                                 </div>
-                                <div class="chat_text_caution">cannot send message</div>
+                                <div class="chat_text_caution">Cannot send message</div>
                             </div>
                         {% endif %}
                         <div id="chat_frame_bottom"></div>

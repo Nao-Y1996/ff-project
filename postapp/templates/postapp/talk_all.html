@@ -81,7 +81,7 @@
 
         <main class="main1">
             <details>
-                <summary>End and Favorite | Number : {{talk_count}} </summary>
+                <summary>Favorite past chats : {{talk_count}} </summary>
                 {% for talk in favorite_dead_talks %}
                 <div class="TalkList_inTalkDetail_frame_table">
                     <div class="TalkList_inTalkDetail_read_lamp"></div>
@@ -116,7 +116,7 @@
                                             <i class="fas fa-ellipsis-v"></i>
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                            <a class="dropdown-item" href="{% url 'users:report' talk_id=talk.id %}">report</a>
+                                            <a class="dropdown-item" href="{% url 'users:report' talk_id=talk.id %}">Report</a>
                                             </div>
 
                                         </div>
@@ -178,7 +178,7 @@
                                     {% endif %}
                                 </div>
                                 <div class="TalkList_inTalkDetail_table_lefttime">
-                                    <span class="TalkList_inTalkDetail_span_time">End and Unconfirmed</span>
+                                    <span class="TalkList_inTalkDetail_span_time">Times up. Please confirm message</span>
                                 </div>
                             </div>
                             <div class="TalkList_inTalkDetail_frame_outline3">
@@ -190,7 +190,7 @@
                                                 <i class="fas fa-ellipsis-v"></i>
                                                 </button>
                                                 <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                                <a class="dropdown-item" href="{% url 'users:report' talk_id=talk.id %}">report</a>
+                                                <a class="dropdown-item" href="{% url 'users:report' talk_id=talk.id %}">Report</a>
                                                 </div>
                                             </div>
                                         </td>
@@ -377,13 +377,13 @@
             {% else %}
                 <div class="talk_create_content_newpost">
                     <h1>New posts</h1>
-                    <p class="talk_create_post_title">There is no talk in progress. Let's talk.</p>
+                    <p class="talk_create_post_title">No message. Let's send a message!</p>
                     <form method="POST" wrap="soft">
                         {% csrf_token %}
                         {{ form.id.as_hidden }}
                         {{ form.sending_user.as_hidden }}
                         {{ form.content }}
-                        <p id="inputlength">Word count・・・ 0/500</p>
+                        <p id="inputlength">Character count・・・ 0/500</p>
                         <div class="talk_create_position_button">
                             <button type="submit" class="talk_create_button_newpost">
                                 Post a message
