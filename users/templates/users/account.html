@@ -5,9 +5,23 @@
 {% if user.is_authenticated %}
 
 <main>
-    <div class="signup_frame_all">
-        <div class="signup_text_content">Account</div>
-        <div class="signup_frame_tab">
+    <div class="signup_body_area">
+        <div class="signup_frame_all">
+            <div class="signup_text_content">Account</div>
+                <div class="signup_frame_tab">
+                        <div class="button_area_button">
+                            <a href="{% url 'users:email_change' %}" type="button" class="button_button_next" name="button_change_email" id="button_button_EmailChange"> Change Email</a>
+                        </div>
+                        <div class="button_area_button">
+                            <a href="{% url 'users:password_change' %}" type="button" class="button_button_next" name="button_change_password" id="button_button_EmailChange"> Change password</a>
+                        </div>
+                    <div class="button_area_button">
+                            <a class="button_button_next" href="{% url 'users:withdrawal' %}" id="button_button_DeleteAccount">
+                                <p>Delete account</p>
+                            </a>
+                    </div>
+                </div>
+            </div>
             <div class="signup_text_email">Email</div>
                 <div class="button_area_button">
                     <a href="{% url 'users:email_change' %}" type="button" class="button_button_next" name="button_change_email"> Change </a>
