@@ -120,7 +120,7 @@
 }
 
 @media screen and (max-width: 999px) {
-    .flexbox-container {
+    .top-flexbox-container {
         display: flex;
         flex-flow: column;
     }

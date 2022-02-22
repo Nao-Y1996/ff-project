@@ -23,6 +23,8 @@
 	display:flex;
 	font-weight: bold;
 	font-size:20px;
+  height: 100%;
+  align-items: center;
 }
 
 input[type="range"] {

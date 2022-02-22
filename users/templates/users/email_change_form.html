@@ -18,22 +18,22 @@
 		/>
         <link rel="stylesheet" href="{% static 'postapp/Signup.css' %}">
 		<link rel="stylesheet" href="{% static 'users/button.css' %}">
-		<title>change_email</title>
+		<title>Change_email</title>
 	</head>
 	<body>
         <div class="signup_frame_all" id="signup_withdraw_frame">
-            <div class="signup_text_content">change email adress</div>
+            <div class="signup_text_content">Change email adress</div>
             <div class="signup_frame_tab">
                 <form action="" method="POST">
                     {{ form.non_field_errors }}
                     {% for field in form %}
-                        <div class="signup_text_email">new email adress:</div>
+                        <div class="signup_text_email">New email adress:</div>
                         {{ field }}
                         {{ field.errors }}
                     {% endfor %}
                     {% csrf_token %}
                     <div class="button_area_button">
-                        <button class="button_button_next" type="submit">save</button>
+                        <button class="button_button_next" type="submit">Next</button>
                     </div>
                 </form>
             </div>
