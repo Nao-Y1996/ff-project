@@ -13,7 +13,7 @@
         {% endif %}
             <summary>Favorite past chats : {{talk_count}} </summary>
             {% for talk in favorite_dead_talks %}
-            <div class="TalkList_inTalkDetail_frame_table">
+            <div class="TalkList_inTalkDetail_frame_table TalkList_favorite_table">
                 {% check_is_detail talk detail_talk_id as is_detail %}
                 <div class="TalkList_inTalkDetail_read_lamp {{is_detail}} "></div>
                 <div class="TalkList_inTalkDetail_frame_outline0 {{is_detail}}">

@@ -15,7 +15,6 @@
 }
 
 .TalkList_inTalkDetail_frame_outline0{
-    background-color: #FFF;
     display: flex;
     width: calc(100% - 20px);
     height: 100%;
@@ -34,9 +33,6 @@
     height:100%;
 }
 
-.is_detail_true{
-    background-color: rgb(255, 245, 226);
-}
 
 .TalkList_inTalkDetail_frame_outline1{
     display:flex;
@@ -228,4 +224,10 @@ img.TalkList_inTalkDetail_you_image{
 .TalkList_inTalkDetail_table_remove_favorite_frame{
     width: 100%;
     text-align: center;
+}
+.TalkList_favorite_table{
+    background-color: rgb(245, 245, 245);
+}
+.is_detail_true{
+    background-color: rgb(255, 245, 226);
 }
