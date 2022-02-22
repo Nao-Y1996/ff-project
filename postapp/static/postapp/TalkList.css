@@ -80,6 +80,11 @@
     font-size:12px;
     color: gray;
     line-height: 100%;
+    white-space: nowrap; /* 横幅のMAXに達しても改行しない */
+    overflow: hidden; /* ハミ出した部分を隠す */
+    text-overflow: ellipsis; /* 「…」と省略 */
+    -webkit-text-overflow: ellipsis; /* Safari */
+    -o-text-overflow: ellipsis; /* Opera */
 }
 
 .TalkList_inTalkDetail_button_love{

@@ -324,9 +324,7 @@
                                 <div class='chat_frame_image'>
                                     <img src="{{message.sending_user.user_info.profile_image.url}}" class="chat_image_rounded">
                                     <div class="chart_text_talk-limit">{{message.created_at|date:"H:i"}}</div>   
-                                </div>
-                                <div class="chat_text_caution">Cannot send message</div>
-
+                                </div>                            
                             </div>
                         {% endif %}
                     {% endif %}
@@ -344,11 +342,11 @@
                                 <div class="chat_info_age">{{user_info.age}}</div>
                             </div>
                             <div class="chat_frame_info">
-                                <div class="chat_item_nationality">country:</div>
+                                <div class="chat_item_nationality">Country:</div>
                                 <div class="chat_info_nationality">{{user_info.country}}</div>
                             </div>
                             <div class="chat_frame_info_introduction">
-                                <div class="chat_item_introduction">introduction:</div>
+                                <div class="chat_item_introduction">Introduction:</div>
                                 <div class="chat_info_introduction">
                                     <div class="grad-wrap">
                                         <input id="trigger1" class="grad-trigger" type="checkbox">
@@ -362,13 +360,13 @@
                         </div>
                         <div class="chat_frame_button">
                         {% if Exist_favorites == False %}
-                            <a type="submit" class="chat_button_opendata" href="{% url 'postapp:final_favorite_add' talk_id=detail_talk_id %}">favorite</a>
-                            <a class="chat_button_opendata" href="{% url 'postapp:final_favorite_delete' talk_id=detail_talk_id %}">delete</a>
+                            <a type="submit" class="chat_button_opendata" href="{% url 'postapp:final_favorite_add' talk_id=detail_talk_id %}">Favorite</a>
+                            <a class="chat_button_opendata" href="{% url 'postapp:final_favorite_delete' talk_id=detail_talk_id %}">Delete</a>
                             {% else %}
                             <a class="chat_button_opendata" href="{% url 'postapp:confirmed_add' talk_id=detail_talk_id %}">Home</a>
                         {% endif %}
                         </div>
-                        <div class="chat_text_caution">cannot send message</div>
+                        <div class="chat_text_caution">Cannot send message</div>
                     </div>
                 {% endif %}
                 <div id="chat_frame_bottom"></div>
