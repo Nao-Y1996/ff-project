@@ -6,18 +6,18 @@
 
     <main>
         {% if messages %}
-        <ul class="messages_ul">
+        <div class="messages_ul">
             {% for message in messages %}
             {% if forloop.first %}
-            <li class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %} alert-dismissible" role="alert">
+            <p class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %} alert-dismissible" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
                         aria-hidden="true">&times;</span>
                     </button>
                     {{ message }}
-            </li>
+            </p>
             {% endif %}
             {% endfor %}
-        </ul>
+        </div>
         {% endif %}
 
         <details>
