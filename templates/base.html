@@ -3,6 +3,8 @@
 <!doctype html>
 <html lang="en">
 
+{% load tag_library %}
+
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -12,47 +14,72 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
         integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 
+    <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet" />
+
     <link rel="stylesheet" href="{% static 'users/users.css' %}">
+    <link rel="stylesheet" href="{% static 'users/userinfo.css' %}" />
+    <link rel="stylesheet" href="{% static 'users/button.css' %}" />
+    <link rel="stylesheet" href="{% static 'users/report.css' %}">
+    <link rel="stylesheet" href="{% static 'users/Login.css' %}">
+    <link rel="stylesheet" href="{% static 'users/top.css' %}" />
+    <link rel="stylesheet" href="{% static 'users/user_create.css' %}">
+    <link rel="stylesheet" href="{% static 'postapp/talk_create.css'%}">
+    <link rel="stylesheet" href="{% static 'postapp/frame.css' %}">
+    <link rel="stylesheet" href="{% static 'postapp/frame_split3.css' %}" />
     <link rel="stylesheet" href="{% static 'postapp/arrow_box.css' %}">
+    <link rel="stylesheet" href="{% static 'postapp/menu.css' %}">
+    <link rel="stylesheet" href="{% static 'postapp/TalkList.css' %}">
+    <link rel="stylesheet" href="{% static 'postapp/chat.css' %}" />   
+    <link rel="stylesheet" href="{% static 'postapp/Signup.css' %}">
+    <link rel="stylesheet" href="{% static 'postapp/frame.css' %}">
 
     <title>ff_project</title>
 </head>
 
 <body>
-
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="{% url 'users:top'%}">MessageApp</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
-            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-
-
-            <div class="navbar-nav">
-                {% if user.is_authenticated %}
-                <a class="nav-item nav-link active" href="{% url 'users:account' %}">{{user.username}}</a>
-                <a class="nav-item nav-link " href="{% url 'users:logout' %}">Logout</a>
-                {% else %}
-                <a class="nav-item nav-link active" href="{% url 'users:login' %}">Login</a>
-                <a class="nav-item nav-link active" href="{% url 'users:user_create' %}">Sign Up</a>
-                {% endif %}
-            </div>
-        </div>
-    </nav>
-
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-
-
-
     <!-- メインコンテント -->
-    <div class="container mt-3">
-        {% block content %}
-        {% endblock %}
+    <div class="container flexbox-container">
+        <aside>
+            <a href="{% url 'postapp:talk_all' %}" class="menu_font_ProjectName">FF<br />project</a>
+            <i class="fas fa-key fa-lg"></i>
+            <!-- <div class="col-3"> -->
+            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <nav class="nav flex-column">
+                    <a href="{% url 'users:userinfo_edit' user.user_info.id %}" class="menu_unit_button"
+                        id="menu_shape_UserButton" role="tab" aria-controls="v-pills-user" aria-selected="false">
+                        <img class="menu_shape_ProfPicture" src="{{user.user_info.profile_image.url}}" />
+                        <p class="menu_font_MenuButton" id="_menu_font_username">{{user.username}}</p>
+                    </a>
+                    <a href="{% url 'postapp:talk_all' %}" class="menu_unit_button" id="v-pills-home-tab" role="tab"
+                        aria-controls="v-pills-home" aria-selected="false">
+                        <i class="fas fa-home fa-lg"></i>
+                        <p class="menu_font_MenuButton">Home</p>
+                    </a>
+                    <a href="{% url 'users:account' %}" class="menu_unit_button" id="v-pills-profile-tab" role="tab"
+                        aria-controls="v-pills-profile" aria-selected="false">
+                        <p class="menu_font_MenuButton">Account</p>
+                        <i class="fas fa-cog fa-lg"></i>
+                    </a>
+                    <a href="{% url 'postapp:talk_create' %}" class="menu_unit_button" class="nav-link"
+                        id="menu_color_NewpostButton" role="tab" aria-controls="v-pills-messages" aria-selected="false">
+                        <p class="menu_font_MenuButton">New post</p>
+                        <i class="fas fa-plus fa-lg"></i>
+                    </a>
+                    <a href="{% url 'users:logout' %}" class="menu_unit_button" class="nav-link" id="v-pills-settings-tab"
+                        role="tab" aria-controls="v-pills-settings" aria-selected="false">
+                        <p class="menu_font_MenuButton">Logout</p>
+                        <i class="fas fa-sign-out-alt fa-lg"></i>
+                    </a>
+                </nav>
+            </div>
+            <!-- </div> -->
+        </aside>
+    
+    {% block content %}
+    {% endblock %}
+
     </div>
+</body>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -66,6 +93,74 @@
         integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
         crossorigin="anonymous"></script>
 
-</body>
-
+    <script>
+ 
+        window.onload = function(){
+            var perfEntries = performance.getEntriesByType("navigation");
+            perfEntries.forEach(function(pe){
+                switch( pe.type ){
+                case 'navigate':
+                    // console.log('通常のアクセス');
+                    break;
+                case 'reload':
+                    // console.log('更新によるアクセス');
+                    break;
+                case 'back_forward':
+                    // console.log('戻るによるアクセス');
+                    location.reload();
+                    break;
+                case 'prerender':
+                    // console.log('レンダリング前');
+                    break;
+                }
+            });
+            };
+    
+        function update_time() {
+            let nowTime = new Date();
+            let limit_date = new Date(days = 0)
+            DAY = 0
+            HOURS = 0
+            MINUTES = 10
+    
+            const get_date = document.getElementsByClassName('lefttime');
+    
+            for (let d of get_date) {
+                let created_at = new Date(d.getAttribute('value').replace("_", "T"))
+                created_at.setDate(created_at.getDate()+DAY);
+                created_at.setHours(created_at.getHours()+HOURS);
+                created_at.setMinutes(created_at.getMinutes()+MINUTES);
+                let left_time = (created_at - nowTime) / 1000
+    
+                let daysLeft = Math.floor(left_time / (24 * 60 * 60));
+                let hoursLeft = (Math.floor(left_time / (60 * 60))) % 24;
+                let minitesLeft = (Math.floor(left_time / 60)) % 60;
+                let secondsLeft = Math.floor(left_time) % 60;
+                // 二桁表示
+                minitesLeft = ("0" + minitesLeft).slice(-2)
+                secondsLeft = ("0" + secondsLeft).slice(-2)
+                // 出力
+                console.log(typeof (d.id))
+    
+                document.querySelector("#" + d.id).innerHTML = (daysLeft + "d " + hoursLeft + "h " + minitesLeft + "m " + secondsLeft + "s ");
+            }
+        }
+    
+        update_time();
+    
+        setInterval(update_time, 1000)
+    
+        function ShowLength( str ) {
+            if (str.length < 500) {
+                document.getElementById("inputlength").innerHTML = "Word count・・・ " + str.length + "/500";
+            }else{
+                document.getElementById("inputlength").innerHTML = "Word count・・・ " + str.length + "/500   I can not enter any more";
+            }
+            }
+            
+        let target = document.getElementById('chat_frame_bottom');
+        target.scrollIntoView(false);
+            
+    
+    </script>
 </html>

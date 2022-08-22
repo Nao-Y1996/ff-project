@@ -1,529 +1,389 @@
-{% load static %}
-
-<!doctype html>
-<html lang="en">
+{% extends 'base.html' %}
 
 {% load tag_library %}
 
-	<head>
-        
-        <!-- Required meta tags -->
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-        
-        <!-- Bootstrap CSS -->
-		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
-        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous"/>
-		
-        <link
-			href="https://use.fontawesome.com/releases/v5.6.1/css/all.css"
-			rel="stylesheet"
-		/>
+{% block content %}
 
-		<link rel="stylesheet" href="{% static 'postapp/frame_split3.css' %}" />
-		<link rel="stylesheet" href="{% static 'postapp/chat.css' %}" />
-        <link rel="stylesheet" href="{% static 'postapp/menu.css' %}">
-        <link rel="stylesheet" href="{% static 'postapp/TalkList.css' %}">
-
-
-	</head>
-    <body>
-            <!-- <header>FF project<br /></header> -->
-        <div class="container flexbox-container">
-            <aside>
-                <a href="{% url 'postapp:talk_all' %}" class="menu_font_ProjectName">FF<br />project</a>
-                <i class="fas fa-key fa-lg"></i>
-                <!-- <div class="col-3"> -->
-                <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                    <nav class="nav flex-column">
-                        <a href="{% url 'users:userinfo_edit' user.user_info.id %}" class="menu_unit_button"
-                            id="menu_shape_UserButton" role="tab" aria-controls="v-pills-user" aria-selected="false">
-                            <img class="menu_shape_ProfPicture" src="{{user.user_info.profile_image.url}}" />
-                            <p class="menu_font_MenuButton" id="_menu_font_username">{{user.username}}</p>
-                        </a>
-                        <a href="{% url 'postapp:talk_all' %}" class="menu_unit_button" id="v-pills-home-tab" role="tab"
-                            aria-controls="v-pills-home" aria-selected="false">
-                            <i class="fas fa-home fa-lg"></i>
-                            <p class="menu_font_MenuButton">Home</p>
-                        </a>
-                        <a href="{% url 'users:account' %}" class="menu_unit_button" id="v-pills-profile-tab" role="tab"
-                            aria-controls="v-pills-profile" aria-selected="false">
-                            <p class="menu_font_MenuButton">Account</p>
-                            <i class="fas fa-cog fa-lg"></i>
-                        </a>
-                        <a href="{% url 'postapp:talk_create' %}" class="menu_unit_button" class="nav-link"
-                            id="menu_color_NewpostButton" role="tab" aria-controls="v-pills-messages" aria-selected="false">
-                            <p class="menu_font_MenuButton">New post</p>
-                            <i class="fas fa-plus fa-lg"></i>
-                        </a>
-                        <a href="{% url 'users:logout' %}" class="menu_unit_button" class="nav-link" id="v-pills-settings-tab"
-                            role="tab" aria-controls="v-pills-settings" aria-selected="false">
-                            <p class="menu_font_MenuButton">Logout</p>
-                            <i class="fas fa-sign-out-alt fa-lg"></i>
-                        </a>
-                    </nav>
-                </div>
-                <!-- </div> -->
-            </aside>
-
-            <main class="main1">
-                <!-- お気に入りした非activeなトークの一覧 -->
-                {% if talk_is_dead %}
-                <details open>
-                {% else %}
-                <details>
-                {% endif %}
-                    <summary>End and Favorite | Number : {{talk_count}} </summary>
-                    {% for talk in favorite_dead_talks %}
-                    <div class="TalkList_inTalkDetail_frame_table">
-                        {% check_is_detail talk detail_talk_id as is_detail %}
-                        <div class="TalkList_inTalkDetail_read_lamp {{is_detail}} "></div>
-                        <div class="TalkList_inTalkDetail_frame_outline0 {{is_detail}}">
-                            <div class="TalkList_inTalkDetail_frame_outline1">
-                                {% get_talk_partner user talk as talk_partner %}
-                                <img src="{{talk_partner.user_info.profile_image.url}}" class="TalkList_inTalkDetail_you_image" />
-                                <div class="TalkList_inTalkDetail_list_name">    
-                                    {{talk_partner}}
-                                </div>
-                            </div>
-                            <div class="TalkList_inTalkDetail_frame_outline2">
-                                <div class="TalkList_inTalkDetail_overflow">
-                                    {% if talk.exist_reply == True %}
-                                    <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">
-                                        {% get_newest_message talk.id %}
-                                    </a>
-                                    {% else %}
-                                        {% get_newest_message talk.id %}
-                                    {% endif %}
-                                </div>
-                                <div class="TalkList_inTalkDetail_table_lefttime">
-                                    <span class="TalkList_inTalkDetail_span_time">End and Favorite</span>
-                                </div>
-                            </div>
-                            <div class="TalkList_inTalkDetail_frame_outline3">
-                                <table>
-                                    <tr>
-                                        <td class="TalkList_inTalkDetail_td2">
-                                            <div class="btn-group" role="group">
-                                                <button id="btnGroupDrop1" type="button" class="TalkList_inTalkDetail_table_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <i class="fas fa-ellipsis-v"></i>
-                                                </button>
-                                                <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                                <a class="dropdown-item" href="{% url 'users:report' talk_id=talk.id %}">report</a>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="TalkList_inTalkDetail_td2">
-                                            <!--返信があればいいねボタンを表示-->
-                                            {% if talk.exist_reply == True %}
-                                                {% favorite_check user talk as exist_favorite %}
-                                                {% if exist_favorite %}
-                                                    <button type="button" class="TalkList_inTalkDetail_button_love" id="btnGroupDrop1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        <i class="fas fa-heart"></i>
-                                                    </button>
-                                                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                                        <p>If you remove favorite,this talk will disappear.</p>
-                                                        <p>Do you remove favorite?</p>
-                                                        <div class="TalkList_inTalkDetail_table_remove_favorite_frame">
-                                                            <a class="TalkList_inTalkDetail_table_remove_favorite" href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}" >YES</a>
-                                                        </div>
-                                                    </div>
-                                                {% else %}
-                                                <button class="TalkList_inTalkDetail_button_love2">
-                                                    <a href="{% url 'postapp:talk_favorite_add' talk_id=talk.id %}"
-                                                        class="fas fa-heart"></a>
-                                                </button>
-                                                {% endif %}
-                                            {% endif %}
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
+    <main class="main1">
+        <!-- お気に入りした非activeなトークの一覧 -->
+        {% if talk_is_dead %}
+        <details open>
+        {% else %}
+        <details>
+        {% endif %}
+            <summary>Favorite past chats : {{talk_count}} </summary>
+            {% for talk in favorite_dead_talks %}
+            <div class="TalkList_inTalkDetail_frame_table TalkList_favorite_table">
+                {% check_is_detail talk detail_talk_id as is_detail %}
+                <div class="TalkList_inTalkDetail_read_lamp {{is_detail}} "></div>
+                <div class="TalkList_inTalkDetail_frame_outline0 {{is_detail}}">
+                    <div class="TalkList_inTalkDetail_frame_outline1">
+                        {% get_talk_partner user talk as talk_partner %}
+                        <img src="{{talk_partner.user_info.profile_image.url}}" class="TalkList_inTalkDetail_you_image" />
+                        <div class="TalkList_inTalkDetail_list_name">    
+                            {{talk_partner}}
                         </div>
                     </div>
-                    {% endfor %}
-                </details>
-
-                <!-- その他トークの一覧 -->
-                <div class="TalkList_inTalkDetail_table_frame_all">
-                    <!-- 未確認の非activeなトークの表示 -->
-                    {% for talk in unchecked_dead_talks %}
-                    <div class="TalkList_inTalkDetail_frame_table">
-                        {% check_is_detail talk detail_talk_id as is_detail %}
-                        <div class="TalkList_inTalkDetail_read_lamp {{is_detail}}"></div>
-                        <div class="TalkList_inTalkDetail_frame_outline0 {{is_detail}}">
-                            <div class="TalkList_inTalkDetail_frame_outline1">
-                                {% get_talk_partner user talk as talk_partner %}
-                                <img src="{{talk_partner.user_info.profile_image.url}}" class="TalkList_inTalkDetail_you_image" />
-                                <div class="TalkList_inTalkDetail_list_name">
-                                    {{ talk_partner }}
-                                </div>
-                            </div>
-                            <div class="TalkList_inTalkDetail_frame_outline2">
-                                <div class="TalkList_inTalkDetail_overflow">
-                                    {% if talk.exist_reply == True %}
-                                    <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">
-                                        {% get_newest_message talk.id %}
-                                    </a>
-                                    {% else %}
-                                        {% get_newest_message talk.id %}
-                                    {% endif %}
-                                </div>
-                                <div class="TalkList_inTalkDetail_table_lefttime">
-                                    <span class="TalkList_inTalkDetail_span_time">End and Unconfirmed</span>
-                                </div>
-                            </div>
-                            <div class="TalkList_inTalkDetail_frame_outline3">
-                                <table>
-                                    <tr>
-                                        <td class="TalkList_inTalkDetail_td2">
-                                            <div class="btn-group" role="group">
-                                                <button id="btnGroupDrop1" type="button" class="TalkList_inTalkDetail_table_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                  <i class="fas fa-ellipsis-v"></i>
-                                                </button>
-                                                <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                                    <a class="dropdown-item" href="{% url 'users:report' talk_id=talk.id %}">report</a>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="TalkList_inTalkDetail_td2">
-                                            <!--返信があればいいねボタンを表示-->
-                                            {% if talk.exist_reply == True %}
-                                                {% favorite_check user talk as exist_favorite %}
-                                                {% if exist_favorite %}
-                                                    <button type="button" class="TalkList_inTalkDetail_button_love" id="btnGroupDrop1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        <i class="fas fa-heart"></i>
-                                                    </button>
-                                                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                                        <p>If you remove favorite,this talk will disappear.</p>
-                                                        <p>Do you remove favorite?</p>
-                                                        <div class="TalkList_inTalkDetail_table_remove_favorite_frame">
-                                                            <a class="TalkList_inTalkDetail_table_remove_favorite" href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}" >YES</a>
-                                                        </div>
-                                                    </div>
-                                                {% else %}
-                                                <button class="TalkList_inTalkDetail_button_love2">
-                                                    <a href="{% url 'postapp:talk_favorite_add' talk_id=talk.id %}"
-                                                        class="fas fa-heart"></a>
-                                                </button>
-                                                {% endif %}
-                                            {% endif %}
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                     <!-- 未読トークの表示 -->
-                    {% for talk in unread_talks %}
-                    <div class="TalkList_inTalkDetail_frame_table">
-                        {% check_is_detail talk detail_talk_id as is_detail %}
-                            <div class="TalkList_inTalkDetail_unread_lamp {{is_detail}}"></div>
-                            <div class="TalkList_inTalkDetail_frame_outline0 {{is_detail}}">
-                                <div class="TalkList_inTalkDetail_frame_outline1">
-                                    {% get_talk_partner user talk as talk_partner %}
-                                    <img src="{{talk_partner.user_info.profile_image.url}}" class="TalkList_inTalkDetail_you_image" />
-                                    <div class="TalkList_inTalkDetail_list_name">
-                                        {{ talk_partner }}
-                                    </div>
-                                </div>
-                                <div class="TalkList_inTalkDetail_frame_outline2">
-                                    <div class="TalkList_inTalkDetail_overflow">
-                                        <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">
-                                            {% get_newest_message talk.id %}
-                                        </a>
-                                    </div>
-                                    <div class="TalkList_inTalkDetail_table_lefttime">
-                                        <div class="TalkList_inTalkDetail_span_time">
-                                            {% integer_to_string talk.id as str_talk_id %}
-                                            <p class="TalkList_inTalkDetail_time" id={{str_talk_id}}></p>
-                                            <input class="lefttime" type="hidden" id={{str_talk_id}}
-                                                value={{talk.created_at|date:"Y-m-d_H:i:sO"}}>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="TalkList_inTalkDetail_frame_outline3">
-                                    <table>
-                                        <tr>
-                                            <td class="TalkList_inTalkDetail_td2">
-                                                <div class="btn-group" role="group">
-                                                    <button id="btnGroupDrop1" type="button" class="TalkList_inTalkDetail_table_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        <i class="fas fa-ellipsis-v"></i>
-                                                    </button>
-                                                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                                        <a class="dropdown-item" href="{% url 'users:report' talk_id=talk.id %}">report</a>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="TalkList_inTalkDetail_td2">
-                                                {% if talk.exist_reply == True %}
-                                                    {% favorite_check user talk as exist_favorite %}
-                                                    {% if exist_favorite %}
-                                                        <button class="TalkList_inTalkDetail_button_love">
-                                                            <a href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}" class="fas fa-heart"></a>
-                                                        </button>
-                                                    {% else %}
-                                                    <button class="TalkList_inTalkDetail_button_love2">
-                                                        <a href="{% url 'postapp:talk_favorite_add' talk_id=talk.id %}"
-                                                            class="fas fa-heart"></a>
-                                                    </button>
-                                                    {% endif %}
-                                                {% endif %}
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </div>
-                            </div>
-                    </div>
-                    {% endfor %}
-                    <!-- 既読トークの表示 -->
-                    {% for talk in read_talks %}
-                    <div class="TalkList_inTalkDetail_frame_table">
-                        {% check_is_detail talk detail_talk_id as is_detail %}
-                        <div class="TalkList_inTalkDetail_read_lamp {{is_detail}}"></div>
-                        <div class="TalkList_inTalkDetail_frame_outline0 {{is_detail}}">
-                            <div class="TalkList_inTalkDetail_frame_outline1">
-                                {% get_talk_partner user talk as talk_partner %}
-                                <img src="{{talk_partner.user_info.profile_image.url}}" class="TalkList_inTalkDetail_you_image" />
-                                <div class="TalkList_inTalkDetail_list_name">    
-                                    {{ talk_partner }}
-                                </div>
-                            </div>
-                            <div class="TalkList_inTalkDetail_frame_outline2">
-                                <div class="TalkList_inTalkDetail_overflow">
-                                    {% if talk.sending_user == user %}
-                                        {% if talk.exist_reply == True %}
-                                        <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">
-                                            {% get_newest_message talk.id %}
-                                        </a>
-                                        {% else %}
-                                            {% get_newest_message talk.id %}
-                                        {% endif %}
-                                    {% else %}
-                                        <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">
-                                        {% get_newest_message talk.id %}
-                                        </a>
-                                    {% endif %}
-                                </div>
-                                <div class="TalkList_inTalkDetail_table_lefttime">
-                                    <div class="TalkList_inTalkDetail_span_time">
-                                        {% integer_to_string talk.id as str_talk_id %}
-                                        <p class="TalkList_inTalkDetail_time" id={{str_talk_id}}></p>
-                                        <input class="lefttime" type="hidden" id={{str_talk_id}}
-                                            value={{talk.created_at|date:"Y-m-d_H:i:sO"}}>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="TalkList_inTalkDetail_frame_outline3">
-                                <table>
-                                    <tr>
-                                        <td class="TalkList_inTalkDetail_td2">
-                                            <div class="btn-group" role="group">
-                                                <button id="btnGroupDrop1" type="button" class="TalkList_inTalkDetail_table_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                  <i class="fas fa-ellipsis-v"></i>
-                                                </button>
-                                                <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                                  <a class="dropdown-item" href="{% url 'users:report' talk_id=talk.id %}">report</a>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="TalkList_inTalkDetail_td2">
-                                            {% if talk.exist_reply == True %}
-                                                {% favorite_check user talk as exist_favorite %}
-                                                {% if exist_favorite %}
-                                                    <button class="TalkList_inTalkDetail_button_love">
-                                                        <a href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}" class="fas fa-heart"></a>
-                                                    </button>
-                                                {% else %}
-                                                <button class="TalkList_inTalkDetail_button_love2">
-                                                    <a href="{% url 'postapp:talk_favorite_add' talk_id=talk.id %}"
-                                                        class="fas fa-heart"></a>
-                                                </button>
-                                                {% endif %}
-                                            {% endif %}
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            </main>
-
-            <main class="main2">
-				<div class="chat_frame_outline">
-					<div class="chat_frame_outline2">
-                        {% for message in messages %}
-                            {% if message.is_date == True %}
-                                <div class="chat_form_data">{{message.created_at|date:"Y-m-d"}}</div>
+                    <div class="TalkList_inTalkDetail_frame_outline2">
+                        <div class="TalkList_inTalkDetail_overflow">
+                            {% if talk.exist_reply == True %}
+                            <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">
+                                {% get_newest_message talk.id %}
+                            </a>
                             {% else %}
-                                {% if message.sending_user_id != user.id %}
-                                    <div class="chat_frame_outline3">
-                                        <div class='chat_frame_image'>
-                                            <img src="{{message.sending_user.user_info.profile_image.url}}"  class="chat_image_rounded">
-                                            <div class="chart_text_talk-limit">{{message.created_at|date:"H:i"}}</div>   
-                                        </div>
-                                        <div class="chat_frame_talk_partner">
-                                            <p class="chat_text_talk">{{message.content}}</p>
-                                        </div>
-                                    </div>
-                                {% else %}
-                                    <div class="chat_frame_outline4">
-                                        <div class="chat_frame_talk_me">
-                                            <p class="chat_text_talk">{{message.content}}</p>    
-                                        </div>
-                                        <div class='chat_frame_image'>
-                                            <img src="{{message.sending_user.user_info.profile_image.url}}" class="chat_image_rounded">
-                                            <div class="chart_text_talk-limit">{{message.created_at|date:"H:i"}}</div>   
-                                        </div>
-                                    </div>
-                                {% endif %}
+                                {% get_newest_message talk.id %}
                             {% endif %}
-                        {% endfor %}
-                        {% if talk_is_dead %}
-                            <div class="chat_frame_opendata">
-                                <div class="chat_text_heading">●Public information</div>
-                                <div class="chat_frame_userdata">
-                                    <div class="chat_frame_info">
-                                        <div class="chat_item_name">Username:</div>
-                                        <div class="chat_info_name">{{sending_user}}</div>
+                        </div>
+                        <div class="TalkList_inTalkDetail_table_lefttime">
+                            <span class="TalkList_inTalkDetail_span_time">Time's up. Please confirm message</span>
+                        </div>
+                    </div>
+                    <div class="TalkList_inTalkDetail_frame_outline3">
+                        <table>
+                            <tr>
+                                <td class="TalkList_inTalkDetail_td2">
+                                    <div class="btn-group" role="group">
+                                        <button id="btnGroupDrop1" type="button" class="TalkList_inTalkDetail_table_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                        <a class="dropdown-item" href="{% url 'users:report' talk_id=talk.id %}">Report</a>
+                                        </div>
                                     </div>
-                                    <div class="chat_frame_info">
-                                        <div class="chat_item_age">Age:</div>
-                                        <div class="chat_info_age">{{user_info.age}}</div>
-                                    </div>
-                                    <div class="chat_frame_info">
-                                        <div class="chat_item_nationality">country:</div>
-                                        <div class="chat_info_nationality">{{user_info.country}}</div>
-                                    </div>
-                                    <div class="chat_frame_info_introduction">
-                                        <div class="chat_item_introduction">introduction:</div>
-                                        <div class="chat_info_introduction">
-                                            <div class="grad-wrap">
-                                                <input id="trigger1" class="grad-trigger" type="checkbox">
-                                                <div class="grad-item">{{user_info.introduction}}</div>
-                                                <div class="chat_positon_infobutton">
-                                                    <label class="grad-btn" for="trigger1">Click to read more</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="TalkList_inTalkDetail_td2">
+                                    <!--返信があればいいねボタンを表示-->
+                                    {% if talk.exist_reply == True %}
+                                        {% favorite_check user talk as exist_favorite %}
+                                        {% if exist_favorite %}
+                                            <button type="button" class="TalkList_inTalkDetail_button_love" id="btnGroupDrop1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fas fa-heart"></i>
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                                <p>If you remove favorite,this talk will disappear.</p>
+                                                <p>Do you remove favorite?</p>
+                                                <div class="TalkList_inTalkDetail_table_remove_favorite_frame">
+                                                    <a class="TalkList_inTalkDetail_table_remove_favorite" href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}" >YES</a>
                                                 </div>
                                             </div>
+                                        {% else %}
+                                        <button class="TalkList_inTalkDetail_button_love2">
+                                            <a href="{% url 'postapp:talk_favorite_add' talk_id=talk.id %}"
+                                                class="fas fa-heart"></a>
+                                        </button>
+                                        {% endif %}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </details>
+
+        <!-- その他トークの一覧 -->
+        <div class="TalkList_inTalkDetail_table_frame_all">
+            <!-- 未確認の非activeなトークの表示 -->
+            {% for talk in unchecked_dead_talks %}
+            <div class="TalkList_inTalkDetail_frame_table">
+                {% check_is_detail talk detail_talk_id as is_detail %}
+                <div class="TalkList_inTalkDetail_read_lamp {{is_detail}}"></div>
+                <div class="TalkList_inTalkDetail_frame_outline0 {{is_detail}}">
+                    <div class="TalkList_inTalkDetail_frame_outline1">
+                        {% get_talk_partner user talk as talk_partner %}
+                        <img src="{{talk_partner.user_info.profile_image.url}}" class="TalkList_inTalkDetail_you_image" />
+                        <div class="TalkList_inTalkDetail_list_name">
+                            {{ talk_partner }}
+                        </div>
+                    </div>
+                    <div class="TalkList_inTalkDetail_frame_outline2">
+                        <div class="TalkList_inTalkDetail_overflow">
+                            {% if talk.exist_reply == True %}
+                            <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">
+                                {% get_newest_message talk.id %}
+                            </a>
+                            {% else %}
+                                {% get_newest_message talk.id %}
+                            {% endif %}
+                        </div>
+                        <div class="TalkList_inTalkDetail_table_lefttime">
+                            <span class="TalkList_inTalkDetail_span_time">Time's up. Please confirm message</span>
+                        </div>
+                    </div>
+                    <div class="TalkList_inTalkDetail_frame_outline3">
+                        <table>
+                            <tr>
+                                <td class="TalkList_inTalkDetail_td2">
+                                    <div class="btn-group" role="group">
+                                        <button id="btnGroupDrop1" type="button" class="TalkList_inTalkDetail_table_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-v"></i>
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                            <a class="dropdown-item" href="{% url 'users:report' talk_id=talk.id %}">Report</a>
                                         </div>
                                     </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="TalkList_inTalkDetail_td2">
+                                    <!--返信があればいいねボタンを表示-->
+                                    {% if talk.exist_reply == True %}
+                                        {% favorite_check user talk as exist_favorite %}
+                                        {% if exist_favorite %}
+                                            <button type="button" class="TalkList_inTalkDetail_button_love" id="btnGroupDrop1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fas fa-heart"></i>
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                                <p>If you remove favorite,this talk will disappear.</p>
+                                                <p>Do you remove favorite?</p>
+                                                <div class="TalkList_inTalkDetail_table_remove_favorite_frame">
+                                                    <a class="TalkList_inTalkDetail_table_remove_favorite" href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}" >YES</a>
+                                                </div>
+                                            </div>
+                                        {% else %}
+                                        <button class="TalkList_inTalkDetail_button_love2">
+                                            <a href="{% url 'postapp:talk_favorite_add' talk_id=talk.id %}"
+                                                class="fas fa-heart"></a>
+                                        </button>
+                                        {% endif %}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+                <!-- 未読トークの表示 -->
+            {% for talk in unread_talks %}
+            <div class="TalkList_inTalkDetail_frame_table">
+                {% check_is_detail talk detail_talk_id as is_detail %}
+                    <div class="TalkList_inTalkDetail_unread_lamp {{is_detail}}"></div>
+                    <div class="TalkList_inTalkDetail_frame_outline0 {{is_detail}}">
+                        <div class="TalkList_inTalkDetail_frame_outline1">
+                            {% get_talk_partner user talk as talk_partner %}
+                            <img src="{{talk_partner.user_info.profile_image.url}}" class="TalkList_inTalkDetail_you_image" />
+                            <div class="TalkList_inTalkDetail_list_name">
+                                {{ talk_partner }}
+                            </div>
+                        </div>
+                        <div class="TalkList_inTalkDetail_frame_outline2">
+                            <div class="TalkList_inTalkDetail_overflow">
+                                <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">
+                                    {% get_newest_message talk.id %}
+                                </a>
+                            </div>
+                            <div class="TalkList_inTalkDetail_table_lefttime">
+                                <div class="TalkList_inTalkDetail_span_time">
+                                    {% integer_to_string talk.id as str_talk_id %}
+                                    <p class="TalkList_inTalkDetail_time" id={{str_talk_id}}></p>
+                                    <input class="lefttime" type="hidden" id={{str_talk_id}}
+                                        value={{talk.created_at|date:"Y-m-d_H:i:sO"}}>
                                 </div>
-                                <div class="chat_frame_button">
-                                {% if Exist_favorites == False %}
-                                    <a type="submit" class="chat_button_opendata" href="{% url 'postapp:final_favorite_add' talk_id=detail_talk_id %}">favorite</a>
-                                    <a class="chat_button_opendata" href="{% url 'postapp:final_favorite_delete' talk_id=detail_talk_id %}">delete</a>
-                                    {% else %}
-                                    <a class="chat_button_opendata" href="{% url 'postapp:confirmed_add' talk_id=detail_talk_id %}">Home</a>
+                            </div>
+                        </div>
+                        <div class="TalkList_inTalkDetail_frame_outline3">
+                            <table>
+                                <tr>
+                                    <td class="TalkList_inTalkDetail_td2">
+                                        <div class="btn-group" role="group">
+                                            <button id="btnGroupDrop1" type="button" class="TalkList_inTalkDetail_table_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fas fa-ellipsis-v"></i>
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                                <a class="dropdown-item" href="{% url 'users:report' talk_id=talk.id %}">Report</a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="TalkList_inTalkDetail_td2">
+                                        {% if talk.exist_reply == True %}
+                                            {% favorite_check user talk as exist_favorite %}
+                                            {% if exist_favorite %}
+                                                <button class="TalkList_inTalkDetail_button_love">
+                                                    <a href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}" class="fas fa-heart"></a>
+                                                </button>
+                                            {% else %}
+                                            <button class="TalkList_inTalkDetail_button_love2">
+                                                <a href="{% url 'postapp:talk_favorite_add' talk_id=talk.id %}"
+                                                    class="fas fa-heart"></a>
+                                            </button>
+                                            {% endif %}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+            </div>
+            {% endfor %}
+            <!-- 既読トークの表示 -->
+            {% for talk in read_talks %}
+            <div class="TalkList_inTalkDetail_frame_table">
+                {% check_is_detail talk detail_talk_id as is_detail %}
+                <div class="TalkList_inTalkDetail_read_lamp {{is_detail}}"></div>
+                <div class="TalkList_inTalkDetail_frame_outline0 {{is_detail}}">
+                    <div class="TalkList_inTalkDetail_frame_outline1">
+                        {% get_talk_partner user talk as talk_partner %}
+                        <img src="{{talk_partner.user_info.profile_image.url}}" class="TalkList_inTalkDetail_you_image" />
+                        <div class="TalkList_inTalkDetail_list_name">    
+                            {{ talk_partner }}
+                        </div>
+                    </div>
+                    <div class="TalkList_inTalkDetail_frame_outline2">
+                        <div class="TalkList_inTalkDetail_overflow">
+                            {% if talk.sending_user == user %}
+                                {% if talk.exist_reply == True %}
+                                <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">
+                                    {% get_newest_message talk.id %}
+                                </a>
+                                {% else %}
+                                    {% get_newest_message talk.id %}
                                 {% endif %}
+                            {% else %}
+                                <a href="{% url 'postapp:talk_detail' talk_id=talk.id %}">
+                                {% get_newest_message talk.id %}
+                                </a>
+                            {% endif %}
+                        </div>
+                        <div class="TalkList_inTalkDetail_table_lefttime">
+                            <div class="TalkList_inTalkDetail_span_time">
+                                {% integer_to_string talk.id as str_talk_id %}
+                                <p class="TalkList_inTalkDetail_time" id={{str_talk_id}}></p>
+                                <input class="lefttime" type="hidden" id={{str_talk_id}}
+                                    value={{talk.created_at|date:"Y-m-d_H:i:sO"}}>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="TalkList_inTalkDetail_frame_outline3">
+                        <table>
+                            <tr>
+                                <td class="TalkList_inTalkDetail_td2">
+                                    <div class="btn-group" role="group">
+                                        <button id="btnGroupDrop1" type="button" class="TalkList_inTalkDetail_table_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-v"></i>
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                            <a class="dropdown-item" href="{% url 'users:report' talk_id=talk.id %}">report</a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="TalkList_inTalkDetail_td2">
+                                    {% if talk.exist_reply == True %}
+                                        {% favorite_check user talk as exist_favorite %}
+                                        {% if exist_favorite %}
+                                            <button class="TalkList_inTalkDetail_button_love">
+                                                <a href="{% url 'postapp:talk_favorite_delete' talk_id=talk.id %}" class="fas fa-heart"></a>
+                                            </button>
+                                        {% else %}
+                                        <button class="TalkList_inTalkDetail_button_love2">
+                                            <a href="{% url 'postapp:talk_favorite_add' talk_id=talk.id %}"
+                                                class="fas fa-heart"></a>
+                                        </button>
+                                        {% endif %}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </main>
+
+    <main class="main2">
+            <div class="chat_frame_outline">
+                <div class="chat_frame_outline2">
+                    {% for message in messages %}
+                        {% if message.is_date == True %}
+                            <div class="chat_form_data">{{message.created_at|date:"Y-m-d"}}</div>
+
+                    {% else %}
+                        {% if message.sending_user_id != user.id %}
+                            <div class="chat_frame_outline3">
+                                <div class='chat_frame_image'>
+                                    <img src="{{message.sending_user.user_info.profile_image.url}}"  class="chat_image_rounded">
+                                    <div class="chart_text_talk-limit">{{message.created_at|date:"H:i"}}</div>   
                                 </div>
-                                <div class="chat_text_caution">cannot send message</div>
+                                <div class="chat_frame_talk_partner">
+                                    <p class="chat_text_talk">{{message.content}}</p>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="chat_frame_outline4">
+                                <div class="chat_frame_talk_me">
+                                    <p class="chat_text_talk">{{message.content}}</p>    
+                                </div>
+                                <div class='chat_frame_image'>
+                                    <img src="{{message.sending_user.user_info.profile_image.url}}" class="chat_image_rounded">
+                                    <div class="chart_text_talk-limit">{{message.created_at|date:"H:i"}}</div>   
+                                </div>                            
                             </div>
                         {% endif %}
-                        <div id="chat_frame_bottom"></div>
-                    </div>
-                    {% if not talk_is_dead %}
-                        <form method="POST" class="chat_frame_form" id="scroll">
-                            {% csrf_token %}
-                            {{ form.id.as_hidden }}
-                            {{ form.sending_user.as_hidden }}
-                            {{ form.content }}
-                            {{ form.talk.as_hidden}}
-                            {{ form.created_at.as_hidden }}
-                            <button type="submit" class="chat_frame_send-button">
-                                <i class="fas fa-paper-plane fa-lg"></i>
-                            </button>
-                        </form>
                     {% endif %}
-				</div>
-			</main>
-
-            <script>
-
-                /*
-                const data = JSON.parse('{{ data_json|safe }}');
-            
-                function init_display() {
-                    for (let d in data) {
-                        var newElement = document.createElement("p"); // p要素作成
-                        newElement.setAttribute("id", "talk" + d); // p要素にidを設定
-            
-                        var parentDiv = document.getElementById("talks-time_limit");
-                        parentDiv.insertBefore(newElement, parentDiv.lastChild);
-                    }
-                }
-                */
-            
-                function update_time() {
-                    let nowTime = new Date();
-                    let limit_date = new Date(days = 0)
-                    DAY = 0
-                    HOURS = 0
-                    MINUTES = 10
-
-                    const get_date = document.getElementsByClassName('lefttime');
-
-                    for (let d of get_date) {
-                        let created_at = new Date(d.getAttribute('value').replace("_", "T"))
-                        created_at.setDate(created_at.getDate()+DAY);
-                        created_at.setHours(created_at.getHours()+HOURS);
-                        created_at.setMinutes(created_at.getMinutes()+MINUTES);
-                        let left_time = (created_at - nowTime) / 1000
-
-                        let daysLeft = Math.floor(left_time / (24 * 60 * 60));
-                        let hoursLeft = (Math.floor(left_time / (60 * 60))) % 24;
-                        let minitesLeft = (Math.floor(left_time / 60)) % 60;
-                        let secondsLeft = Math.floor(left_time) % 60;
-                        // 二桁表示
-                        minitesLeft = ("0" + minitesLeft).slice(-2)
-                        secondsLeft = ("0" + secondsLeft).slice(-2)
-                        // 出力
-                        console.log(typeof (d.id))
-
-                        document.querySelector("#" + d.id).innerHTML = (daysLeft + "d " + hoursLeft + "h " + minitesLeft + "m " + secondsLeft + "s ");
-                    }
-                }
-                /*
-                init_display();
-                */
-                update_time();
-            
-                setInterval(update_time, 1000)
-            
-            </script>
-            
-            <!-- Optional JavaScript -->
-			<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-			<script
-            src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-            crossorigin="anonymous"
-            ></script>
-            <script
-            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
-            integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
-            crossorigin="anonymous"
-            ></script>
-            <script
-            src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
-            integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
-            crossorigin="anonymous"></script>
-
-            
-            <script>
-                let target = document.getElementById('chat_frame_bottom');
-                target.scrollIntoView(false);
-            </script>
+                {% endfor %}
+                {% if talk_is_dead %}
+                    <div class="chat_frame_opendata">
+                        <div class="chat_text_heading">●Public information</div>
+                        <div class="chat_frame_userdata">
+                            <div class="chat_frame_info">
+                                <div class="chat_item_name">Username:</div>
+                                <div class="chat_info_name">{{sending_user}}</div>
+                            </div>
+                            <div class="chat_frame_info">
+                                <div class="chat_item_age">Age:</div>
+                                <div class="chat_info_age">{{user_info.age}}</div>
+                            </div>
+                            <div class="chat_frame_info">
+                                <div class="chat_item_nationality">Country:</div>
+                                <div class="chat_info_nationality">{{user_info.country}}</div>
+                            </div>
+                            <div class="chat_frame_info_introduction">
+                                <div class="chat_item_introduction">Introduction:</div>
+                                <div class="chat_info_introduction">
+                                    <div class="grad-wrap">
+                                        <input id="trigger1" class="grad-trigger" type="checkbox">
+                                        <div class="grad-item">{{user_info.introduction}}</div>
+                                        <div class="chat_positon_infobutton">
+                                            <label class="grad-btn" for="trigger1">Click to read more</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chat_frame_button">
+                        {% if Exist_favorites == False %}
+                            <a type="submit" class="chat_button_opendata" href="{% url 'postapp:final_favorite_add' talk_id=detail_talk_id %}">Favorite</a>
+                            <a class="chat_button_opendata" href="{% url 'postapp:final_favorite_delete' talk_id=detail_talk_id %}">Delete</a>
+                            {% else %}
+                            <a class="chat_button_opendata" href="{% url 'postapp:confirmed_add' talk_id=detail_talk_id %}">Home</a>
+                        {% endif %}
+                        </div>
+                        <div class="chat_text_caution">Cannot send message</div>
+                    </div>
+                {% endif %}
+                <div id="chat_frame_bottom"></div>
+            </div>
+            {% if not talk_is_dead %}
+                <form method="POST" class="chat_frame_form" id="scroll">
+                    {% csrf_token %}
+                    {{ form.id.as_hidden }}
+                    {{ form.sending_user.as_hidden }}
+                    {{ form.content }}
+                    {{ form.talk.as_hidden}}
+                    {{ form.created_at.as_hidden }}
+                    <button type="submit" class="chat_frame_send-button">
+                        <i class="fas fa-paper-plane fa-lg"></i>
+                    </button>
+                </form>
+            {% endif %}
         </div>
-
-    </body>
+    </main>
+{% endblock %}

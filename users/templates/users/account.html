@@ -1,105 +1,32 @@
-{% load static %}
+{% extends 'base.html' %}
 
-<!doctype html>
-<html lang="en">
+{% block content %}
 
-<head>
+{% if user.is_authenticated %}
 
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
-        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-
-    <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet" />
-
-    <link rel="stylesheet" href="{% static 'postapp/frame.css' %}">
-    <link rel="stylesheet" href="{% static 'postapp/menu.css' %}">
-    <link rel="stylesheet" href="{% static 'users/button.css' %}" />
-    <link rel="stylesheet" href="{% static 'postapp/Signup.css' %}" />
-
-
-</head>
-
-<body>
-    <!-- <header>FF project<br /></header> -->
-    <div class="container flexbox-container">
-        <aside>
-            <a href="{% url 'postapp:talk_all' %}" class="menu_font_ProjectName">FF<br />project</a>
-            <i class="fas fa-key fa-lg"></i>
-            <!-- <div class="col-3"> -->
-            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                <nav class="nav flex-column">
-                    <a href="{% url 'users:userinfo_edit' user.user_info.id %}" class="menu_unit_button"
-                        id="menu_shape_UserButton" role="tab" aria-controls="v-pills-user" aria-selected="false">
-                        <img class="menu_shape_ProfPicture" src="{{user.user_info.profile_image.url}}" />
-                        <p class="menu_font_MenuButton" id="_menu_font_username">{{user.username}}</p>
-                    </a>
-                    <a href="{% url 'postapp:talk_all' %}" class="menu_unit_button" id="v-pills-home-tab" role="tab"
-                        aria-controls="v-pills-home" aria-selected="false">
-                        <i class="fas fa-home fa-lg"></i>
-                        <p class="menu_font_MenuButton">Home</p>
-                    </a>
-                    <a href="{% url 'users:account' %}" class="menu_unit_button" id="v-pills-profile-tab" role="tab"
-                        aria-controls="v-pills-profile" aria-selected="false">
-                        <p class="menu_font_MenuButton">Account</p>
-                        <i class="fas fa-cog fa-lg"></i>
-                    </a>
-                    <a href="{% url 'postapp:talk_create' %}" class="menu_unit_button" class="nav-link"
-                        id="menu_color_NewpostButton" role="tab" aria-controls="v-pills-messages" aria-selected="false">
-                        <p class="menu_font_MenuButton">New post</p>
-                        <i class="fas fa-plus fa-lg"></i>
-                    </a>
-                    <a href="{% url 'users:logout' %}" class="menu_unit_button" class="nav-link" id="v-pills-settings-tab"
-                        role="tab" aria-controls="v-pills-settings" aria-selected="false">
-                        <p class="menu_font_MenuButton">Logout</p>
-                        <i class="fas fa-sign-out-alt fa-lg"></i>
-                    </a>
-                </nav>
-            </div>
-            <!-- </div> -->
-        </aside>
-
-        {% if user.is_authenticated %}
-
-        <main>
-            <div class="signup_frame_all">
-                <div class="signup_text_content">Account</div>
-                
-
-                
+<main>
+    <div class="signup_body_area">
+        <div class="signup_frame_all">
+            <div class="signup_text_content">Account</div>
                 <div class="signup_frame_tab">
-                    <div class="signup_text_email">Email</div>
                         <div class="button_area_button">
-                            <a href="{% url 'users:email_change' %}" type="button" class="button_button_next" name="button_change_email"> Change </a>
+                            <a href="{% url 'users:email_change' %}" type="button" class="button_button_next" name="button_change_email" id="button_button_EmailChange"> Change Email</a>
                         </div>
-                    <div class="signup_text_password">Password</div>
                         <div class="button_area_button">
-                            <a href="{% url 'users:password_change' %}" type="button" class="button_button_next" name="button_change_password"> Change </a>
+                            <a href="{% url 'users:password_change' %}" type="button" class="button_button_next" name="button_change_password" id="button_button_EmailChange"> Change password</a>
                         </div>
                     <div class="button_area_button">
-                            <a class="button_button_withdrawal" href="{% url 'users:withdrawal' %}">
-                                <p>Withdrawal</p>
+                            <a class="button_button_next" href="{% url 'users:withdrawal' %}" id="button_button_DeleteAccount">
+                                <p>Delete account</p>
                             </a>
                     </div>
                 </div>
             </div>
-        </main>
-        {% else %}
-        <p>ログインしていません。</p>
-        {% endif %}
-
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-            crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
-            integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
-            crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
-            integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
-            crossorigin="anonymous"></script>
-
+        </div>
     </div>
-</body>
+</main>
+{% else %}
+<p>ログインしていません。</p>
+{% endif %}
+
+{% endblock %}

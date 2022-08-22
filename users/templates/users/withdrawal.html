@@ -23,13 +23,13 @@
 	</head>
 	<body>
 		<div class="signup_frame_all" id="signup_withdraw_frame" >
-			<div class="signup_text_content">Do you withdraw from this app?</div>
+			<div class="signup_text_content">Do you delete this app?</div>
 			<div class="signup_frame_tab">
                 <form method="POST">
                     {% csrf_token %}
                     <div class="button_list" id="button_button_withdrawal_area_button">
                         <a class="button_button_withdrawal" href="{% url 'postapp:talk_all' %}">Back</a>
-                        <button  class="button_button_next" type="submit">Withdrawal</button>
+                        <button  class="button_button_next" type="submit">delete</button>
                     </div>
                 </form>
 			</div>

@@ -17,11 +17,11 @@
 {% endif %}
 
 {% if messages %}
-	<ul class="messages_ul">
+	<div class="messages_ul">
 		{% for message in messages %}
 			<p class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</p>
 		{% endfor %}
-	</ul>
+	</div>
 {% endif %}
 
 <link rel="stylesheet" href="{% static 'users/button.css' %}">
@@ -47,7 +47,7 @@
                     type="submit"
                     value="login"
                 >
-                login</button>
+                Login</button>
                 <input type="hidden" name="next" value="{{ next }}">
             </div>
         </form>

@@ -1,12 +1,17 @@
-
+.signup_body_area{
+	display:flex;
+	align-items: center;
+    justify-content: center;
+	flex-flow: column;
+}
 
 .signup_frame_all{
-	widows: 50%;
+	width: 100%;
 	display:flex;
 	align-items: center;
 	flex-flow: column;
 	padding:20px;
-	margin: auto;
+	margin: 0 auto;
 	/* border: solid 3px #333; */
 }
 
@@ -27,6 +32,7 @@
 	font-weight: bold;
 	font-size:20px;
 	color: orange;
+	text-align: center;
 }
 
 .signup_input_newform{
@@ -41,22 +47,7 @@
 	outline:none;
 }
 
-table,tr{
-	width:100%;
-	
-}
-
-.signup_form_td_form{
-	padding: 0 20px;
-	width: 400px;
-	
-
-}
-
-.signup_form_td_button{
-	width:200px;
-}
-
 #signup_withdraw_frame{
 	margin-top: 200px;
 }
+
