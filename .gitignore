@@ -1,6 +1,7 @@
 db.sqlite3
 local_settings.py
-media/
+media/*
+!media/no_image.png
 users/migrations/*
 postapp/migrations/*
 users/__pycache__/

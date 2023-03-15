@@ -15,7 +15,6 @@ import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-# print('BASE_DIR：'+str(BASE_DIR))
 
 
 # Quick-start development settings - unsuitable for production
@@ -30,8 +29,6 @@ try:
 except ImportError:
     pass
 
-# SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
 
 ALLOWED_HOSTS = ['192.168.179.5:8000','127.0.0.1','localhost']
 
@@ -133,13 +130,11 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 AUTH_USER_MODEL = 'users.CustomUser'
 LOGIN_URL = 'users:login'
-LOGIN_REDIRECT_URL = 'users:profile'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # 画像を保存する先の指定
-MEDIA＿ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # 画像をdjango側で読み込むための設定
 MEDIA_URL = '/media/'
 

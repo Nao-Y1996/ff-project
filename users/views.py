@@ -1,7 +1,6 @@
 from django.contrib.auth import logout
 from django.shortcuts import render
 from django.contrib.auth.forms import UserCreationForm
-# from django.contrib.auth.models import CustomUser
 from django.conf import settings
 from django.contrib.auth import get_user_model, authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -70,32 +69,6 @@ def Top(request):
             return redirect('postapp:talk_all')
     else:
         return render(request, 'users/top.html')
-
-
-# @login_required
-# def profile(request):
-#     user_info = request.user.user_info
-#     # 国が登録されていない時は登録ページに飛ぶ
-#     if user_info.nationality == None:
-#         form = UserInfoUpdateForm(instance=user_info)
-#         return redirect('users:userinfo_edit', info_id=user_info.id)
-#     else:
-#         exist_profile_image = bool(user_info.profile_image)
-#         if exist_profile_image:
-#             profile_image = str(user_info.profile_image)
-#         else:
-#             profile_image = 'no_image.png'
-#     return render(request, 'users/profile.html', {'profile_image': profile_image})
-    # if request.method == 'POST':
-    #     if form.is_valid():
-    #         form = ReportForm(request.POST)
-    #         form.save()
-    #         return redirect('users:profile', pk=request.user.id)
-    #     else:
-    #         return render(request, 'users/profile.html', {'form':form})
-    # else:
-    #     form = ReportForm()
-    #     return render(request,'users/profile.html', {'form':form, 'id':pk})
 
 
 @login_required
@@ -321,7 +294,6 @@ def UserReregistrationComplete(request, **kwargs):
                 user.is_active = True
                 user.save()
                 user_create_completed = True
-                # return super().get(request, **kwargs)
     messages.info(
         request, f'再開処理を完了しました。ログインできます。')
     form = LoginForm()
@@ -400,7 +372,6 @@ class UserCreateComplete(generic.TemplateView):
                     user.is_active = True
                     user.save()
                     user_create_completed = True
-                    # return super().get(request, **kwargs)
         if user_create_completed:
             user_info = UserInfo(user=user)
             user_info.save()
@@ -415,7 +386,6 @@ def EditUserInfo(request, info_id):
     if user_info.user != request.user:
         return redirect('postapp:talk_all')
     if request.method == 'POST':
-        # return reverse('users:profile', kwargs={'pk': request.user.id})
         messages.success(request, 'Successfully Update')
         form = UserInfoUpdateForm(
             request.POST, request.FILES, instance=user_info)
@@ -423,7 +393,6 @@ def EditUserInfo(request, info_id):
             form.save()
             return redirect("postapp:talk_all")
         else:
-            # return redirect('users:profile', pk=request.user.id)
             return render(request, 'users/userinfo_update.html', {'form': form})
     else:
         form = UserInfoUpdateForm(instance=user_info)
@@ -546,7 +515,6 @@ def withdrawal(request):
         except:
             return render(request, 'users/withdrawal.html')
     else:
-        # form = WithdrawalForm
         return render(request, 'users/withdrawal.html')
 
 

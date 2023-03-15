@@ -119,9 +119,10 @@
         function update_time() {
             let nowTime = new Date();
             let limit_date = new Date(days = 0)
-            DAY = 0
+            // views.pyと合わせる必要あり
+            DAYS = 0 
             HOURS = 0
-            MINUTES = 10
+            MINUTES = 5 
     
             const get_date = document.getElementsByClassName('lefttime');
     

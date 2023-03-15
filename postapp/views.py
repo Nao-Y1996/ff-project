@@ -26,10 +26,12 @@ import random
 import numpy as np
 import sys
 from django_pandas.io import read_frame
-DAYS = 0
+# そのユーザーとチャットができる期間
+DAYS = 0 # 7
 HOURS = 0
-MINUTES = 1
-SEND_NUM_LIMIT = 10
+MINUTES = 5 # 0
+# 1日に送信できるメッセージの上限数
+SEND_NUM_LIMIT = 7
 
  # -----------------------（アルゴリズム検証）---------------------------
 # from algorithm_check import algorithm_checker_utils
@@ -61,6 +63,7 @@ def is_talk_active(talk):
         is_talk_active = True
     return is_talk_active
 
+# 自分のトークの分類を行う
 def my_talks_classification(request):
     
     def was_read(talk):
@@ -122,6 +125,7 @@ def my_talks_classification(request):
         
     return params
 
+# メッセージを送信する
 def post(request):
 
     message = Message(content="date_data",is_date=1,sending_user=request.user)
@@ -176,6 +180,7 @@ def post(request):
     else:
         return is_posted, form
 
+# トーク一覧画面
 def talk_all(request):
     
     params = my_talks_classification(request)
@@ -206,19 +211,15 @@ def talk_all(request):
             params["talk_exist"] = True
             return render(request, "postapp/talk_all.html", params)
 
-
-def decide_reciever(request):  # 送り先を決定するアルゴリズム
+# 送り先を決定するアルゴリズム
+def decide_reciever(request):
     found_reciever = False
     send_id = None
     all_user_info = UserInfo.objects.all()
     df = read_frame(all_user_info, fieldnames=['user',
                                             'priority_rank',
                                             'capacity_new_msg'])
-    # print('-----------  df  -----------')
-    # print(df)
-    # print('----------------------------')
     cap = df['capacity_new_msg'].max() + 1
-    # cap_min = df['capacity_new_msg'].min()
     exist_talk_count = 0
     while True:
         cap -= 1
@@ -284,7 +285,7 @@ def decide_reciever(request):  # 送り先を決定するアルゴリズム
     print(f'送信先 --> user_id={send_id} ')
     return send_id
         
-
+# メッセージ送信先の優先度を更新する
 def update_sending_priority_rank():
     all_users_info = UserInfo.objects.all()
     # メッセージ送信の優先度の判定基準となる各カウント数をDataFrameに格納
@@ -328,7 +329,7 @@ def update_sending_priority_rank():
     func.save()
     print(f'関数を実行しました：{self_func_name}, time --> {func.executed_at}')
 
-
+# 優先度の計算用のデータをリセットする
 def reset_count_for_priority_rank():
     all_user_info = UserInfo.objects.all()
     upd_user_infos = []
@@ -347,8 +348,8 @@ def reset_count_for_priority_rank():
     func.save()
     print(f'関数を実行しました：{self_func_name}, time --> {func.executed_at}')
 
-
-def talk_create(request):  # 新規トークフォーム
+# 新規トークフォーム
+def talk_create(request): 
     if request.method == 'POST':
         is_posted, form = post(request)
         if is_posted:
@@ -365,8 +366,8 @@ def talk_create(request):  # 新規トークフォーム
         form = NewTalkForm(initial=initial_dict)
         return render(request, 'postapp/talk_create.html', {'form': form})
 
-
-def talk_detail(request, talk_id):  # 既存トークフォーム
+# 既存トークフォーム
+def talk_detail(request, talk_id):  
     talk = Talks.objects.get(id=talk_id)
 
     if request.method == 'POST':
@@ -493,8 +494,8 @@ def talk_detail(request, talk_id):  # 既存トークフォーム
                 params['form'] = form
                 return render(request, 'postapp/talk_detail.html', params)
 
-
-def talk_favorite_add(request, talk_id):  # お気に入り追加
+# お気に入り追加
+def talk_favorite_add(request, talk_id):  
 
     talk = Talks.objects.get(id=talk_id)
     favorites = Favorites(talk=talk, user=request.user)
@@ -502,8 +503,8 @@ def talk_favorite_add(request, talk_id):  # お気に入り追加
 
     return redirect(request.META['HTTP_REFERER'])
 
-
-def talk_favorite_delete(request, talk_id):  # お気に入り削除
+# お気に入り削除
+def talk_favorite_delete(request, talk_id):  
 
     # print(Favorites.objects.filter(talk__id=talk_id))#, user_id=request.user))
     Favorites.objects.filter(Q(talk__id=talk_id) &
@@ -517,8 +518,8 @@ def talk_favorite_delete(request, talk_id):  # お気に入り削除
 
     return redirect(request.META['HTTP_REFERER'])
 
-
-def final_favorite_add(request, talk_id):  # お気に入り追加_最終チェック
+# お気に入り追加_最終チェック
+def final_favorite_add(request, talk_id):  
 
     talk = Talks.objects.get(id=talk_id)
     favorites = Favorites(talk=talk, user=request.user)
@@ -533,8 +534,8 @@ def final_favorite_add(request, talk_id):  # お気に入り追加_最終チェ�
 
     return redirect("postapp:talk_all")
 
-
-def final_favorite_delete(request, talk_id):  # 状況に応じてトークの削除
+# 状況に応じてトークの削除
+def final_favorite_delete(request, talk_id):  
 
     # print(Favorites.objects.filter(talk__id=talk_id))#, user_id=request.user))
     talk = Talks.objects.get(id=talk_id)
@@ -553,8 +554,8 @@ def final_favorite_delete(request, talk_id):  # 状況に応じてトークの�
 
     return redirect("postapp:talk_all")
 
-
-def confirmed_add(request, talk_id):  # すでにお気に入りしているため、confirmed_byを1へ
+# すでにお気に入りしているため、confirmed_byを1へ
+def confirmed_add(request, talk_id):  
 
     talk = Talks.objects.get(id=talk_id)
 
