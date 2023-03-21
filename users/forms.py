@@ -1,9 +1,9 @@
 from django import forms
-# from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import (
     AuthenticationForm, UserCreationForm, PasswordChangeForm, PasswordResetForm, SetPasswordForm
 )
-from django.contrib.auth import get_user_model
+
 # from .models import CustomUser
 from .models import UserInfo, Report, CustomUser
 from .widgets import FileInputWithPreview
@@ -98,7 +98,7 @@ class EmailChangeForm(forms.ModelForm):
 class UserInfoUpdateForm(forms.ModelForm):
     class Meta:
         model = UserInfo
-        fields = ('nationality', 'age', 'gender', 'gender_of_love','introduction', 'profile_image',)
+        fields = ('nationality', 'age', 'gender', 'gender_of_love', 'introduction', 'profile_image',)
         widgets = {
             'age': forms.NumberInput(attrs={'min': 1, 'max': 120, }),
             'gender': forms.NumberInput(attrs={'type': 'range', 'min': -1, 'max': 1, }),

@@ -10,12 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
-from pathlib import Path
 import os
+from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -25,13 +24,18 @@ DEBUG = False
 SECRET_KEY = ''
 try:
     from .local_settings import *
-    # SECRET_KEYを読み込む
+    # 以下の項目を読み込む
+    # SECRET_KEY = ''
+    # SECRET_KEY = ''
+    # EMAIL_HOST = ''
+    # EMAIL_PORT = 123
+    # EMAIL_HOST_USER = ''
+    # EMAIL_HOST_PASSWORD = ''
+    # DATABASES = {}
 except ImportError:
     pass
 
-
-ALLOWED_HOSTS = ['192.168.179.5:8000','127.0.0.1','localhost']
-
+ALLOWED_HOSTS = ['192.168.179.5:8000', '127.0.0.1', 'localhost']
 
 # Application definition
 
@@ -77,7 +81,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ff.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
@@ -87,7 +90,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -107,7 +109,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
@@ -120,7 +121,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
@@ -138,8 +138,15 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # 画像をdjango側で読み込むための設定
 MEDIA_URL = '/media/'
 
-
 TIME_ZONE = 'Asia/Tokyo'
 USE_TZ = True
 
 X_FRAME_OPTIONS = 'ALLOW'
+
+# 1つのトークの有効期限
+TALK_AVAILABLE_DAYS = 0
+TALK_AVAILABLE_HOURS = 0
+TALK_AVAILABLE_MINUTES = 3
+
+# 1日に新たに投稿できるメッセージ数の上限
+NEW_POST_LIMIT = 7

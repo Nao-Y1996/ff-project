@@ -1,5 +1,6 @@
 from django.contrib import admin
-from postapp.models import Favorites,Talks,Message,Executedfunction
+from postapp.models import Favorites, Talks, Message, Executedfunction
+
 # Register your models here.
 
 admin.site.register(Favorites)

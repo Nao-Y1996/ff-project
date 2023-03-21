@@ -73,3 +73,6 @@ h1{
     border-bottom: none;
     
 }
+#input-length{
+    text-align: right;
+}

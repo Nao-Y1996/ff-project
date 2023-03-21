@@ -33,14 +33,14 @@
     <link rel="stylesheet" href="{% static 'postapp/Signup.css' %}">
     <link rel="stylesheet" href="{% static 'postapp/frame.css' %}">
 
-    <title>ff_project</title>
+    <title>SameS</title>
 </head>
 
 <body>
     <!-- メインコンテント -->
     <div class="container flexbox-container">
         <aside>
-            <a href="{% url 'postapp:talk_all' %}" class="menu_font_ProjectName">FF<br />project</a>
+            <a href="{% url 'postapp:talk_all' %}" class="menu_font_ProjectName">SameS</a>
             <i class="fas fa-key fa-lg"></i>
             <!-- <div class="col-3"> -->
             <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
@@ -153,9 +153,9 @@
     
         function ShowLength( str ) {
             if (str.length < 500) {
-                document.getElementById("inputlength").innerHTML = "Word count・・・ " + str.length + "/500";
+                document.getElementById("input-length").innerHTML = str.length + "/500";
             }else{
-                document.getElementById("inputlength").innerHTML = "Word count・・・ " + str.length + "/500   I can not enter any more";
+                document.getElementById("input-length").innerHTML = "The message should be 500 words or less.";
             }
             }
             

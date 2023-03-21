@@ -1,13 +1,12 @@
-from django.db import models
-from django.contrib.auth.models import (BaseUserManager, AbstractBaseUser)
-from django.core.mail import send_mail
-from django.core import validators
-from phonenumber_field.modelfields import PhoneNumberField
-from django_countries.fields import CountryField
-
 import uuid
 
-# Start mod_userModel branch
+from django.contrib.auth.models import (BaseUserManager, AbstractBaseUser)
+from django.core import validators
+from django.core.mail import send_mail
+from django.db import models
+from django_countries.fields import CountryField
+from phonenumber_field.modelfields import PhoneNumberField
+
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, phone_number, username, password=None):
@@ -39,6 +38,7 @@ class CustomUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
+
 # Create your models here.
 class CustomUser(AbstractBaseUser):
     # id = models.UUIDField(primary_key=True, default=uuid.uuid4)
@@ -63,7 +63,7 @@ class CustomUser(AbstractBaseUser):
     # パスワードと何で認証するかを決める　ここではパスワードとemail
     # AuthenticationFormでの認証は USERNAME_FIELD で指定したユーザー名フィールドを使用する。
     USERNAME_FIELD = 'email'
-    # 「createsuperuser management」コマンドを使用してユーザーを作成するとき、プロンプ​​トに表示されるフィールド名のリスト。デフォルトは「REQUIRED_FIELDS = [‘username’]」です。
+    # 「createsuperuser management」コマンドを使用してユーザーを作成するとき、プロンプトに表示されるフィールド名のリスト。デフォルトは「REQUIRED_FIELDS = [‘username’]」です。
     REQUIRED_FIELDS = ['username', 'phone_number']
 
     def __str__(self):
@@ -98,27 +98,28 @@ def image_directory_path(instance, filename):
 class UserInfo(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="user_info")
-    nationality = CountryField(blank_label='(select country)',blank=False, null=True)
-    age = models.IntegerField(validators=[validators.MinValueValidator(1), validators.MaxValueValidator(120)],blank=True, null=True)
+    nationality = CountryField(blank_label='(select country)', blank=False, null=True)
+    age = models.IntegerField(validators=[validators.MinValueValidator(1), validators.MaxValueValidator(120)],
+                              blank=True, null=True)
     # sex_choice = ((0, 'Female'),(1, 'male'),(2, 'other'))
     gender = models.FloatField(validators=[validators.MinValueValidator(-1.0),
-        validators.MaxValueValidator(1.0)], blank=True, null=True)
+                                           validators.MaxValueValidator(1.0)], blank=True, null=True)
     gender_of_love = models.FloatField(validators=[validators.MinValueValidator(-1.0),
-        validators.MaxValueValidator(1.0)], blank=True, null=True)
-    introduction = models.TextField(blank=True,null=True)
+                                                   validators.MaxValueValidator(1.0)], blank=True, null=True)
+    introduction = models.TextField(blank=True, null=True)
     profile_image = models.ImageField(upload_to=image_directory_path, blank=True, null=False, default='no_image.png')
     count_send_new_messages_in_a_day = models.IntegerField(default=0)
     priority_rank = models.IntegerField(default=7)
     capacity_new_msg = models.IntegerField(default=2)
-    count_send_new_messages = models.IntegerField(blank=True,null=True,default=0)
-    count_receive_new_messages = models.IntegerField(blank=True,null=True,default=0)
-    count_login = models.IntegerField(blank=True,null=True,default=0)
-    count_first_reply = models.IntegerField(blank=True,null=True,default=0)
-    count_bad_messages = models.IntegerField(blank=True,null=True,default=0)
+    count_send_new_messages = models.IntegerField(blank=True, null=True, default=0)
+    count_receive_new_messages = models.IntegerField(blank=True, null=True, default=0)
+    count_login = models.IntegerField(blank=True, null=True, default=0)
+    count_first_reply = models.IntegerField(blank=True, null=True, default=0)
+    count_bad_messages = models.IntegerField(blank=True, null=True, default=0)
 
     def __str__(self):
         return str(self.user)
-    
+
     def save(self, *args, **kwargs):
         if self.profile_image == "":
             self.profile_image = 'no_image.png'
@@ -128,15 +129,17 @@ class UserInfo(models.Model):
 class ReportReasons(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     choices = models.CharField(max_length=200, blank=False, null=True)
+
     def __str__(self):
         return self.choices
+
 
 class Report(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     reason = models.ForeignKey(ReportReasons, on_delete=models.CASCADE, related_name="reason")
-    user_reported = models.ForeignKey(CustomUser,on_delete=models.CASCADE, related_name="reported")
-    user_reporting = models.ForeignKey(CustomUser,on_delete=models.CASCADE, related_name="reporting")
-    content = models.TextField(max_length=200,blank=True,null=True)
+    user_reported = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="reported")
+    user_reporting = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="reporting")
+    content = models.TextField(max_length=200, blank=True, null=True)
+
     def __str__(self):
         return 'from ' + str(self.user_reporting) + ' to ' + str(self.user_reported)
-

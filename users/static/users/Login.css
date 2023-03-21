@@ -27,31 +27,25 @@
 	align-items: center;
     justify-content: center;
 	flex-flow: column;
-	margin: auto;
 }
 
 .login_font_username,.login_font_password{
 	font-weight: bold;
+	margin-top: 10px;
 }
 
 .login_shape_form{
-	width: 100%;
 	 margin: auto;
 	 padding: 0.5rem 1rem;
-	 border-radius: 1.0rem;
-	 background: darken(#f9f9f96b, 10%);
-	 color: darken(#f7f7f738, 50%);
-	 border: solid 3px #333;
-	 outline:none;
-	 
+	 border-radius: 30px;
+	 border-color: black;
+    border-style: solid;
  }
 
 .login_area_namelist,.login_area_passlist{
 	display:flex;
 	align-items: center;
-    justify-content: center;
 	flex-flow: column;
-	padding-right: 30px;
 }
 
 .login_card_body{
@@ -64,7 +58,7 @@
 .login_button_button{
 	text-decoration: none;
 	color:black;
-	font-weight:bold;
+	margin-top: 0.3rem;
 }
 .login_button_button:hover {
     font-weight:bold;

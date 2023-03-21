@@ -28,15 +28,20 @@
     
 }
 .top_title_text1{
-    font-size:60px;
+    font-size:40px;
     font-weight:bold;
 }
 .top_font_ProjectName{
-    height: 150px;
-    font-size: 35px;
+    height: 5rem;
+    font-size: 50px;
     font-weight: bold;
     font-family: Comic Sans MS;
     color: orange;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 0;
+    margin-top: 2rem;
 }
 .top_font_ProjectName:hover{
     text-decoration: none;

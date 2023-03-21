@@ -1,52 +1,45 @@
-from django.contrib.auth import logout
-from django.shortcuts import render
-from django.contrib.auth.forms import UserCreationForm
-from django.conf import settings
-from django.contrib.auth import get_user_model, authenticate, login
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView, PasswordChangeDoneView, PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
-from django.urls import reverse_lazy
-from django.contrib.sites.shortcuts import get_current_site
-from django.core.signing import BadSignature, SignatureExpired, loads, dumps
-from django.http import Http404, HttpResponseBadRequest
-from django.shortcuts import redirect
-from django.template.loader import render_to_string
-from django.views import generic
-from django.core.mail import send_mail
-from django.views.generic import FormView, UpdateView
-from django.urls import reverse
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
+from datetime import datetime, timezone
 
+from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth import get_user_model, authenticate, login as do_login
+from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.views import LogoutView, PasswordChangeView, PasswordChangeDoneView, PasswordResetView, \
+    PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import send_mail
+from django.core.signing import BadSignature, SignatureExpired, loads, dumps
+from django.http import HttpResponseBadRequest
+from django.shortcuts import redirect
+from django.shortcuts import render
+from django.template.loader import render_to_string
+from django.urls import reverse_lazy
+from django.views import generic
+
+from postapp.models import Executedfunction
+from postapp.views import reset_count_for_priority_rank, update_sending_priority_rank
 from .forms import LoginForm, UserCreateForm, MyPasswordChangeForm, MyPasswordResetForm, \
     MySetPasswordForm, EmailChangeForm, UserInfoUpdateForm, ReportForm, UserReregistrationForm  # WithdrawalForm
 from .models import UserInfo, Report, ReportReasons, CustomUser
-from datetime import datetime, timezone
-from dateutil import tz
-from postapp.views import reset_count_for_priority_rank, update_sending_priority_rank
-from postapp.models import Executedfunction, Talks
-
-import urllib
-from urllib.parse import urlparse
-from django.forms.models import modelformset_factory
-from django.db import transaction
 
 User = get_user_model()
 
- # -----------------------（アルゴリズム検証）---------------------------
-from datetime import timedelta
+# -----------------------（アルゴリズム検証）---------------------------
 from algorithm_check import algorithm_checker_utils
 from postapp.models import Talks
-import pandas as pd
-from django_pandas.io import read_frame
+
 csv_controller = algorithm_checker_utils.csv_controller4user()
 users_name = []
 user_num = algorithm_checker_utils.USER_NUM
 timing_update_priority_rank = algorithm_checker_utils.TIMING_UPDATE_PRIORITY
 for i in range(user_num):
-    users_name.append('user_'+str(i))
- # -----------------------（アルゴリズム検証）---------------------------
- 
+    users_name.append('user_' + str(i))
+
+
+# -----------------------（アルゴリズム検証）---------------------------
+
 # ログインユーザー自身以外は遷移できないようにするクラス
 class OnlyYouMixin(UserPassesTestMixin):
     raise_exception = True
@@ -57,12 +50,12 @@ class OnlyYouMixin(UserPassesTestMixin):
         return user.pk == self.kwargs['pk'] or user.is_admin
 
 
-def Top(request):
+def top(request):
     # ログインしていたら
     if request.user.is_authenticated:
         user_info = request.user.user_info
         # 国情報登録していなかったら
-        if user_info.nationality == None:
+        if user_info.nationality is None:
             form = UserInfoUpdateForm(instance=user_info)
             return redirect('users:userinfo_edit', info_id=user_info.id)
         else:
@@ -72,8 +65,7 @@ def Top(request):
 
 
 @login_required
-def report(request,talk_id):
-    
+def report(request, talk_id):
     talk = Talks.objects.get(id=talk_id)
 
     if talk.sending_user == request.user:
@@ -97,10 +89,10 @@ def report(request,talk_id):
             return render(request, 'users/report.html', {'form': form})
     else:
         form = ReportForm()
-        return render(request, 'users/report.html', {'form': form ,'report_target_user':user_reported})
+        return render(request, 'users/report.html', {'form': form, 'report_target_user': user_reported})
 
 
-def Login(request):
+def login(request):
     if request.method == 'POST':
         email = request.POST['username']
         password = request.POST['password']
@@ -117,9 +109,9 @@ def Login(request):
         # パスワードとメールで認証
         user = authenticate(request, email=email, password=password)
         if user is not None:
-            last_login = user.last_login # UTC
+            last_login = user.last_login  # UTC
             now = datetime.now(timezone.utc)
-           
+
             # 初回ログインをしたらログインカウントをインクリメント
             if last_login is None:
                 user.user_info.count_login += 1
@@ -127,28 +119,28 @@ def Login(request):
             else:
                 # 24時間以上、メッセージ送信の優先順位が更新されていなかったら更新
                 priority_rank_updated_at = Executedfunction.objects.get(name='update_sending_priority_rank').executed_at
-                if ((now - priority_rank_updated_at).seconds > 24*60*60):
+                if (now - priority_rank_updated_at).seconds > 24 * 60 * 60:
                     update_sending_priority_rank()
                 else:
                     pass
                 # 24時間以上ぶりにログインしたら
-                if ((now - last_login).seconds > 24*60*60):
-                    user.user_info.count_login += 1 # ログインカウントをインクリメント
-                    user_info.count_send_new_messages_in_a_day = 0 # 本日の投稿可能数をリセット
+                if (now - last_login).seconds > 24 * 60 * 60:
+                    user.user_info.count_login += 1  # ログインカウントをインクリメント
+                    user.user_info.count_send_new_messages_in_a_day = 0  # 本日の投稿可能数をリセット
                     user.user_info.save()
                 elif user.user_info.count_login == 0:
                     user.user_info.count_login += 1
-                    user.user_info.count_send_new_messages_in_a_day = 0 # 本日の投稿可能数をリセット
+                    user.user_info.count_send_new_messages_in_a_day = 0  # 本日の投稿可能数をリセット
                     user.user_info.save()
                 else:
                     pass
                 # 1週間以上、更新関数が実行されていなかったら実行する
                 count_updated_at = Executedfunction.objects.get(name='reset_count_for_priority_rank').executed_at
-                if ((now - count_updated_at).seconds > 7*24*60*60):
+                if (now - count_updated_at).seconds > 7 * 24 * 60 * 60:
                     reset_count_for_priority_rank()
                 else:
                     pass
-            login(request, user)  # ログイン
+            do_login(request, user)  # ログイン
             """
             # -----------------------（アルゴリズム検証）---------------------------
             with open(algorithm_checker_utils.BASE_PATH +'/day_end.txt') as f:
@@ -216,7 +208,7 @@ class Logout(LogoutView):
     template_name = 'users/top.html'
 
 
-def Reregistration(request):
+def reregistration(request):
     if request.method == 'POST':
         """ユーザー再登録"""
         # template_name = 'users/reregistration.html'
@@ -263,10 +255,10 @@ def Reregistration(request):
         return render(request, 'users/reregistration.html', {'form': form})
 
 
-def UserReregistrationComplete(request, **kwargs):
+def user_reregistration_complete(request, **kwargs):
     # template_name = 'users/user_create_complete.html'
     timeout_seconds = getattr(
-        settings, 'ACTIVATION_TIMEOUT_SECONDS', 60*60*24)  # デフォルトでは1日以内
+        settings, 'ACTIVATION_TIMEOUT_SECONDS', 60 * 60 * 24)  # デフォルトでは1日以内
 
     # def get(self, request, **kwargs):
     user_create_completed = False
@@ -298,6 +290,7 @@ def UserReregistrationComplete(request, **kwargs):
         request, f'再開処理を完了しました。ログインできます。')
     form = LoginForm()
     return render(request, 'users/login.html', {'form': form})
+
 
 # --------------------------------------------------------------
 
@@ -343,7 +336,7 @@ class UserCreateComplete(generic.TemplateView):
     """メール内URLアクセス後のユーザー本登録"""
     template_name = 'users/user_create_complete.html'
     timeout_seconds = getattr(
-        settings, 'ACTIVATION_TIMEOUT_SECONDS', 60*60*24)  # デフォルトでは1日以内
+        settings, 'ACTIVATION_TIMEOUT_SECONDS', 60 * 60 * 24)  # デフォルトでは1日以内
 
     def get(self, request, **kwargs):
         """tokenが正しければ本登録."""
@@ -381,7 +374,7 @@ class UserCreateComplete(generic.TemplateView):
 
 
 @login_required
-def EditUserInfo(request, info_id):
+def edit_user_info(request, info_id):
     user_info = UserInfo.objects.get(id=info_id)
     if user_info.user != request.user:
         return redirect('postapp:talk_all')
@@ -477,7 +470,7 @@ class EmailChangeComplete(LoginRequiredMixin, generic.TemplateView):
     """リンクを踏んだ後に呼ばれるメアド変更ビュー"""
     template_name = 'users/email_change_complete.html'
     timeout_seconds = getattr(
-        settings, 'ACTIVATION_TIMEOUT_SECONDS', 60*60*24)  # デフォルトでは1日以内
+        settings, 'ACTIVATION_TIMEOUT_SECONDS', 60 * 60 * 24)  # デフォルトでは1日以内
 
     def get(self, request, **kwargs):
         token = kwargs.get('token')
@@ -518,7 +511,5 @@ def withdrawal(request):
         return render(request, 'users/withdrawal.html')
 
 
-def AccountView(request):
-     
-
+def account_view(request):
     return render(request, 'users/account.html')
