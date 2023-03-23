@@ -12,5 +12,6 @@ urlpatterns = [
     path('final_favorite_add/<str:talk_id>/', views.final_favorite_add, name='final_favorite_add'),
     path('final_favorite_delete/<str:talk_id>/', views.final_favorite_delete, name='final_favorite_delete'),
     path('confirmed_add/<str:talk_id>/', views.confirmed_add, name='confirmed_add'),
+    path('generate_reply/<str:talk_id>/', views.generate_reply, name='generate_reply'),
 
 ]

@@ -48,6 +48,7 @@
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
                                         <a class="dropdown-item" href="{% url 'users:report' talk_id=talk.id %}">Report</a>
+                                            <a class="dropdown-item" href="{% url 'postapp:generate_reply' talk_id=talk.id %}">Get Reply</a>
                                         </div>
                                     </div>
                                 </td>
@@ -123,6 +124,7 @@
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
                                             <a class="dropdown-item" href="{% url 'users:report' talk_id=talk.id %}">Report</a>
+                                            <a class="dropdown-item" href="{% url 'postapp:generate_reply' talk_id=talk.id %}">Get Reply</a>
                                         </div>
                                     </div>
                                 </td>
@@ -195,6 +197,7 @@
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
                                                 <a class="dropdown-item" href="{% url 'users:report' talk_id=talk.id %}">Report</a>
+                                            <a class="dropdown-item" href="{% url 'postapp:generate_reply' talk_id=talk.id %}">Get Reply</a>
                                             </div>
                                         </div>
                                     </td>
@@ -269,6 +272,7 @@
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
                                             <a class="dropdown-item" href="{% url 'users:report' talk_id=talk.id %}">report</a>
+                                            <a class="dropdown-item" href="{% url 'postapp:generate_reply' talk_id=talk.id %}">Get Reply</a>
                                         </div>
                                     </div>
                                 </td>

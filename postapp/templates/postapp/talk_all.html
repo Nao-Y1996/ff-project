@@ -29,7 +29,7 @@
                     <div class="TalkList_inTalkDetail_frame_outline1">
                         {% get_talk_partner user talk as talk_partner %}
                         <img src="{{talk_partner.user_info.profile_image.url}}" class="TalkList_inTalkDetail_you_image" />
-                        <div class="TalkList_inTalkDetail_list_name">    
+                        <div class="TalkList_inTalkDetail_list_name">
                             {{ talk_partner }}
                         </div>
                     </div>
@@ -57,6 +57,7 @@
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
                                         <a class="dropdown-item" href="{% url 'users:report' talk_id=talk.id %}">Report</a>
+                                            <a class="dropdown-item" href="{% url 'postapp:generate_reply' talk_id=talk.id %}">Get Reply</a>
                                         </div>
 
                                     </div>
@@ -95,7 +96,7 @@
         </details>
         {% if talk_exist == True %}
             <div class="TalkList_inTalkDetail_table_frame_all">
-            
+
                 {% for talk in unchecked_dead_talks %}
                 <div class="TalkList_inTalkDetail_frame_table">
                     <div class="TalkList_inTalkDetail_read_lamp"></div>
@@ -131,6 +132,7 @@
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
                                             <a class="dropdown-item" href="{% url 'users:report' talk_id=talk.id %}">Report</a>
+                                            <a class="dropdown-item" href="{% url 'postapp:generate_reply' talk_id=talk.id %}">Get Reply</a>
                                             </div>
                                         </div>
                                     </td>
@@ -204,6 +206,7 @@
                                                     </button>
                                                     <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
                                                     <a class="dropdown-item" href="{% url 'users:report' talk_id=talk.id %}">Report</a>
+                                            <a class="dropdown-item" href="{% url 'postapp:generate_reply' talk_id=talk.id %}">Get Reply</a>
                                                     </div>
                                                 </div>
                                             </td>
@@ -246,7 +249,7 @@
                         <div class="TalkList_inTalkDetail_frame_outline1">
                             {% get_talk_partner user talk as talk_partner %}
                             <img src="{{talk_partner.user_info.profile_image.url}}" class="TalkList_inTalkDetail_you_image" />
-                            <div class="TalkList_inTalkDetail_list_name">    
+                            <div class="TalkList_inTalkDetail_list_name">
                                 {{ talk_partner }}
                             </div>
                         </div>
@@ -284,7 +287,8 @@
                                             <i class="fas fa-ellipsis-v"></i>
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                            <a class="dropdown-item" href="{% url 'users:report' talk_id=talk.id %}">report</a>
+                                            <a class="dropdown-item" href="{% url 'users:report' talk_id=talk.id %}">Report</a>
+                                            <a class="dropdown-item" href="{% url 'postapp:generate_reply' talk_id=talk.id %}">Get Reply</a>
                                             </div>
                                         </div>
                                     </td>
@@ -331,6 +335,6 @@
                     </div>
                 </form>
             </div>
-        {% endif %}     
+        {% endif %}
     </main>
 {% endblock %}

@@ -10,6 +10,7 @@ from django.db.models import Q
 from django.shortcuts import render, redirect
 from django_pandas.io import read_frame
 
+from GPT.gpt_client import GPT
 from ff import settings
 from users.models import CustomUser, UserInfo
 from .forms import MessageForm, NewTalkForm
@@ -360,6 +361,38 @@ def talk_create(request):
         initial_dict = dict(sending_user=request.user, )
         form = NewTalkForm(initial=initial_dict)
         return render(request, 'postapp/talk_create.html', {'form': form})
+
+
+def generate_reply(request, talk_id):
+    gpt = GPT()
+    talk = Talks.objects.get(id=talk_id)
+    if not is_talk_available(talk):  # 終了トークなのに誤って送信が行われた場合
+        return redirect(request.META['HTTP_REFERER'])
+    messages = Message.objects.filter(talk_id=talk_id).order_by('-created_at').reverse()
+    for message in list(messages):
+        if message.is_date:
+            continue
+        if message.sending_user == request.user:
+            print(message.content)
+            gpt.add_user_message(message.content)
+        else:
+            print(message.content)
+            gpt.add_assistant_message(message.content)
+
+    try:
+        reply = gpt.request()
+        print(reply)
+
+        message = Message(content=reply, sending_user=talk.receiving_user)
+        message.talk = talk
+        message.save()
+
+        talk.exist_reply = True
+        talk.save()
+    except Exception:
+        print("timeout : \n" + Exception)
+
+    return redirect(request.META['HTTP_REFERER'])
 
 
 # 既存トークフォーム
