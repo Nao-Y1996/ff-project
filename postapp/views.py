@@ -23,15 +23,6 @@ MINUTES = settings.TALK_AVAILABLE_MINUTES
 # 1日に送信できるメッセージの上限数
 NEW_POST_LIMIT = settings.NEW_POST_LIMIT
 
-
-# -----------------------（アルゴリズム検証）---------------------------
-# from algorithm_check import algorithm_checker_utils
-# timing_delete_talk = algorithm_checker_utils.TIMING_DELETE_TALK
-# import time
-# csv_controller2 = algorithm_checker_utils.csv_controller4user()
-# DAYS = algorithm_checker_utils.TALK_LIMIT_DAYS
-# -----------------------（アルゴリズム検証）---------------------------
-
 def mypage(request):
     return render(request, "postapp/mypage.html")
 
@@ -158,13 +149,6 @@ def post(request):
             post.talk = new_talk
             post.save()
             is_posted = True
-            # -----------------------（アルゴリズム検証）---------------------------
-            # メッセージの受信回数をインクリメント
-            # recieving_user = CustomUser.objects.get(id=send_id)
-            # day_num = csv_controller2.get_day()
-            # csv_controller2.incriment_receive_num(file_name=recieving_user.username, idx_name='day'+day_num)
-            # # -----------------------（アルゴリズム検証）---------------------------
-            # return redirect('postapp:talk_all')
             return is_posted, form
     else:
         return is_posted, form
@@ -425,11 +409,7 @@ def talk_detail(request, talk_id):
             talk.detail_opened = False
             talk.save()
 
-            # initial_dict = {"sending_user": request.user, "talk": talk_id, }
-            # form = MessageForm(initial=initial_dict)
-            # message = Message.objects.filter(talk_id=talk_id).all
             return redirect(request.META['HTTP_REFERER'])
-            # return render(request, 'postapp/talk_detail.html', {'messages':messages, 'form': form ,'talk_id':talk_id , 'Exist_favorites':Exist_favorites})
 
         else:
             message = Message.objects.filter(talk_id=talk_id).all

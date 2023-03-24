@@ -21,24 +21,11 @@ from django.views import generic
 from postapp.models import Executedfunction
 from postapp.views import reset_count_for_priority_rank, update_sending_priority_rank
 from .forms import LoginForm, UserCreateForm, MyPasswordChangeForm, MyPasswordResetForm, \
-    MySetPasswordForm, EmailChangeForm, UserInfoUpdateForm, ReportForm, UserReregistrationForm  # WithdrawalForm
+    MySetPasswordForm, EmailChangeForm, UserInfoUpdateForm, ReportForm, UserReregistrationForm
 from .models import UserInfo, Report, ReportReasons, CustomUser
 
 User = get_user_model()
 
-# -----------------------（アルゴリズム検証）---------------------------
-from algorithm_check import algorithm_checker_utils
-from postapp.models import Talks
-
-csv_controller = algorithm_checker_utils.csv_controller4user()
-users_name = []
-user_num = algorithm_checker_utils.USER_NUM
-timing_update_priority_rank = algorithm_checker_utils.TIMING_UPDATE_PRIORITY
-for i in range(user_num):
-    users_name.append('user_' + str(i))
-
-
-# -----------------------（アルゴリズム検証）---------------------------
 
 # ログインユーザー自身以外は遷移できないようにするクラス
 class OnlyYouMixin(UserPassesTestMixin):
@@ -141,56 +128,6 @@ def login(request):
                 else:
                     pass
             do_login(request, user)  # ログイン
-            """
-            # -----------------------（アルゴリズム検証）---------------------------
-            with open(algorithm_checker_utils.BASE_PATH +'/day_end.txt') as f:
-                l = f.readlines()
-                is_end_day = l[0]
-            day_num = int(csv_controller.get_day())
-            print(f'day = {day_num}')
-            # 1日分のシミュレーションが終わっていたら　送信優先度priorityを記録, talkのcreated_atをマイナス1日する
-            if is_end_day == 'True':
-                print('==============================1日経過=============================')
-                print('======================== Priority_rankを記録します ====================')
-                print('=================================================================')
-                update_sending_priority_rank()
-                all_user_rank = []
-                for name in users_name:
-                    _user = User.objects.filter(username=name)
-                    all_user_rank.append(_user[0].user_info.priority_rank)
-                df = pd.read_csv(algorithm_checker_utils.BASE_PATH + "/rank.csv", index_col=0)
-                df.loc[str(day_num)] = all_user_rank
-                df.to_csv(algorithm_checker_utils.BASE_PATH + "/rank.csv", index=True, header=True)
-                with open(algorithm_checker_utils.BASE_PATH + '/day_end.txt', mode='w') as f:
-                    f.write(str(False))
-
-                # 1日経過するごとにtalkのcreated_atをマイナス1日する
-                upd_talks = []
-                talks = Talks.objects.all()
-                for talk in talks:
-                    talk.created_at = talk.created_at.replace(tzinfo=timezone.utc) - timedelta(days=1)
-                    upd_talks.append(talk)
-                Talks.objects.bulk_update(upd_talks, fields=['created_at'])
-            else:
-                pass
-            # 毎回（1日1回のログインでシミュレーションするので）
-            user.user_info.count_login += 1 # ログインカウントをインクリメント
-            user.user_info.count_send_new_messages_in_a_day = 0 # 本日の投稿可能数をリセット
-            user.user_info.save()
-            # 更新関数を実行する
-            if day_num in timing_update_priority_rank:
-                print('===============================================================')
-                print('=================== 各種カウントをリセットします ===================')
-                print('===============================================================')
-                reset_count_for_priority_rank()
-            else:
-                pass
-            # （アルゴリズム検証）ログインしたかどうかを記録
-            csv_controller.record_logedin(file_name=user.username,idx_name='day'+str(day_num))
-            login(request, user)  # ログイン
-            print(f'---------------userid = {user.id}ログイン成功 = {user.username} -----------------')
-            # -----------------------（アルゴリズム検証）---------------------------
-             """
             return redirect('postapp:talk_all')
         else:
             # form = LoginForm(initial={"username":email, 'password':password}) # htmlで　form.errosでエラーが出なくなってしまう
