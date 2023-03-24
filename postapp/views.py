@@ -373,15 +373,12 @@ def generate_reply(request, talk_id):
         if message.is_date:
             continue
         if message.sending_user == request.user:
-            print(message.content)
             gpt.add_user_message(message.content)
         else:
-            print(message.content)
             gpt.add_assistant_message(message.content)
 
     try:
         reply = gpt.request()
-        print(reply)
 
         message = Message(content=reply, sending_user=talk.receiving_user)
         message.talk = talk
@@ -390,7 +387,7 @@ def generate_reply(request, talk_id):
         talk.exist_reply = True
         talk.save()
     except Exception:
-        print("timeout : \n" + Exception)
+        pass
 
     return redirect(request.META['HTTP_REFERER'])
 
