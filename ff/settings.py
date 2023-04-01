@@ -20,7 +20,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 env = environ.Env()
 env.read_env(os.path.join(BASE_DIR, '.env'))
 
-
 DEBUG = False
 SECRET_KEY = env('SECRET_KEY')
 
@@ -33,14 +32,13 @@ EMAIL_USE_TLS = env('EMAIL_USE_TLS')
 DATABASES = {
     'default': {
         'ENGINE': env('DATABASES_ENGINE'),
-        'NAME': env('NAME'),
+        'NAME': env('DB_NAME'),
         'USER': env('DB_USER'),
-        'PASSWORD': env('PASSWORD'),
-        'HOST': env('HOST'),
-        'PORT': env('PORT'),
+        'PASSWORD': env('DB_PASSWORD'),
+        'HOST': env('DB_HOST'),  # PostgreSQLコンテナのサービス名と一致させる必要がある
+        'PORT': env('DB_PORT'),
     }
 }
-
 
 OPENAI_API_KEY = env('OPENAI_API_KEY')
 

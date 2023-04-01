@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  sames:
+    build:
+      context: docker/python # Dockerfileが配置されているディレクトリへのパス
+    image: sames-python # イメージ名
+    container_name: sames # コンテナ名
+    ports:
+      - "8000:8000" # ホストの8000ポートをコンテナの8000ポートにマッピング
+    volumes:
+      - .:/app # ホストの./ff-projectディレクトリをコンテナの/appディレクトリにマッピング。
+    env_file:
+      - .env # .envに書かれた環境変数をコンテナに適用させる
+    command: >
+      python manage.py makemigrations users &&
+      python manage.py makemigrations postapp &&
+      python manage.py runserver 0.0.0.0:8000
