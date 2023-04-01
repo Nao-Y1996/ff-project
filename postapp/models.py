@@ -16,12 +16,14 @@ class Talks(models.Model):
     exist_reply = models.BooleanField(default=False)
     latest_message_time = models.DateTimeField(default=timezone.now)
     detail_opened = models.BooleanField(default=False)
+    invalid = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.sending_user) + '-' + str(self.receiving_user)
 
-    def new_post_count_in_last_24_hours(self):
-        return False
+    def invalidate(self):
+        self.invalid = True
+        self.save()
 
 
 class Favorites(models.Model):

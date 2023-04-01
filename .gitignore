@@ -10,3 +10,6 @@ __pycache__/
 **/.DS_Store
 chromedriver
 .idea
+env/**
+.env
+GPT/SystemPrompt/*

@@ -18,10 +18,27 @@ from .models import Favorites, Message, Talks, Executedfunction
 
 # そのユーザーとチャットができる期間
 DAYS = settings.TALK_AVAILABLE_DAYS
-HOURS = settings.TALK_AVAILABLE_DAYS
+HOURS = settings.TALK_AVAILABLE_HOURS
 MINUTES = settings.TALK_AVAILABLE_MINUTES
 # 1日に送信できるメッセージの上限数
 NEW_POST_LIMIT = settings.NEW_POST_LIMIT
+system_setting = """
+You are the system that monitors the words or sentences, and determines if it is inappropriate.
+Word or sentence is written in a variety of languages.
+The following is a specification of the system  for generate your response in a pseudo-programming language.
+
+input = (word or sentences)
+if (input is inappropriate): 
+    return 1
+if else (it is not possible to determine whether the input is appropriate or not):
+    return 0 
+else:
+    return 0
+
+You have to return 1 or 0 as response regardless of language.
+Therefore your response must be a single "1" or "0".
+    """
+
 
 def mypage(request):
     return render(request, "postapp/mypage.html")
@@ -42,9 +59,9 @@ def is_talk_available(talk):
     return now < deadline
 
 
-def new_post_count_in_last_24_hours(request):
-    twenty_four_hours_ago = datetime.now() - timedelta(minutes=1)
-    return Talks.objects.filter(sending_user=request.user, created_at__gte=twenty_four_hours_ago).count()
+def new_post_count_in_last_24_hours(sender):
+    twenty_four_hours_ago = datetime.now() - timedelta(hours=24)
+    return Talks.objects.filter(sending_user=sender, created_at__gte=twenty_four_hours_ago).count()
 
 
 # 自分のトークの分類を行う
@@ -62,13 +79,13 @@ def my_talks_classification(request):
         else:
             return True
 
-    my_talks = Talks.objects.filter(
-        (Q(sending_user=request.user) | Q(receiving_user=request.user)))  # 自分の関わっているトークを全て取得
+    my_talks = Talks.objects.filter(Q(invalid=False), (
+                Q(sending_user=request.user) | Q(receiving_user=request.user)))  # 自分の関わっているトークを全て取得
 
     for talk in my_talks:
         if not is_talk_available(talk):  # 期限終了の時
             if not talk.exist_reply:  # 返信がない時
-                talk.delete()
+                talk.invalidate()
                 continue
             checked_userinfo = False
             if talk.sending_user == request.user and (not talk.confirmed_by_sending_user):
@@ -107,51 +124,47 @@ def my_talks_classification(request):
     return params
 
 
-# メッセージを送信する
-def post(request):
-    message = Message(content="date_data", is_date=1, sending_user=request.user)
-
-    form = NewTalkForm(request.POST)
-
-    is_posted = False
-
-    if form.is_valid():
-
-        send_id = decide_reciever(request)  # 送信先決定
-        if send_id is None:
-            messages.warning(
-                request, f'すみません、送信相手が見つかりませんでした。時間を置いてから投稿してください')
-            logging.error('送信相手が見つかりません。予期せぬエラーが発生しました')
-            return redirect("users:profile")
-        else:
-            # 新規投稿した人にカウント
-            sending_user_info = UserInfo.objects.get(user_id=request.user)
-            sending_user_info.count_send_new_messages += 1
-            sending_user_info.count_send_new_messages_in_a_day += 1
-            sending_user_info.save()
-
-            # 新規投稿が送られた人にカウント
-            recieving_user_info = UserInfo.objects.get(user_id=send_id)
-            recieving_user_info.count_receive_new_messages += 1
-            recieving_user_info.capacity_new_msg -= 1
-            recieving_user_info.save()
-
-            new_talk = Talks(sending_user=request.user, receiving_user=CustomUser.objects.get(
-                id=send_id))  # idにどのようなidを入れるかで送り先が変わる
-            new_talk.save()
-
-            # Messageにトークを開始した日付を追加
-            message.talk = new_talk
-            message.save()
-
-            post = form.save(commit=False)
-
-            post.talk = new_talk
-            post.save()
-            is_posted = True
-            return is_posted, form
+def is_inappropriate(content):
+    gpt_filter = GPT()
+    result = gpt_filter.add_setting(system_setting).add_user_message(content).request()
+    if result.startswith("1"):
+        return True
+    elif result.startswith("0"):
+        return False
     else:
-        return is_posted, form
+        logging.warning(
+            "inappropriate_filter returned unexpected value. inappropriate_filter_prompt may need to be updated.")
+        return False
+
+
+# メッセージを送信する
+def post(form: NewTalkForm, sender: CustomUser):
+    receiver = decide_reciever(sender)  # 送信先決定
+    new_talk = Talks(sending_user=sender,
+                     receiving_user=receiver)  # idにどのようなidを入れるかで送り先が変わる
+    new_talk.save()
+
+    # トークを開始した日付の表示用のダミーメッセージを保存
+    date_message = Message(content="date_data", is_date=1, sending_user=sender)
+    date_message.talk = new_talk
+    date_message.save()
+
+    # 新規投稿した人にカウント
+    sending_user_info = UserInfo.objects.get(user_id=sender)
+    sending_user_info.count_send_new_messages += 1
+    sending_user_info.count_send_new_messages_in_a_day += 1
+    sending_user_info.save()
+
+    # 新規投稿が送られた人にカウント
+    recieving_user_info = UserInfo.objects.get(user_id=receiver.id)
+    recieving_user_info.count_receive_new_messages += 1
+    recieving_user_info.capacity_new_msg -= 1
+    recieving_user_info.save()
+
+    # メッセージの保存
+    message = form.save(commit=False)
+    message.talk = new_talk
+    message.save()
 
 
 # トーク一覧画面
@@ -161,13 +174,16 @@ def talk_all(request):
     # 投稿
     if request.method == 'POST':
         # 投稿上限数のチェック
-        if new_post_count_in_last_24_hours(request) >= NEW_POST_LIMIT:
-            messages.warning(request, f'投稿可能上限に達しました。24hで投稿できるのは7件までです。')
+        if new_post_count_in_last_24_hours(request.user) >= NEW_POST_LIMIT:
+            messages.warning(request, f'投稿可能上限に達しました.24hで投稿できるのは7件までです.')
             return redirect("postapp:talk_all")
-        else:
-            pass
-        is_posted, form = post(request)
-        if is_posted:
+
+        form = NewTalkForm(request.POST)
+        if form.is_valid():
+            if is_inappropriate(form.cleaned_data["content"]):
+                messages.warning(request, f'不適切な内容のためメッセージは削除されました.')
+            else:
+                post(form, request.user)
             return redirect('postapp:talk_all')
         else:
             return render(request, 'postapp/talk_create.html', {'form': form})
@@ -185,9 +201,9 @@ def talk_all(request):
 
 
 # 送り先を決定するアルゴリズム
-def decide_reciever(request):
+def decide_reciever(sender: CustomUser):
     found_reciever = False
-    send_id = None
+    receiver = None
     all_user_info = UserInfo.objects.all()
     df = read_frame(all_user_info, fieldnames=['user',
                                                'priority_rank',
@@ -227,8 +243,8 @@ def decide_reciever(request):
                         candidates_choice_list.index(candidate_choice))  # 候補者の選択肢からから現在選択されているユーザーを削除
                     # print(f'候補{candidate_choice}を削除')
                     continue
-                talk = Talks.objects.filter((Q(sending_user=request.user) & Q(receiving_user=candidate)) | (
-                        Q(sending_user=candidate) & Q(receiving_user=request.user)))
+                talk = Talks.objects.filter(Q(invalid=False), (Q(sending_user=sender) & Q(receiving_user=candidate)) | (
+                        Q(sending_user=candidate) & Q(receiving_user=sender)))
                 if len(talk) != 0:  # 候補者とのトークがある時はスキップ
                     # print('すでに送信先の候補者とのトークが存在しています')
                     candidates_choice_list.pop(
@@ -238,14 +254,14 @@ def decide_reciever(request):
                     # print(f'exist_talk_count = {exist_talk_count}')
                     continue
                 else:
-                    if candidate == request.user:  # 候補者が自分の時はスキップ
+                    if candidate == sender:  # 候補者が自分の時はスキップ
                         candidates_choice_list.pop(
                             candidates_choice_list.index(candidate_choice))  # 候補者の選択肢からから現在選択されているユーザーを削除
                         # print('候補者が自分でした')
                         # print(f'候補{candidate_choice}を削除')
                         continue
                     else:  # 候補者が自分でなければ送信先に決定
-                        send_id = candidate.id
+                        receiver = candidate
                         found_reciever = True
                 if found_reciever:
                     break
@@ -259,8 +275,8 @@ def decide_reciever(request):
             # print(f'現在のトーク数 = {len(my_talk)}')
             # time.sleep(3)
             break
-    logging.info(f'送信先 --> user_id={send_id} ')
-    return send_id
+    logging.info(f'送信先 --> user_id={receiver.id} ')
+    return receiver
 
 
 # メッセージ送信先の優先度を更新する
@@ -332,16 +348,25 @@ def reset_count_for_priority_rank():
 # 新規トークフォーム
 def talk_create(request):
     if request.method == 'POST':
-        is_posted, form = post(request)
-        if is_posted:
+
+        print("メッセージ数 : " + str(new_post_count_in_last_24_hours(request.user)))
+        if new_post_count_in_last_24_hours(request.user) >= NEW_POST_LIMIT:
+            messages.warning(
+                request, f'投稿可能上限に達しました.24hで投稿できるのは7件までです.')
+            return redirect("postapp:talk_all")
+
+        form = NewTalkForm(request.POST)
+        if form.is_valid():
+            if is_inappropriate(form.cleaned_data["content"]):
+                messages.warning(request, f'不適切な内容のためメッセージは削除されました.')
+            else:
+                post(form, request.user)
             return redirect('postapp:talk_all')
         else:
             return render(request, 'postapp/talk_create.html', {'form': form})
+
     else:
-        if new_post_count_in_last_24_hours(request) >= NEW_POST_LIMIT:
-            messages.warning(
-                request, f'投稿可能上限に達しました。24hで投稿できるのは7件までです。')
-            return redirect("postapp:talk_all")
+
         initial_dict = dict(sending_user=request.user, )
         form = NewTalkForm(initial=initial_dict)
         return render(request, 'postapp/talk_create.html', {'form': form})
@@ -388,18 +413,24 @@ def talk_detail(request, talk_id):
 
         # 最新メッセージの作成日時を取得し、その日の最終時刻に修正
         latest_message = Message.objects.filter(talk_id=talk.id).latest("created_at").created_at
-        latest_message_date = datetime(latest_message.year, latest_message.month, latest_message.day, 23, 59, 59,
-                                       999999)
+        latest_message_date = datetime(latest_message.year, latest_message.month, latest_message.day).date()
 
         form = MessageForm(request.POST)
         if form.is_valid():
+            if is_inappropriate(form.cleaned_data["content"]):
+                messages.warning(request, f'不適切な内容のためメッセージは削除されました.')
+                return redirect("postapp:talk_detail", talk_id=talk_id)
 
-            # 送信したメッセージが最新のメッセージと比較して日付を跨いでいる場合
-            if latest_message_date < datetime.now():
-                # 日付表示用のMessage生成し、トークと紐付けて保存
-                message = Message(content="date_data", is_date=1, sending_user=request.user)
-                message.talk = talk
-                message.save()
+            # TODO 送信したメッセージが最新のメッセージと比較して日付を跨いでいる場合
+            # print(latest_message_date)
+            # print(latest_message_date + timedelta(days=1))
+            # print(datetime.today())
+            # if (latest_message_date + timedelta(days=1)) < datetime.today():
+            #     print("日付追加！")
+            #     # 日付表示用のMessage生成し、トークと紐付けて保存
+            #     message = Message(content="date_data", is_date=1, sending_user=request.user)
+            #     message.talk = talk
+            #     message.save()
 
             # 送信したメッセージを保存
             post = form.save(commit=False)
@@ -416,7 +447,7 @@ def talk_detail(request, talk_id):
 
             # talk_allの内容を取得し、更にデータを格納している
             params = my_talks_classification(request)
-            params['messages'] = message
+            params['message_list'] = message
             params['form'] = form
             params['detail_talk_id'] = talk_id
             params['Exist_favorites'] = exist_favorites(request, talk)
@@ -435,7 +466,7 @@ def talk_detail(request, talk_id):
         is_active = is_talk_available(talk)
         # 返信がない　かつ　トーク可能時間外の場合、トークを削除して一覧画面へ戻る
         if (not talk.exist_reply) and (not is_active):
-            talk.delete()
+            talk.invalidate()
             messages.info(request, 'このトークは終了しています')
             return redirect("postapp:talk_all")
 
@@ -448,7 +479,7 @@ def talk_detail(request, talk_id):
                 talk_partner = talk.sending_user
             # talk_allの内容を取得し、更にデータを格納している
             params = my_talks_classification(request)
-            params['messages'] = Message.objects.filter(talk_id=talk.id).all()
+            params['message_list'] = Message.objects.filter(talk_id=talk.id).all()
             params['detail_talk_id'] = talk_id
             params['Exist_favorites'] = exist_favorites(request, talk)
             params['talk_is_dead'] = not is_active
@@ -474,7 +505,7 @@ def talk_detail(request, talk_id):
         initial_dict = {
             "sending_user": request.user, "talk": talk_id, }
         params = my_talks_classification(request)
-        params['messages'] = Message.objects.filter(talk_id=talk_id).all
+        params['message_list'] = Message.objects.filter(talk_id=talk_id).all
         params['detail_talk_id'] = talk_id
         params['Exist_favorites'] = exist_favorites(request, talk)
         params['off_hours'] = not is_active
@@ -500,7 +531,7 @@ def talk_favorite_delete(request, talk_id):
     CheckExist = not (Favorites.objects.filter(talk__id=talk_id).exists())
 
     if talk.confirmed_by_receiving_user == 1 & talk.confirmed_by_sending_user == 1 & CheckExist:  # トークを削除するかの判定
-        talk.delete()
+        talk.invalidate()
         return redirect("postapp:talk_all")
 
     return redirect(request.META['HTTP_REFERER'])
@@ -536,7 +567,7 @@ def final_favorite_delete(request, talk_id):
     CheckExist = not (Favorites.objects.filter(talk__id=talk_id).exists())
 
     if talk.confirmed_by_receiving_user == 1 & talk.confirmed_by_sending_user == 1 & CheckExist:  # トークを削除するかの判定
-        talk.delete()
+        talk.invalidate()
 
     return redirect("postapp:talk_all")
 

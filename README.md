@@ -3,6 +3,10 @@
 ## DBの初期化
 
 ```
+ docker run --name samesdb -e POSTGRES_USER=<postgres_user> -e POSTGRES_PASSWORD=<postgres_user_password> -e POSTGRES_DB=samesdb  -p 5432:5432 -d postgres:15.2
+```
+
+```
 python manage.py makemigrations users
 ```
 

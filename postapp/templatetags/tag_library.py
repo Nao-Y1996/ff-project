@@ -17,7 +17,7 @@ def favorite_check(user,talk):
 @register.simple_tag
 def get_newest_message(talk_id):
 
-    newest_message = Message.objects.filter(talk_id=talk_id).latest("created_at")#.order_by('-created_at')[0]
+    newest_message = Message.objects.filter(talk_id=talk_id, is_date=False).latest("created_at")
     newest_message = newest_message.content
 
     return newest_message

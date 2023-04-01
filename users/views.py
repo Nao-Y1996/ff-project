@@ -18,7 +18,7 @@ from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.views import generic
 
-from postapp.models import Executedfunction
+from postapp.models import Executedfunction, Talks
 from postapp.views import reset_count_for_priority_rank, update_sending_priority_rank
 from .forms import LoginForm, UserCreateForm, MyPasswordChangeForm, MyPasswordResetForm, \
     MySetPasswordForm, EmailChangeForm, UserInfoUpdateForm, ReportForm, UserReregistrationForm

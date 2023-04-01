@@ -5,13 +5,23 @@
 {% block content %}
 
     <main class="main1">
-        <!-- お気に入りした非activeなトークの一覧 -->
-        {% if talk_is_dead %}
-        <details open>
-        {% else %}
-        <details>
+        {% if messages %}
+        <div class="messages_ul">
+            {% for message in messages %}
+            {% if forloop.first %}
+            <p class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %} alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                        aria-hidden="true">&times;</span>
+                    </button>
+                    {{ message }}
+            </p>
+            {% endif %}
+            {% endfor %}
+        </div>
         {% endif %}
-            <summary>Favorite past chats : {{talk_count}} </summary>
+        <!-- お気に入りした非activeなトークの一覧 -->
+        <details>
+            <summary>Saved Talks : {{talk_count}} </summary>
             {% for talk in favorite_dead_talks %}
             <div class="TalkList_inTalkDetail_frame_table TalkList_favorite_table">
                 {% check_is_detail talk detail_talk_id as is_detail %}
@@ -305,7 +315,7 @@
     <main class="main2">
             <div class="chat_frame_outline">
                 <div class="chat_frame_outline2">
-                    {% for message in messages %}
+                    {% for message in message_list %}
                         {% if message.is_date == True %}
                             <div class="chat_form_data">{{message.created_at|date:"Y-m-d"}}</div>
 

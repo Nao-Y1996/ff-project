@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
+import environ
 
 import os
 from pathlib import Path
@@ -16,24 +17,32 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
+env = environ.Env()
+env.read_env(os.path.join(BASE_DIR, '.env'))
 
-# SECURITY WARNING: keep the secret key used in production secret!
+
 DEBUG = False
-SECRET_KEY = ''
-try:
-    from .local_settings import *
-    # 以下の項目を読み込む
-    # SECRET_KEY = ''
-    # SECRET_KEY = ''
-    # EMAIL_HOST = ''
-    # EMAIL_PORT = 123
-    # EMAIL_HOST_USER = ''
-    # EMAIL_HOST_PASSWORD = ''
-    # DATABASES = {}
-except ImportError:
-    pass
+SECRET_KEY = env('SECRET_KEY')
+
+EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_PORT = env('EMAIL_PORT')
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = env('EMAIL_USE_TLS')
+
+DATABASES = {
+    'default': {
+        'ENGINE': env('DATABASES_ENGINE'),
+        'NAME': env('NAME'),
+        'USER': env('DB_USER'),
+        'PASSWORD': env('PASSWORD'),
+        'HOST': env('HOST'),
+        'PORT': env('PORT'),
+    }
+}
+
+
+OPENAI_API_KEY = env('OPENAI_API_KEY')
 
 ALLOWED_HOSTS = ['192.168.179.5:8000', '127.0.0.1', 'localhost']
 
@@ -84,12 +93,6 @@ WSGI_APPLICATION = 'ff.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -114,7 +117,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+# TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Tokyo'
 
 USE_I18N = True
 
@@ -138,15 +142,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # 画像をdjango側で読み込むための設定
 MEDIA_URL = '/media/'
 
-TIME_ZONE = 'Asia/Tokyo'
-USE_TZ = True
-
 X_FRAME_OPTIONS = 'ALLOW'
 
 # 1つのトークの有効期限
 TALK_AVAILABLE_DAYS = 0
 TALK_AVAILABLE_HOURS = 0
-TALK_AVAILABLE_MINUTES = 3
+TALK_AVAILABLE_MINUTES = 1
 
 # 1日に新たに投稿できるメッセージ数の上限
 NEW_POST_LIMIT = 7

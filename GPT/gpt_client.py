@@ -1,11 +1,11 @@
-import os
-
 import openai
 
-openai.api_key = os.environ["OPENAI_API_KEY"]
+from ff import settings
+
 
 class GPT:
-    def __init__(self, model: str = None, setting: str = None):
+    def __init__(self, model: str = None, setting: str = None, setting_file_path: str = None):
+        openai.api_key = settings.OPENAI_API_KEY
         self._system_prompts = []
         self._user_prompts = []
         self._assistant_prompts = []
@@ -13,8 +13,12 @@ class GPT:
         self._model = "gpt-3.5-turbo"
         if model is not None:
             self._model = model
-        if setting is not None:
+        if setting is not None and setting_file_path is None:
             self.add_setting(setting)
+        if setting is None and setting_file_path is not None:
+            file = open(setting_file_path, "r")
+            self.add_setting(file.read())
+            file.close()
 
     def rebuild_messages(self, past_prompts: list[dict]):
         for prompt in past_prompts:
@@ -62,20 +66,13 @@ class GPT:
         return self._assistant_prompts[-1]
 
     def request(self):
-        try:
-            res = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",
-                messages=self._messages,
-                timeout=2
-            )
-        except Exception:
-            print("timeout" + Exception)
-            return Exception
+
+        res = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=self._messages,
+            timeout=2
+        )
+
         response_message = res["choices"][0]["message"]["content"]
         self.add_assistant_message(response_message)
         return response_message
-
-
-
-
-
